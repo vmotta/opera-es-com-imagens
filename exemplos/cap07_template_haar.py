@@ -54,7 +54,7 @@ def executar(output_dir) -> None:
     cena = np.full((380, 560, 3), 155, dtype=np.uint8)
     cv2.circle(cena, (65, 65), 22, (0, 0, 255), -1)
     cv2.rectangle(cena, (110, 260), (155, 305), (255, 0, 0), -1)
-    cv2.circle(cena, (385, 190), 44, (0, 255, 255), -1)  # alvo ligeiramente maior
+    cv2.circle(cena, (385, 190), 44, (0, 255, 255), -1)
     cv2.line(cena, (315, 55), (480, 80), (20, 20, 20), 3)
 
     template = np.full((72, 72, 3), 155, dtype=np.uint8)
@@ -64,16 +64,15 @@ def executar(output_dir) -> None:
     # 2. DUAS MÉTRICAS: CCOEFF (máximo) E SQDIFF (mínimo).
     # --------------------------------------------------------------------------
     mapa_ccoeff = cv2.matchTemplate(cena, template, cv2.TM_CCOEFF_NORMED)
-    min_c, max_c, min_loc_c, max_loc_c = cv2.minMaxLoc(mapa_ccoeff)
+    _, max_c, _, max_loc_c = cv2.minMaxLoc(mapa_ccoeff)
 
     mapa_sqdiff = cv2.matchTemplate(cena, template, cv2.TM_SQDIFF_NORMED)
-    min_s, max_s, min_loc_s, max_loc_s = cv2.minMaxLoc(mapa_sqdiff)
+    min_s, _, min_loc_s, _ = cv2.minMaxLoc(mapa_sqdiff)
 
     print(f"TM_CCOEFF_NORMED: melhor=max={max_c:.4f} em {max_loc_c}")
     print(f"TM_SQDIFF_NORMED: melhor=min={min_s:.4f} em {min_loc_s}")
 
     mapa_ccoeff_vis = normalizar_mapa(mapa_ccoeff)
-    # Para visualização, invertemos SQDIFF para que regiões melhores fiquem claras.
     mapa_sqdiff_vis = normalizar_mapa(mapa_sqdiff, inverter=True)
 
     # --------------------------------------------------------------------------
@@ -142,7 +141,6 @@ def executar(output_dir) -> None:
     for i, visual in enumerate(resultados_haar, start=1):
         salvar(output_dir / f"0{4+i}_haar_parametro_{i}.png", visual)
 
-    # Mantém o nome histórico usado na documentação.
     salvar(output_dir / "02_template_encontrado.png", marcado)
     salvar(output_dir / "03_haar_experimento.png", resultados_haar[1])
 
