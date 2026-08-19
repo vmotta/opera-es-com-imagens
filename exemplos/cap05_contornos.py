@@ -21,7 +21,7 @@ def classificar_forma(contorno: np.ndarray) -> tuple[str, np.ndarray, float]:
     if vertices == 3:
         classe = "triangulo"
     elif vertices == 4:
-        x, y, w, h = cv2.boundingRect(aproximado)
+        _, _, w, h = cv2.boundingRect(aproximado)
         razao = w / h if h else 0.0
         classe = "quadrado" if 0.90 <= razao <= 1.10 else "retangulo"
     elif circularidade >= 0.80:
@@ -71,7 +71,6 @@ def executar(output_dir) -> None:
         if area >= 500:
             medidas.append((area, contorno))
 
-    # A ordem original não possui significado semântico; x fornece IDs estáveis.
     medidas.sort(key=lambda item: cv2.boundingRect(item[1])[0])
 
     for indice, (area, contorno) in enumerate(medidas, start=1):
@@ -83,15 +82,12 @@ def executar(output_dir) -> None:
         classe, aproximado, circularidade = classificar_forma(contorno)
         razao = largura / altura if altura else 0.0
 
-        # Caixa alinhada aos eixos.
         cv2.rectangle(resultado, (x, y), (x + largura, y + altura), (0, 170, 0), 2)
 
-        # Caixa rotacionada mínima.
         min_rect = cv2.minAreaRect(contorno)
         min_box = cv2.boxPoints(min_rect).astype(np.int32)
         cv2.polylines(resultado, [min_box], True, (255, 120, 0), 2)
 
-        # Polígono aproximado e centroide.
         cv2.polylines(resultado, [aproximado], True, (0, 220, 255), 2)
         cv2.circle(resultado, (cx, cy), 6, (0, 0, 255), -1)
         cv2.putText(
@@ -110,7 +106,6 @@ def executar(output_dir) -> None:
             f"vertices={len(aproximado)}"
         )
 
-    # Visualização separada da hierarquia: todos os contornos, incluindo o buraco.
     visual_tree = cv2.cvtColor(binaria, cv2.COLOR_GRAY2BGR)
     cv2.drawContours(visual_tree, contornos_tree, -1, (0, 255, 0), 2)
     for i, contorno in enumerate(contornos_tree):
