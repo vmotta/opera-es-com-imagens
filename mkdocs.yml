@@ -1,0 +1,81 @@
+site_name: Operações com Imagens
+site_description: Curso didático de processamento de imagens e visão computacional
+site_author: Vinícius da Rocha Motta
+repo_url: https://github.com/vmotta/opera-es-com-imagens
+repo_name: vmotta/opera-es-com-imagens
+edit_uri: edit/main/docs/
+theme:
+  name: material
+  language: pt-BR
+  features:
+    - navigation.indexes
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: Usar tema escuro
+    - scheme: slate
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/weather-sunny
+        name: Usar tema claro
+  font:
+    text: Atkinson Hyperlegible
+    code: JetBrains Mono
+extra_css:
+  - stylesheets/extra.css
+extra_javascript:
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+nav:
+  - Início: index.md
+  - Como estudar: como-estudar.md
+  - Preparação do ambiente: ambiente.md
+  - Fundamentos:
+      - "1. Imagem digital e OpenCV": capitulos/01-fundamentos.md
+      - "2. Transformações geométricas": capitulos/02-transformacoes.md
+      - "3. Filtros, convolução e bordas": capitulos/03-filtros.md
+      - "4. Limiarização e morfologia": capitulos/04-morfologia.md
+      - "5. Contornos e características": capitulos/05-contornos.md
+      - "6. Espaços de cores": capitulos/06-cores.md
+  - Detecção e movimento:
+      - "7. Template Matching e Haar": capitulos/07-deteccao-classica.md
+      - "8. Feature Matching": capitulos/08-feature-matching.md
+      - "9. Vídeo e fluxo óptico": capitulos/09-video.md
+  - Redes neurais e aplicações:
+      - "10. CNNs e módulo DNN": capitulos/10-dnn.md
+      - "11. YOLO e NMS": capitulos/11-yolo-nms.md
+      - "12. Estimativa de pose": capitulos/12-pose.md
+      - "13. Reconhecimento facial": capitulos/13-faces.md
+      - "14. OCR": capitulos/14-ocr.md
+      - "15. Visão estéreo": capitulos/15-estereo.md
+      - "16. Construindo CNNs": capitulos/16-cnn.md
+      - "17. GANs": capitulos/17-gans.md
+      - "18. YOLO moderno": capitulos/18-yolo-moderno.md
+  - Glossário: glossario.md
+  - Referências: referencias.md
