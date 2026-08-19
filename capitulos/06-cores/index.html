@@ -1,0 +1,2332 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Curso didático de processamento de imagens e visão computacional">
+      
+      
+        <meta name="author" content="Vinícius da Rocha Motta">
+      
+      
+      
+        <link rel="prev" href="../05-contornos/">
+      
+      
+        <link rel="next" href="../07-deteccao-classica/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>6. Espaços de cores - Operações com Imagens</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Atkinson+Hyperlegible:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Atkinson Hyperlegible";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#6-espacos-de-cores-e-segmentacao-cromatica" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Operações com Imagens" class="md-header__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Operações com Imagens
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              6. Espaços de cores
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Usar tema escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Usar tema escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Usar tema claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Usar tema claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Operações com Imagens" class="md-nav__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Operações com Imagens
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../como-estudar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Como estudar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ambiente/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Preparação do ambiente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Imagem digital e OpenCV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-transformacoes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformações geométricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-filtros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Filtros, convolução e bordas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-morfologia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Limiarização e morfologia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-contornos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Contornos e características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Espaços de cores
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Espaços de cores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#61-uma-mesma-cor-pode-ser-descrita-de-formas-diferentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Uma mesma cor pode ser descrita de formas diferentes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Uma mesma cor pode ser descrita de formas diferentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-endereco-de-uma-pessoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: endereço de uma pessoa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62-bgr-e-rgb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 BGR e RGB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-por-que-rgbbgr-pode-ser-ruim-para-segmentar-cor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Por que RGB/BGR pode ser ruim para segmentar cor?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-hsv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 HSV
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.4 HSV">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-tinta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: tinta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#65-escala-hsv-no-opencv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Escala HSV no OpenCV
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#66-a-matiz-e-circular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 A matiz é circular
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.6 A matiz é circular">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-relogio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: relógio
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#67-convertendo-para-hsv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 Convertendo para HSV
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.7 Convertendo para HSV">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1-inspecionando-um-pixel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1 — inspecionando um pixel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#68-separando-h-s-e-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 Separando H, S e V
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#69-inrange-criando-uma-caixa-de-decisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.9 inRange: criando uma caixa de decisão
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.9 inRange: criando uma caixa de decisão">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-tres-catracas-ao-mesmo-tempo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: três catracas ao mesmo tempo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#610-por-que-usar-limites-minimos-de-s-e-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.10 Por que usar limites mínimos de S e V?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#611-aplicando-a-mascara" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.11 Aplicando a máscara
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#612-limpando-a-mascara" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.12 Limpando a máscara
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#613-encontrando-o-maior-objeto-segmentado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.13 Encontrando o maior objeto segmentado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#614-espaco-lab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.14 Espaço Lab
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#615-hsv-nao-e-invariancia-completa-a-iluminacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.15 HSV não é invariância completa à iluminação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#616-calibrando-limites-corretamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.16 Calibrando limites corretamente
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.16 Calibrando limites corretamente">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2-coletando-pixels-de-uma-roi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2 — coletando pixels de uma ROI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#617-segmentacao-por-cor-como-classificador-simples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.17 Segmentação por cor como classificador simples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#618-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.18 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#619-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.19 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#620-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.20 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detecção e movimento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Detecção e movimento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-deteccao-classica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Template Matching e Haar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-feature-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Feature Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-video/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Vídeo e fluxo óptico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes neurais e aplicações
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redes neurais e aplicações
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-dnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. CNNs e módulo DNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-yolo-nms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. YOLO e NMS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-pose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Estimativa de pose
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-faces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Reconhecimento facial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-ocr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. OCR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-estereo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Visão estéreo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16. Construindo CNNs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-gans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17. GANs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-yolo-moderno/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18. YOLO moderno
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#61-uma-mesma-cor-pode-ser-descrita-de-formas-diferentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Uma mesma cor pode ser descrita de formas diferentes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Uma mesma cor pode ser descrita de formas diferentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-endereco-de-uma-pessoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: endereço de uma pessoa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62-bgr-e-rgb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 BGR e RGB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-por-que-rgbbgr-pode-ser-ruim-para-segmentar-cor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Por que RGB/BGR pode ser ruim para segmentar cor?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-hsv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 HSV
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.4 HSV">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-tinta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: tinta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#65-escala-hsv-no-opencv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Escala HSV no OpenCV
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#66-a-matiz-e-circular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 A matiz é circular
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.6 A matiz é circular">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-relogio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: relógio
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#67-convertendo-para-hsv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 Convertendo para HSV
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.7 Convertendo para HSV">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1-inspecionando-um-pixel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1 — inspecionando um pixel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#68-separando-h-s-e-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 Separando H, S e V
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#69-inrange-criando-uma-caixa-de-decisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.9 inRange: criando uma caixa de decisão
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.9 inRange: criando uma caixa de decisão">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-tres-catracas-ao-mesmo-tempo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: três catracas ao mesmo tempo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#610-por-que-usar-limites-minimos-de-s-e-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.10 Por que usar limites mínimos de S e V?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#611-aplicando-a-mascara" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.11 Aplicando a máscara
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#612-limpando-a-mascara" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.12 Limpando a máscara
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#613-encontrando-o-maior-objeto-segmentado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.13 Encontrando o maior objeto segmentado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#614-espaco-lab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.14 Espaço Lab
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#615-hsv-nao-e-invariancia-completa-a-iluminacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.15 HSV não é invariância completa à iluminação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#616-calibrando-limites-corretamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.16 Calibrando limites corretamente
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.16 Calibrando limites corretamente">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2-coletando-pixels-de-uma-roi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2 — coletando pixels de uma ROI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#617-segmentacao-por-cor-como-classificador-simples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.17 Segmentação por cor como classificador simples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#618-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.18 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#619-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.19 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#620-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.20 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="6-espacos-de-cores-e-segmentacao-cromatica">6. Espaços de cores e segmentação cromática<a class="headerlink" href="#6-espacos-de-cores-e-segmentacao-cromatica" title="Permanent link">&para;</a></h1>
+<h2 id="o-que-voce-aprendera">O que você aprenderá<a class="headerlink" href="#o-que-voce-aprendera" title="Permanent link">&para;</a></h2>
+<p>Uma cor pode ser representada de diferentes maneiras. Neste capítulo, você aprenderá que mudar de espaço de cor não altera magicamente a cena: muda a <strong>forma matemática de organizar a informação</strong>, o que pode tornar certas tarefas mais simples.</p>
+<p>Ao final, você deverá conseguir:</p>
+<ol>
+<li>diferenciar BGR/RGB, HSV e Lab;</li>
+<li>compreender por que BGR mistura cor e brilho;</li>
+<li>interpretar matiz, saturação e valor;</li>
+<li>conhecer a escala HSV usada pelo OpenCV;</li>
+<li>compreender a circularidade da matiz;</li>
+<li>converter imagens com <code>cvtColor</code>;</li>
+<li>inspecionar valores de pixels em diferentes espaços;</li>
+<li>criar máscaras por intervalo com <code>inRange</code>;</li>
+<li>combinar intervalos para cores que cruzam a origem da matiz;</li>
+<li>aplicar máscaras à imagem original;</li>
+<li>limpar máscaras com morfologia;</li>
+<li>calibrar limites de forma experimental;</li>
+<li>reconhecer limitações de segmentação por cor.</li>
+</ol>
+<p>Espaços de cor são representações alternativas que podem separar componentes úteis para análise, como cromaticidade e luminosidade (GONZALEZ; WOODS, 2010; SZELISKI, 2022).</p>
+<hr />
+<h2 id="61-uma-mesma-cor-pode-ser-descrita-de-formas-diferentes">6.1 Uma mesma cor pode ser descrita de formas diferentes<a class="headerlink" href="#61-uma-mesma-cor-pode-ser-descrita-de-formas-diferentes" title="Permanent link">&para;</a></h2>
+<p>Em BGR, cada pixel possui três valores:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[B, G, R]
+</span></code></pre></div>
+<p>Em HSV, o mesmo pixel é descrito por:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[H, S, V]
+</span></code></pre></div>
+<p>Em Lab, usamos aproximadamente:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[L, a, b]
+</span></code></pre></div>
+<h3 id="analogia-endereco-de-uma-pessoa">Analogia: endereço de uma pessoa<a class="headerlink" href="#analogia-endereco-de-uma-pessoa" title="Permanent link">&para;</a></h3>
+<p>Uma pessoa pode ser localizada por endereço postal, coordenadas geográficas ou referência de bairro. A pessoa é a mesma, mas cada representação facilita uma tarefa diferente.</p>
+<hr />
+<h2 id="62-bgr-e-rgb">6.2 BGR e RGB<a class="headerlink" href="#62-bgr-e-rgb" title="Permanent link">&para;</a></h2>
+<p>O OpenCV normalmente carrega imagens coloridas em BGR.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">imagem</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s2">"foto.jpg"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Para converter para RGB:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">rgb</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Essa conversão é importante ao usar bibliotecas que esperam RGB.</p>
+<hr />
+<h2 id="63-por-que-rgbbgr-pode-ser-ruim-para-segmentar-cor">6.3 Por que RGB/BGR pode ser ruim para segmentar cor?<a class="headerlink" href="#63-por-que-rgbbgr-pode-ser-ruim-para-segmentar-cor" title="Permanent link">&para;</a></h2>
+<p>Considere um objeto azul iluminado fortemente e o mesmo objeto na sombra. Os valores B, G e R mudam em conjunto com a iluminação.</p>
+<p>Assim, uma regra direta como:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>B &gt; 200
+</span></code></pre></div>
+<p>pode funcionar em uma cena e falhar em outra.</p>
+<p>HSV reorganiza a representação para separar melhor a “família” da cor do brilho.</p>
+<hr />
+<h2 id="64-hsv">6.4 HSV<a class="headerlink" href="#64-hsv" title="Permanent link">&para;</a></h2>
+<p>HSV significa:</p>
+<ul>
+<li><strong>H — Hue (matiz):</strong> família da cor;</li>
+<li><strong>S — Saturation (saturação):</strong> pureza da cor;</li>
+<li><strong>V — Value (valor):</strong> brilho.</li>
+</ul>
+<h3 id="analogia-tinta">Analogia: tinta<a class="headerlink" href="#analogia-tinta" title="Permanent link">&para;</a></h3>
+<p>Imagine descrever uma tinta por:</p>
+<ol>
+<li>qual é a cor principal;</li>
+<li>quanto ela foi diluída com cinza/branco;</li>
+<li>quão iluminada ela está.</li>
+</ol>
+<p>Essa separação ajuda a selecionar cores mesmo quando o brilho varia moderadamente.</p>
+<hr />
+<h2 id="65-escala-hsv-no-opencv">6.5 Escala HSV no OpenCV<a class="headerlink" href="#65-escala-hsv-no-opencv" title="Permanent link">&para;</a></h2>
+<p>Para imagens <code>uint8</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>H: 0..179
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>S: 0..255
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>V: 0..255
+</span></code></pre></div>
+<p>O canal H representa um círculo de matizes comprimido para <code>0..179</code>.</p>
+<p>Valores aproximados:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vermelho ≈ 0 ou 179
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>verde    ≈ 60
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>azul     ≈ 120
+</span></code></pre></div>
+<hr />
+<h2 id="66-a-matiz-e-circular">6.6 A matiz é circular<a class="headerlink" href="#66-a-matiz-e-circular" title="Permanent link">&para;</a></h2>
+<p>O vermelho aparece perto do início e do final da escala.</p>
+<h3 id="analogia-relogio">Analogia: relógio<a class="headerlink" href="#analogia-relogio" title="Permanent link">&para;</a></h3>
+<p>11h59 está muito perto de 0h01, embora os números pareçam distantes. Matiz funciona de forma circular semelhante.</p>
+<p>Por isso, para vermelho frequentemente usamos dois intervalos.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">mascara1</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">inRange</span><span class="p">(</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="n">hsv</span><span class="p">,</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">)</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">mascara2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">inRange</span><span class="p">(</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">hsv</span><span class="p">,</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="p">(</span><span class="mi">170</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="p">(</span><span class="mi">179</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">)</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="n">mascara_vermelho</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">bitwise_or</span><span class="p">(</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="n">mascara1</span><span class="p">,</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    <span class="n">mascara2</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="67-convertendo-para-hsv">6.7 Convertendo para HSV<a class="headerlink" href="#67-convertendo-para-hsv" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">hsv</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2HSV</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="exemplo-1-inspecionando-um-pixel">Exemplo 1 — inspecionando um pixel<a class="headerlink" href="#exemplo-1-inspecionando-um-pixel" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">y</span> <span class="o">=</span> <span class="mi">100</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">x</span> <span class="o">=</span> <span class="mi">150</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"BGR:"</span><span class="p">,</span> <span class="n">imagem</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"HSV:"</span><span class="p">,</span> <span class="n">hsv</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
+</span></code></pre></div>
+<p>Essa prática ajuda a compreender que os números mudaram de significado.</p>
+<hr />
+<h2 id="68-separando-h-s-e-v">6.8 Separando H, S e V<a class="headerlink" href="#68-separando-h-s-e-v" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">h</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">hsv</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Podemos visualizar cada componente separadamente para entender o papel de cada uma.</p>
+<ul>
+<li><code>H</code>: identifica a família cromática;</li>
+<li><code>S</code>: valores baixos indicam cores pouco saturadas;</li>
+<li><code>V</code>: concentra informação de brilho.</li>
+</ul>
+<hr />
+<h2 id="69-inrange-criando-uma-caixa-de-decisao">6.9 <code>inRange</code>: criando uma caixa de decisão<a class="headerlink" href="#69-inrange-criando-uma-caixa-de-decisao" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">mascara_azul</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">inRange</span><span class="p">(</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">hsv</span><span class="p">,</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="p">(</span><span class="mi">135</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>O pixel fica branco somente se H, S e V estiverem simultaneamente dentro do intervalo.</p>
+<h3 id="analogia-tres-catracas-ao-mesmo-tempo">Analogia: três catracas ao mesmo tempo<a class="headerlink" href="#analogia-tres-catracas-ao-mesmo-tempo" title="Permanent link">&para;</a></h3>
+<p>Para o pixel ser aceito:</p>
+<ul>
+<li>H precisa passar;</li>
+<li>S precisa passar;</li>
+<li>V precisa passar.</li>
+</ul>
+<p>Se qualquer uma falhar, o pixel é rejeitado.</p>
+<hr />
+<h2 id="610-por-que-usar-limites-minimos-de-s-e-v">6.10 Por que usar limites mínimos de S e V?<a class="headerlink" href="#610-por-que-usar-limites-minimos-de-s-e-v" title="Permanent link">&para;</a></h2>
+<p>Quando a saturação é muito baixa, a cor se aproxima de cinza. A matiz deixa de ser uma medida muito confiável.</p>
+<p>Quando V é muito baixo, o pixel está quase preto e novamente a cor fica difícil de estimar.</p>
+<p>Por isso é comum usar algo como:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+</span></code></pre></div>
+<p>em vez de aceitar qualquer S e V.</p>
+<hr />
+<h2 id="611-aplicando-a-mascara">6.11 Aplicando a máscara<a class="headerlink" href="#611-aplicando-a-mascara" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">resultado</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">mask</span><span class="o">=</span><span class="n">mascara_azul</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>A máscara decide onde a cor original será preservada.</p>
+<hr />
+<h2 id="612-limpando-a-mascara">6.12 Limpando a máscara<a class="headerlink" href="#612-limpando-a-mascara" title="Permanent link">&para;</a></h2>
+<p>Segmentação por cor pode produzir pontos isolados e buracos.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">kernel</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getStructuringElement</span><span class="p">(</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_ELLIPSE</span><span class="p">,</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="p">)</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="n">limpa</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">morphologyEx</span><span class="p">(</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    <span class="n">mascara_azul</span><span class="p">,</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_OPEN</span><span class="p">,</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="n">kernel</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="p">)</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="n">limpa</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">morphologyEx</span><span class="p">(</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    <span class="n">limpa</span><span class="p">,</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_CLOSE</span><span class="p">,</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>    <span class="n">kernel</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Isso conecta diretamente o capítulo de cores ao capítulo de morfologia.</p>
+<hr />
+<h2 id="613-encontrando-o-maior-objeto-segmentado">6.13 Encontrando o maior objeto segmentado<a class="headerlink" href="#613-encontrando-o-maior-objeto-segmentado" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">contornos</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findContours</span><span class="p">(</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="n">limpa</span><span class="p">,</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">RETR_EXTERNAL</span><span class="p">,</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">CHAIN_APPROX_SIMPLE</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="p">)</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="k">if</span> <span class="n">contornos</span><span class="p">:</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>    <span class="n">maior</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">contornos</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">)</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">boundingRect</span><span class="p">(</span><span class="n">maior</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Agora a segmentação cromática pode alimentar um detector geométrico simples.</p>
+<hr />
+<h2 id="614-espaco-lab">6.14 Espaço Lab<a class="headerlink" href="#614-espaco-lab" title="Permanent link">&para;</a></h2>
+<p>Lab separa aproximadamente:</p>
+<ul>
+<li><code>L</code>: luminosidade;</li>
+<li><code>a</code>: eixo verde–vermelho;</li>
+<li><code>b</code>: eixo azul–amarelo.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">lab</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2LAB</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>O Lab é útil em tarefas em que desejamos trabalhar com componentes cromáticas e luminosidade de forma diferente.</p>
+<hr />
+<h2 id="615-hsv-nao-e-invariancia-completa-a-iluminacao">6.15 HSV não é invariância completa à iluminação<a class="headerlink" href="#615-hsv-nao-e-invariancia-completa-a-iluminacao" title="Permanent link">&para;</a></h2>
+<p>Mesmo com HSV, mudanças de iluminação podem causar:</p>
+<ul>
+<li>alteração de V;</li>
+<li>alteração de S;</li>
+<li>deslocamento de H devido a balanço de branco;</li>
+<li>reflexos especulares;</li>
+<li>saturação do sensor.</li>
+</ul>
+<p>Assim, HSV <strong>facilita</strong> alguns problemas, mas não elimina física de iluminação.</p>
+<hr />
+<h2 id="616-calibrando-limites-corretamente">6.16 Calibrando limites corretamente<a class="headerlink" href="#616-calibrando-limites-corretamente" title="Permanent link">&para;</a></h2>
+<p>Uma estratégia melhor que copiar números prontos:</p>
+<ol>
+<li>capture imagens representativas;</li>
+<li>selecione pixels do objeto;</li>
+<li>registre H, S e V;</li>
+<li>observe mínimos, máximos e percentis;</li>
+<li>inclua variações de iluminação;</li>
+<li>teste em imagens que não foram usadas para escolher limites;</li>
+<li>revise falsos positivos e falsos negativos.</li>
+</ol>
+<h3 id="exemplo-2-coletando-pixels-de-uma-roi">Exemplo 2 — coletando pixels de uma ROI<a class="headerlink" href="#exemplo-2-coletando-pixels-de-uma-roi" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">roi</span> <span class="o">=</span> <span class="n">hsv</span><span class="p">[</span><span class="n">y1</span><span class="p">:</span><span class="n">y2</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span><span class="n">x2</span><span class="p">]</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="n">pixels</span> <span class="o">=</span> <span class="n">roi</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"H mínimo:"</span><span class="p">,</span> <span class="n">pixels</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"H máximo:"</span><span class="p">,</span> <span class="n">pixels</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"S mediana:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">pixels</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]))</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"V mediana:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">pixels</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]))</span>
+</span></code></pre></div>
+<hr />
+<h2 id="617-segmentacao-por-cor-como-classificador-simples">6.17 Segmentação por cor como classificador simples<a class="headerlink" href="#617-segmentacao-por-cor-como-classificador-simples" title="Permanent link">&para;</a></h2>
+<p>Podemos interpretar <code>inRange</code> como um classificador baseado em regras:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>se H,S,V estiverem na região aceita → objeto
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>senão → fundo
+</span></code></pre></div>
+<p>Isso funciona bem quando a cor realmente separa as classes.</p>
+<p>Falha quando:</p>
+<ul>
+<li>objeto e fundo têm cores semelhantes;</li>
+<li>a iluminação varia demais;</li>
+<li>reflexos mudam a aparência;</li>
+<li>o objeto possui várias cores.</li>
+</ul>
+<p>Nesses casos, combine cor com:</p>
+<ul>
+<li>forma;</li>
+<li>textura;</li>
+<li>movimento;</li>
+<li>características locais;</li>
+<li>redes neurais.</li>
+</ul>
+<hr />
+<h2 id="618-exemplo-integrado-do-capitulo">6.18 Exemplo integrado do capítulo<a class="headerlink" href="#618-exemplo-integrado-do-capitulo" title="Permanent link">&para;</a></h2>
+<p>O <a href="https://github.com/vmotta/opera-es-com-imagens/blob/main/exemplos/cap06_espacos_cores.py">código do capítulo 6</a> cria objetos de várias cores e mostra como segmentá-los.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>python<span class="w"> </span>-m<span class="w"> </span>exemplos.cap06_espacos_cores
+</span></code></pre></div>
+<p>Pipeline:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>imagem BGR
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>  ↓
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>HSV e Lab
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>  ↓
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>separação de canais
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>  ↓
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>faixa azul
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>  ↓
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>duas faixas vermelhas
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>  ↓
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>OR das faixas
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>  ↓
+</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>limpeza morfológica
+</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>  ↓
+</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>aplicação da máscara
+</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>  ↓
+</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>contorno do maior objeto
+</span></code></pre></div>
+<p><img alt="Segmentação de azul e vermelho por máscaras HSV" src="../../assets/resultados/cap06/painel.png" /></p>
+<hr />
+<h2 id="619-erros-comuns">6.19 Erros comuns<a class="headerlink" href="#619-erros-comuns" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa provável</th>
+<th>Correção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vermelho não é detectado</td>
+<td>faixa cruza 0/179</td>
+<td>use dois intervalos</td>
+</tr>
+<tr>
+<td>muitos cinzas são aceitos</td>
+<td>S mínimo baixo</td>
+<td>aumente limite de saturação</td>
+</tr>
+<tr>
+<td>sombras viram fundo</td>
+<td>V mínimo alto</td>
+<td>calibre brilho</td>
+</tr>
+<tr>
+<td>resultado muda em outra câmera</td>
+<td>balanço de branco/exposição</td>
+<td>recalibre</td>
+</tr>
+<tr>
+<td>azul/vermelho trocados</td>
+<td>BGR/RGB confundidos</td>
+<td>confira conversão</td>
+</tr>
+<tr>
+<td>máscara possui pontos</td>
+<td>ruído</td>
+<td>abertura/fechamento</td>
+</tr>
+<tr>
+<td>objeto e fundo se misturam</td>
+<td>cor não separa classes</td>
+<td>acrescente outras características</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="620-perguntas-de-revisao">6.20 Perguntas de revisão<a class="headerlink" href="#620-perguntas-de-revisao" title="Permanent link">&para;</a></h2>
+<ol>
+<li>O que muda quando convertemos BGR para HSV?</li>
+<li>O que representa H?</li>
+<li>O que representa S?</li>
+<li>O que representa V?</li>
+<li>Por que H vai de 0 a 179 no OpenCV <code>uint8</code>?</li>
+<li>Por que vermelho exige frequentemente dois intervalos?</li>
+<li>Como funciona <code>inRange</code>?</li>
+<li>Por que excluir saturações muito baixas?</li>
+<li>HSV resolve completamente mudanças de iluminação?</li>
+<li>Quando Lab pode ser interessante?</li>
+</ol>
+<hr />
+<h1 id="exercicios-de-fixacao">Exercícios de fixação<a class="headerlink" href="#exercicios-de-fixacao" title="Permanent link">&para;</a></h1>
+<h3 id="exercicio-1">Exercício 1<a class="headerlink" href="#exercicio-1" title="Permanent link">&para;</a></h3>
+<p>Crie uma imagem com blocos BGR vermelho, verde, azul, amarelo e branco. Converta para HSV e imprima o valor central de cada bloco.</p>
+<h3 id="exercicio-2">Exercício 2<a class="headerlink" href="#exercicio-2" title="Permanent link">&para;</a></h3>
+<p>Separe e salve H, S e V individualmente.</p>
+<h3 id="exercicio-3">Exercício 3<a class="headerlink" href="#exercicio-3" title="Permanent link">&para;</a></h3>
+<p>Crie uma máscara para azul usando <code>inRange</code>.</p>
+<h3 id="exercicio-4">Exercício 4<a class="headerlink" href="#exercicio-4" title="Permanent link">&para;</a></h3>
+<p>Crie uma máscara para vermelho usando apenas <code>0..10</code> e observe o que é perdido. Depois adicione <code>170..179</code>.</p>
+<h3 id="exercicio-5">Exercício 5<a class="headerlink" href="#exercicio-5" title="Permanent link">&para;</a></h3>
+<p>Adicione regiões cinza e teste como diferentes valores mínimos de S afetam falsos positivos.</p>
+<h3 id="exercicio-6">Exercício 6<a class="headerlink" href="#exercicio-6" title="Permanent link">&para;</a></h3>
+<p>Crie uma sombra sintética reduzindo V numa parte do objeto e teste a robustez da faixa.</p>
+<h3 id="exercicio-7">Exercício 7<a class="headerlink" href="#exercicio-7" title="Permanent link">&para;</a></h3>
+<p>Use abertura e fechamento na máscara e compare a quantidade de componentes.</p>
+<h3 id="exercicio-8">Exercício 8<a class="headerlink" href="#exercicio-8" title="Permanent link">&para;</a></h3>
+<p>Encontre o maior objeto azul e desenhe sua bounding box.</p>
+<h3 id="exercicio-9">Exercício 9<a class="headerlink" href="#exercicio-9" title="Permanent link">&para;</a></h3>
+<p>Calcule o centroide do maior objeto segmentado.</p>
+<h3 id="exercicio-10">Exercício 10<a class="headerlink" href="#exercicio-10" title="Permanent link">&para;</a></h3>
+<p>Compare a separação entre objeto e fundo usando HSV e Lab.</p>
+<h3 id="exercicio-11">Exercício 11<a class="headerlink" href="#exercicio-11" title="Permanent link">&para;</a></h3>
+<p>Implemente um programa que permita clicar em pixels e mostre seus valores BGR e HSV.</p>
+<h3 id="exercicio-12">Exercício 12<a class="headerlink" href="#exercicio-12" title="Permanent link">&para;</a></h3>
+<p>Colete valores HSV de uma ROI e calcule percentis 5 e 95 para cada canal.</p>
+<h3 id="exercicio-13">Exercício 13<a class="headerlink" href="#exercicio-13" title="Permanent link">&para;</a></h3>
+<p>Explique por que copiar limites HSV de um tutorial da internet pode falhar em sua câmera.</p>
+<hr />
+<h2 id="sintese">Síntese<a class="headerlink" href="#sintese" title="Permanent link">&para;</a></h2>
+<p>Espaços de cor reorganizam informação. HSV torna explícitas matiz, saturação e brilho, o que facilita regras de segmentação cromática, mas não elimina problemas de iluminação. Uma boa segmentação por cor depende de calibração, validação em condições reais e integração com outras pistas quando a cor isolada não é suficiente.</p>
+<hr />
+<h2 id="referencias">Referências<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<p>GONZALEZ, Rafael C.; WOODS, Richard E. <em>Processamento Digital de Imagens</em>. 3. ed. São Paulo: Pearson, 2010.</p>
+<p>SZELISKI, Richard. <em>Computer Vision: Algorithms and Applications</em>. 2. ed. Cham: Springer, 2022.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

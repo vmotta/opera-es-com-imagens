@@ -1,0 +1,2586 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Curso didático de processamento de imagens e visão computacional">
+      
+      
+        <meta name="author" content="Vinícius da Rocha Motta">
+      
+      
+      
+        <link rel="prev" href="../03-filtros/">
+      
+      
+        <link rel="next" href="../05-contornos/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>4. Limiarização e morfologia - Operações com Imagens</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Atkinson+Hyperlegible:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Atkinson Hyperlegible";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#4-limiarizacao-e-morfologia-matematica" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Operações com Imagens" class="md-header__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Operações com Imagens
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4. Limiarização e morfologia
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Usar tema escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Usar tema escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Usar tema claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Usar tema claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Operações com Imagens" class="md-nav__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Operações com Imagens
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../como-estudar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Como estudar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ambiente/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Preparação do ambiente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Imagem digital e OpenCV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-transformacoes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformações geométricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-filtros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Filtros, convolução e bordas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Limiarização e morfologia
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Limiarização e morfologia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#41-da-intensidade-para-uma-decisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Da intensidade para uma decisão
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 Da intensidade para uma decisão">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-catraca-de-altura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: catraca de altura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#42-limiar-fixo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Limiar fixo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2 Limiar fixo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#43-polaridade-importa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Polaridade importa
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#44-o-histograma-ajuda-a-escolher" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 O histograma ajuda a escolher
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 O histograma ajuda a escolher">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-duas-turmas-em-uma-prova" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: duas turmas em uma prova
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#45-metodo-de-otsu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Método de Otsu
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.5 Método de Otsu">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mas-otsu-nao-ve-objetos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mas Otsu não “vê objetos”
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#46-por-que-suavizar-antes-de-otsu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Por que suavizar antes de Otsu?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#47-limiar-adaptativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Limiar adaptativo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.7 Limiar adaptativo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-regras-locais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: regras locais
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#48-o-que-e-morfologia-matematica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.8 O que é morfologia matemática?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.8 O que é morfologia matemática?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-carimbo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: carimbo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#49-criando-elementos-estruturantes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.9 Criando elementos estruturantes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#410-erosao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.10 Erosão
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.10 Erosão">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intuicao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intuição
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risco
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#411-dilatacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.11 Dilatação
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.11 Dilatação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usos_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analogia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#412-abertura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.12 Abertura
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.12 Abertura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-peneira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: peneira
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#413-fechamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.13 Fechamento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.13 Fechamento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-rejunte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: rejunte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#414-gradiente-morfologico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.14 Gradiente morfológico
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#415-top-hat-e-black-hat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15 Top-hat e black-hat
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#416-o-tamanho-do-kernel-representa-uma-escala" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.16 O tamanho do kernel representa uma escala
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#417-iteracoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.17 Iterações
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#418-pipeline-tipico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.18 Pipeline típico
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#419-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.19 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#420-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.20 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#421-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.21 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-contornos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Contornos e características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-cores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Espaços de cores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detecção e movimento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Detecção e movimento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-deteccao-classica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Template Matching e Haar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-feature-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Feature Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-video/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Vídeo e fluxo óptico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes neurais e aplicações
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redes neurais e aplicações
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-dnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. CNNs e módulo DNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-yolo-nms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. YOLO e NMS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-pose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Estimativa de pose
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-faces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Reconhecimento facial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-ocr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. OCR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-estereo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Visão estéreo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16. Construindo CNNs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-gans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17. GANs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-yolo-moderno/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18. YOLO moderno
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#41-da-intensidade-para-uma-decisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Da intensidade para uma decisão
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 Da intensidade para uma decisão">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-catraca-de-altura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: catraca de altura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#42-limiar-fixo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Limiar fixo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2 Limiar fixo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#43-polaridade-importa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Polaridade importa
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#44-o-histograma-ajuda-a-escolher" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 O histograma ajuda a escolher
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 O histograma ajuda a escolher">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-duas-turmas-em-uma-prova" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: duas turmas em uma prova
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#45-metodo-de-otsu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Método de Otsu
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.5 Método de Otsu">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mas-otsu-nao-ve-objetos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mas Otsu não “vê objetos”
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#46-por-que-suavizar-antes-de-otsu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Por que suavizar antes de Otsu?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#47-limiar-adaptativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Limiar adaptativo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.7 Limiar adaptativo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-regras-locais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: regras locais
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#48-o-que-e-morfologia-matematica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.8 O que é morfologia matemática?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.8 O que é morfologia matemática?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-carimbo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: carimbo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#49-criando-elementos-estruturantes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.9 Criando elementos estruturantes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#410-erosao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.10 Erosão
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.10 Erosão">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intuicao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intuição
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risco
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#411-dilatacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.11 Dilatação
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.11 Dilatação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usos_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analogia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#412-abertura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.12 Abertura
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.12 Abertura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-peneira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: peneira
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#413-fechamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.13 Fechamento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.13 Fechamento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-rejunte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: rejunte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#414-gradiente-morfologico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.14 Gradiente morfológico
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#415-top-hat-e-black-hat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15 Top-hat e black-hat
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#416-o-tamanho-do-kernel-representa-uma-escala" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.16 O tamanho do kernel representa uma escala
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#417-iteracoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.17 Iterações
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#418-pipeline-tipico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.18 Pipeline típico
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#419-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.19 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#420-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.20 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#421-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.21 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="4-limiarizacao-e-morfologia-matematica">4. Limiarização e morfologia matemática<a class="headerlink" href="#4-limiarizacao-e-morfologia-matematica" title="Permanent link">&para;</a></h1>
+<h2 id="o-que-voce-aprendera">O que você aprenderá<a class="headerlink" href="#o-que-voce-aprendera" title="Permanent link">&para;</a></h2>
+<p>Neste capítulo, você aprenderá a transformar uma imagem de intensidades em uma <strong>decisão espacial</strong>: quais pixels pertencem ao objeto e quais pertencem ao fundo. Depois, aprenderá a corrigir pequenas imperfeições dessa decisão por meio de operações morfológicas.</p>
+<p>Ao final, você deverá conseguir:</p>
+<ol>
+<li>compreender o conceito de limiarização;</li>
+<li>diferenciar limiar fixo, Otsu e limiar adaptativo;</li>
+<li>interpretar um histograma antes de escolher o método;</li>
+<li>compreender polaridade de primeiro plano e fundo;</li>
+<li>criar elementos estruturantes;</li>
+<li>explicar erosão e dilatação;</li>
+<li>explicar abertura e fechamento;</li>
+<li>usar gradiente morfológico;</li>
+<li>relacionar tamanho de kernel à escala do objeto;</li>
+<li>compreender por que morfologia não “entende” semanticamente a imagem;</li>
+<li>montar pipelines de binarização + morfologia;</li>
+<li>diagnosticar falhas causadas por iluminação irregular.</li>
+</ol>
+<p>A limiarização é uma das formas mais simples de segmentação de imagens, mas seu desempenho depende fortemente da distribuição das intensidades e das condições de aquisição (GONZALEZ; WOODS, 2010). O método de Otsu automatiza a escolha do limiar sob uma hipótese estatística de separação entre classes (OTSU, 1979).</p>
+<hr />
+<h2 id="41-da-intensidade-para-uma-decisao">4.1 Da intensidade para uma decisão<a class="headerlink" href="#41-da-intensidade-para-uma-decisao" title="Permanent link">&para;</a></h2>
+<p>Uma imagem em tons de cinza possui diversos níveis. A limiarização transforma essa escala em uma decisão binária.</p>
+<p>Para um limiar <code>T</code>:</p>
+<div class="arithmatex">\[
+B(y,x)=\begin{cases}
+255,&amp;I(y,x)&gt;T\\
+0,&amp;\text{caso contrário}
+\end{cases}
+\]</div>
+<h3 id="analogia-catraca-de-altura">Analogia: catraca de altura<a class="headerlink" href="#analogia-catraca-de-altura" title="Permanent link">&para;</a></h3>
+<p>A altura de uma pessoa pode assumir muitos valores, mas a catraca toma uma decisão binária: passa ou não passa. O limiar faz algo parecido com a intensidade do pixel.</p>
+<hr />
+<h2 id="42-limiar-fixo">4.2 Limiar fixo<a class="headerlink" href="#42-limiar-fixo" title="Permanent link">&para;</a></h2>
+<h3 id="exemplo-1">Exemplo 1<a class="headerlink" href="#exemplo-1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">cinza</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">imagem</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">_</span><span class="p">,</span> <span class="n">binaria</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">cinza</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="mi">127</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="mi">255</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Aqui:</p>
+<ul>
+<li>valores maiores que <code>127</code> viram <code>255</code>;</li>
+<li>os demais viram <code>0</code>.</li>
+</ul>
+<p>O primeiro valor retornado é o limiar utilizado; o segundo é a imagem resultante.</p>
+<hr />
+<h2 id="43-polaridade-importa">4.3 Polaridade importa<a class="headerlink" href="#43-polaridade-importa" title="Permanent link">&para;</a></h2>
+<p>Com <code>THRESH_BINARY</code>, pixels acima do limiar ficam brancos. Com <code>THRESH_BINARY_INV</code>, ocorre o contrário.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">_</span><span class="p">,</span> <span class="n">invertida</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">cinza</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="mi">127</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="mi">255</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY_INV</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Morfologia depende de quem é o primeiro plano</p>
+<p>Em muitas explicações, considera-se que o objeto de interesse é branco. Se o objeto estiver preto, erosão e dilatação parecerão produzir o efeito “contrário”.</p>
+</div>
+<hr />
+<h2 id="44-o-histograma-ajuda-a-escolher">4.4 O histograma ajuda a escolher<a class="headerlink" href="#44-o-histograma-ajuda-a-escolher" title="Permanent link">&para;</a></h2>
+<p>Um histograma mostra quantos pixels existem em cada faixa de intensidade.</p>
+<p>Se uma imagem contém:</p>
+<ul>
+<li>fundo escuro;</li>
+<li>objeto claro;</li>
+</ul>
+<p>podem aparecer dois grupos separados.</p>
+<h3 id="analogia-duas-turmas-em-uma-prova">Analogia: duas turmas em uma prova<a class="headerlink" href="#analogia-duas-turmas-em-uma-prova" title="Permanent link">&para;</a></h3>
+<p>Imagine as notas de duas turmas: uma concentrada perto de 30 e outra perto de 80. Um valor intermediário pode separar razoavelmente os grupos. O histograma bimodal possui lógica semelhante.</p>
+<hr />
+<h2 id="45-metodo-de-otsu">4.5 Método de Otsu<a class="headerlink" href="#45-metodo-de-otsu" title="Permanent link">&para;</a></h2>
+<p>O método proposto por Otsu (1979) testa limiares possíveis e seleciona aquele que melhor separa duas classes em termos de variância intra-classe.</p>
+<h3 id="exemplo-2">Exemplo 2<a class="headerlink" href="#exemplo-2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">limiar</span><span class="p">,</span> <span class="n">binaria_otsu</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">cinza</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="mi">255</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_OTSU</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"Limiar escolhido:"</span><span class="p">,</span> <span class="n">limiar</span><span class="p">)</span>
+</span></code></pre></div>
+<p>A vantagem é não escolher manualmente <code>T</code>.</p>
+<h3 id="mas-otsu-nao-ve-objetos">Mas Otsu não “vê objetos”<a class="headerlink" href="#mas-otsu-nao-ve-objetos" title="Permanent link">&para;</a></h3>
+<p>Ele analisa distribuição de intensidades. Se a cena tiver iluminação muito irregular ou várias classes sobrepostas, a separação pode falhar.</p>
+<hr />
+<h2 id="46-por-que-suavizar-antes-de-otsu">4.6 Por que suavizar antes de Otsu?<a class="headerlink" href="#46-por-que-suavizar-antes-de-otsu" title="Permanent link">&para;</a></h2>
+<p>Ruído cria pequenas flutuações no histograma.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">suave</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span><span class="p">(</span><span class="n">cinza</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">_</span><span class="p">,</span> <span class="n">otsu</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">suave</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="mi">255</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_OTSU</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Isso não é obrigatório, mas pode estabilizar a decisão quando o ruído é pequeno e distribuído.</p>
+<hr />
+<h2 id="47-limiar-adaptativo">4.7 Limiar adaptativo<a class="headerlink" href="#47-limiar-adaptativo" title="Permanent link">&para;</a></h2>
+<p>Quando a iluminação muda ao longo da imagem, um único <code>T</code> pode ser inadequado.</p>
+<p>O limiar adaptativo calcula uma decisão local.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">adaptativa</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">adaptiveThreshold</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">cinza</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="mi">255</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">ADAPTIVE_THRESH_GAUSSIAN_C</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="mi">21</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="mi">5</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="analogia-regras-locais">Analogia: regras locais<a class="headerlink" href="#analogia-regras-locais" title="Permanent link">&para;</a></h3>
+<p>Em vez de usar uma única média salarial para comparar bairros muito diferentes, calculamos uma referência dentro de cada região.</p>
+<hr />
+<h2 id="48-o-que-e-morfologia-matematica">4.8 O que é morfologia matemática?<a class="headerlink" href="#48-o-que-e-morfologia-matematica" title="Permanent link">&para;</a></h2>
+<p>A morfologia analisa a forma de regiões usando um <strong>elemento estruturante</strong>. Em uma imagem binária, esse elemento atua como uma pequena sonda que percorre a máscara (GONZALEZ; WOODS, 2010).</p>
+<h3 id="analogia-carimbo">Analogia: carimbo<a class="headerlink" href="#analogia-carimbo" title="Permanent link">&para;</a></h3>
+<p>Imagine um carimbo rígido percorrendo uma forma. Dependendo da operação, perguntamos se o carimbo cabe totalmente ou se basta tocar o objeto.</p>
+<hr />
+<h2 id="49-criando-elementos-estruturantes">4.9 Criando elementos estruturantes<a class="headerlink" href="#49-criando-elementos-estruturantes" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">retangular</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getStructuringElement</span><span class="p">(</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_RECT</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">eliptico</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getStructuringElement</span><span class="p">(</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_ELLIPSE</span><span class="p">,</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">)</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">cruz</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getStructuringElement</span><span class="p">(</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_CROSS</span><span class="p">,</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>A forma do kernel influencia quais estruturas são preservadas.</p>
+<hr />
+<h2 id="410-erosao">4.10 Erosão<a class="headerlink" href="#410-erosao" title="Permanent link">&para;</a></h2>
+<p>Na erosão, uma região branca tende a encolher.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">erodida</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">erode</span><span class="p">(</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">binaria</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">eliptico</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="intuicao">Intuição<a class="headerlink" href="#intuicao" title="Permanent link">&para;</a></h3>
+<p>Um pixel branco só permanece quando a vizinhança exigida pelo elemento estruturante também satisfaz a condição.</p>
+<h3 id="usos">Usos<a class="headerlink" href="#usos" title="Permanent link">&para;</a></h3>
+<ul>
+<li>remover pontos brancos pequenos;</li>
+<li>separar objetos ligados por pontes estreitas;</li>
+<li>reduzir espessura.</li>
+</ul>
+<h3 id="risco">Risco<a class="headerlink" href="#risco" title="Permanent link">&para;</a></h3>
+<p>Detalhes válidos também podem desaparecer.</p>
+<hr />
+<h2 id="411-dilatacao">4.11 Dilatação<a class="headerlink" href="#411-dilatacao" title="Permanent link">&para;</a></h2>
+<p>A dilatação expande regiões brancas.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">dilatada</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">dilate</span><span class="p">(</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">binaria</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">eliptico</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="usos_1">Usos<a class="headerlink" href="#usos_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>preencher pequenas falhas;</li>
+<li>conectar regiões próximas;</li>
+<li>aumentar espessura.</li>
+</ul>
+<h3 id="analogia">Analogia<a class="headerlink" href="#analogia" title="Permanent link">&para;</a></h3>
+<p>É como engrossar o traço de uma caneta.</p>
+<hr />
+<h2 id="412-abertura">4.12 Abertura<a class="headerlink" href="#412-abertura" title="Permanent link">&para;</a></h2>
+<p>Abertura é:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>erosão → dilatação
+</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">abertura</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">morphologyEx</span><span class="p">(</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">binaria</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_OPEN</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">eliptico</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Ela tende a remover pequenos objetos brancos sem manter todo o encolhimento causado pela erosão.</p>
+<h3 id="analogia-peneira">Analogia: peneira<a class="headerlink" href="#analogia-peneira" title="Permanent link">&para;</a></h3>
+<p>Partículas menores do que a abertura da peneira desaparecem; estruturas grandes continuam.</p>
+<hr />
+<h2 id="413-fechamento">4.13 Fechamento<a class="headerlink" href="#413-fechamento" title="Permanent link">&para;</a></h2>
+<p>Fechamento é:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>dilatação → erosão
+</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">fechamento</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">morphologyEx</span><span class="p">(</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">binaria</span><span class="p">,</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_CLOSE</span><span class="p">,</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">eliptico</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Ele tende a fechar pequenos buracos e fendas pretas.</p>
+<h3 id="analogia-rejunte">Analogia: rejunte<a class="headerlink" href="#analogia-rejunte" title="Permanent link">&para;</a></h3>
+<p>É como preencher pequenas fissuras e depois remover o excesso.</p>
+<hr />
+<h2 id="414-gradiente-morfologico">4.14 Gradiente morfológico<a class="headerlink" href="#414-gradiente-morfologico" title="Permanent link">&para;</a></h2>
+<p>O gradiente morfológico é a diferença entre dilatação e erosão.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">gradiente</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">morphologyEx</span><span class="p">(</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">binaria</span><span class="p">,</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_GRADIENT</span><span class="p">,</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">eliptico</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>O resultado destaca uma faixa ao redor das fronteiras.</p>
+<hr />
+<h2 id="415-top-hat-e-black-hat">4.15 Top-hat e black-hat<a class="headerlink" href="#415-top-hat-e-black-hat" title="Permanent link">&para;</a></h2>
+<p>Essas operações são úteis para destacar estruturas pequenas em relação ao fundo.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">tophat</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">morphologyEx</span><span class="p">(</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">cinza</span><span class="p">,</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_TOPHAT</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">kernel</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="p">)</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="n">blackhat</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">morphologyEx</span><span class="p">(</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="n">cinza</span><span class="p">,</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_BLACKHAT</span><span class="p">,</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="n">kernel</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="p">)</span>
+</span></code></pre></div>
+<ul>
+<li><em>top-hat</em>: realça elementos claros menores que o elemento estruturante;</li>
+<li><em>black-hat</em>: realça elementos escuros menores que o elemento estruturante.</li>
+</ul>
+<p>São úteis, por exemplo, em preparação de texto e correção local de iluminação.</p>
+<hr />
+<h2 id="416-o-tamanho-do-kernel-representa-uma-escala">4.16 O tamanho do kernel representa uma escala<a class="headerlink" href="#416-o-tamanho-do-kernel-representa-uma-escala" title="Permanent link">&para;</a></h2>
+<p>Um kernel <code>3 × 3</code> e um <code>15 × 15</code> têm efeitos muito diferentes.</p>
+<p>Se um defeito mede cerca de 4 pixels, um kernel pequeno pode removê-lo. Se um objeto válido também mede 4 pixels, o mesmo kernel pode destruí-lo.</p>
+<div class="admonition important">
+<p class="admonition-title">Pixels não são uma unidade física universal</p>
+<p>Se a resolução da câmera dobrar, o mesmo defeito físico poderá ocupar o dobro de pixels. Parâmetros morfológicos precisam considerar a escala do sistema.</p>
+</div>
+<hr />
+<h2 id="417-iteracoes">4.17 Iterações<a class="headerlink" href="#417-iteracoes" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">dilatada</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">dilate</span><span class="p">(</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">binaria</span><span class="p">,</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">kernel</span><span class="p">,</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">iterations</span><span class="o">=</span><span class="mi">3</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Três iterações ampliam o efeito. Isso pode ser útil, mas também pode alterar profundamente a forma.</p>
+<p>Nunca escolha iterações apenas porque “parece funcionar” em uma única imagem.</p>
+<hr />
+<h2 id="418-pipeline-tipico">4.18 Pipeline típico<a class="headerlink" href="#418-pipeline-tipico" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>imagem
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  ↓
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>tons de cinza
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  ↓
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>suavização
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  ↓
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>limiarização
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>  ↓
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>abertura para remover pontos
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  ↓
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>fechamento para preencher falhas
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>  ↓
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>contornos / medidas
+</span></code></pre></div>
+<p>A ordem importa. Fazer fechamento antes de abertura pode produzir um resultado diferente.</p>
+<hr />
+<h2 id="419-exemplo-integrado-do-capitulo">4.19 Exemplo integrado do capítulo<a class="headerlink" href="#419-exemplo-integrado-do-capitulo" title="Permanent link">&para;</a></h2>
+<p>O <a href="https://github.com/vmotta/opera-es-com-imagens/blob/main/exemplos/cap04_limiar_morfologia.py">código do capítulo 4</a> cria um objeto com defeitos e compara técnicas de segmentação e morfologia.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>python<span class="w"> </span>-m<span class="w"> </span>exemplos.cap04_limiar_morfologia
+</span></code></pre></div>
+<p>Pipeline ampliado:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>imagem com iluminação/ruído
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>   ↓
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>limiar fixo
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>   ↓
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Otsu
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>   ↓
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>limiar adaptativo
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>   ↓
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>erodir / dilatar
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>   ↓
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>abrir / fechar
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>   ↓
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>gradiente
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>   ↓
+</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>painel comparativo
+</span></code></pre></div>
+<p><img alt="Efeito de erosão, dilatação, abertura e fechamento em uma máscara com defeitos" src="../../assets/resultados/cap04/painel.png" /></p>
+<hr />
+<h2 id="420-erros-comuns">4.20 Erros comuns<a class="headerlink" href="#420-erros-comuns" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa provável</th>
+<th>Correção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>objeto some após erosão</td>
+<td>kernel grande/iterações demais</td>
+<td>reduza escala</td>
+</tr>
+<tr>
+<td>buraco cresce em vez de fechar</td>
+<td>polaridade invertida</td>
+<td>confira primeiro plano</td>
+</tr>
+<tr>
+<td>Otsu falha sob sombra</td>
+<td>limiar global inadequado</td>
+<td>teste adaptativo/correção de iluminação</td>
+</tr>
+<tr>
+<td>objetos distintos se unem</td>
+<td>dilatação excessiva</td>
+<td>reduza kernel/iterações</td>
+</tr>
+<tr>
+<td>ruído não sai com abertura</td>
+<td>ruído maior que o kernel</td>
+<td>ajuste escala</td>
+</tr>
+<tr>
+<td>cantos mudam demais</td>
+<td>kernel incompatível com a forma</td>
+<td>teste elipse/cruz/retângulo</td>
+</tr>
+<tr>
+<td>resultado varia com resolução</td>
+<td>kernel fixo em pixels</td>
+<td>normalize escala</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="421-perguntas-de-revisao">4.21 Perguntas de revisão<a class="headerlink" href="#421-perguntas-de-revisao" title="Permanent link">&para;</a></h2>
+<ol>
+<li>O que a limiarização transforma?</li>
+<li>Qual diferença existe entre <code>THRESH_BINARY</code> e <code>THRESH_BINARY_INV</code>?</li>
+<li>Qual hipótese favorece Otsu?</li>
+<li>Por que Otsu pode falhar sob iluminação irregular?</li>
+<li>O que representa o elemento estruturante?</li>
+<li>O que acontece com objetos brancos na erosão?</li>
+<li>E na dilatação?</li>
+<li>Qual é a ordem da abertura?</li>
+<li>Qual é a ordem do fechamento?</li>
+<li>Por que o tamanho do kernel deve ser relacionado à escala do problema?</li>
+</ol>
+<hr />
+<h1 id="exercicios-de-fixacao">Exercícios de fixação<a class="headerlink" href="#exercicios-de-fixacao" title="Permanent link">&para;</a></h1>
+<h2 id="parte-a-limiarizacao">Parte A — limiarização<a class="headerlink" href="#parte-a-limiarizacao" title="Permanent link">&para;</a></h2>
+<h3 id="exercicio-1">Exercício 1<a class="headerlink" href="#exercicio-1" title="Permanent link">&para;</a></h3>
+<p>Crie um gradiente horizontal de <code>0</code> a <code>255</code> e aplique limiares <code>64</code>, <code>128</code> e <code>192</code>.</p>
+<h3 id="exercicio-2">Exercício 2<a class="headerlink" href="#exercicio-2" title="Permanent link">&para;</a></h3>
+<p>Crie duas regiões de intensidade <code>70</code> e <code>190</code>, adicione ruído e aplique Otsu. Registre o limiar escolhido.</p>
+<h3 id="exercicio-3">Exercício 3<a class="headerlink" href="#exercicio-3" title="Permanent link">&para;</a></h3>
+<p>Gere uma imagem com fundo em gradiente e objeto claro. Compare Otsu e <code>adaptiveThreshold</code>.</p>
+<h3 id="exercicio-4">Exercício 4<a class="headerlink" href="#exercicio-4" title="Permanent link">&para;</a></h3>
+<p>Compare <code>THRESH_BINARY</code> e <code>THRESH_BINARY_INV</code> e explique o impacto sobre a morfologia.</p>
+<h2 id="parte-b-operacoes-basicas">Parte B — operações básicas<a class="headerlink" href="#parte-b-operacoes-basicas" title="Permanent link">&para;</a></h2>
+<h3 id="exercicio-5">Exercício 5<a class="headerlink" href="#exercicio-5" title="Permanent link">&para;</a></h3>
+<p>Crie uma máscara com pontos brancos pequenos e aplique erosão com três tamanhos de kernel.</p>
+<h3 id="exercicio-6">Exercício 6<a class="headerlink" href="#exercicio-6" title="Permanent link">&para;</a></h3>
+<p>Crie dois objetos separados por três pixels e teste quantas iterações de dilatação são necessárias para uni-los.</p>
+<h3 id="exercicio-7">Exercício 7<a class="headerlink" href="#exercicio-7" title="Permanent link">&para;</a></h3>
+<p>Crie uma máscara com ruído externo e buracos internos. Aplique abertura e fechamento separadamente.</p>
+<h3 id="exercicio-8">Exercício 8<a class="headerlink" href="#exercicio-8" title="Permanent link">&para;</a></h3>
+<p>Aplique fechamento seguido de abertura e depois inverta a ordem. Compare.</p>
+<h2 id="parte-c-kernels">Parte C — kernels<a class="headerlink" href="#parte-c-kernels" title="Permanent link">&para;</a></h2>
+<h3 id="exercicio-9">Exercício 9<a class="headerlink" href="#exercicio-9" title="Permanent link">&para;</a></h3>
+<p>Compare kernels retangular, elíptico e cruz em uma forma circular.</p>
+<h3 id="exercicio-10">Exercício 10<a class="headerlink" href="#exercicio-10" title="Permanent link">&para;</a></h3>
+<p>Dobre a resolução da imagem e ajuste o kernel para manter aproximadamente o mesmo efeito físico.</p>
+<h2 id="parte-d-desafios">Parte D — desafios<a class="headerlink" href="#parte-d-desafios" title="Permanent link">&para;</a></h2>
+<h3 id="exercicio-11">Exercício 11<a class="headerlink" href="#exercicio-11" title="Permanent link">&para;</a></h3>
+<p>Implemente um pipeline que conte objetos após remover ruído por abertura.</p>
+<h3 id="exercicio-12">Exercício 12<a class="headerlink" href="#exercicio-12" title="Permanent link">&para;</a></h3>
+<p>Use <code>MORPH_TOPHAT</code> para realçar pequenos elementos claros em fundo irregular.</p>
+<h3 id="exercicio-13">Exercício 13<a class="headerlink" href="#exercicio-13" title="Permanent link">&para;</a></h3>
+<p>Use <code>MORPH_BLACKHAT</code> para destacar texto escuro sobre uma região clara com variação de iluminação.</p>
+<h3 id="exercicio-14">Exercício 14<a class="headerlink" href="#exercicio-14" title="Permanent link">&para;</a></h3>
+<p>Explique por que morfologia não pode distinguir automaticamente “ruído” de um objeto verdadeiro com o mesmo tamanho e formato.</p>
+<hr />
+<h2 id="sintese">Síntese<a class="headerlink" href="#sintese" title="Permanent link">&para;</a></h2>
+<p>Limiarizar significa converter intensidade em decisão. Morfologia significa modificar essa decisão usando uma noção explícita de vizinhança e escala. Otsu, limiar adaptativo, erosão, dilatação, abertura e fechamento são ferramentas simples, mas seu resultado depende de hipóteses sobre iluminação, polaridade, tamanho das estruturas e resolução da imagem.</p>
+<hr />
+<h2 id="referencias">Referências<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<p>GONZALEZ, Rafael C.; WOODS, Richard E. <em>Processamento Digital de Imagens</em>. 3. ed. São Paulo: Pearson, 2010.</p>
+<p>OTSU, Nobuyuki. A threshold selection method from gray-level histograms. <em>IEEE Transactions on Systems, Man, and Cybernetics</em>, v. 9, n. 1, p. 62-66, 1979.</p>
+<p>SZELISKI, Richard. <em>Computer Vision: Algorithms and Applications</em>. 2. ed. Cham: Springer, 2022.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

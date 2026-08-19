@@ -1,0 +1,2651 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Curso didático de processamento de imagens e visão computacional">
+      
+      
+        <meta name="author" content="Vinícius da Rocha Motta">
+      
+      
+      
+        <link rel="prev" href="../04-morfologia/">
+      
+      
+        <link rel="next" href="../06-cores/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>5. Contornos e características - Operações com Imagens</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Atkinson+Hyperlegible:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Atkinson Hyperlegible";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#5-contornos-e-extracao-de-caracteristicas-geometricas" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Operações com Imagens" class="md-header__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Operações com Imagens
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5. Contornos e características
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Usar tema escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Usar tema escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Usar tema claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Usar tema claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Operações com Imagens" class="md-nav__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Operações com Imagens
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../como-estudar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Como estudar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ambiente/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Preparação do ambiente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Imagem digital e OpenCV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-transformacoes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformações geométricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-filtros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Filtros, convolução e bordas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-morfologia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Limiarização e morfologia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Contornos e características
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Contornos e características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#51-bordas-e-contornos-nao-sao-a-mesma-coisa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Bordas e contornos não são a mesma coisa
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1 Bordas e contornos não são a mesma coisa">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-muro-e-planta-do-terreno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: muro e planta do terreno
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52-preparacao-da-entrada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Preparação da entrada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#53-o-retorno-nao-e-uma-imagem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 O retorno não é uma imagem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#54-chain_approx_none-versus-chain_approx_simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 CHAIN_APPROX_NONE versus CHAIN_APPROX_SIMPLE
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.4 CHAIN_APPROX_NONE versus CHAIN_APPROX_SIMPLE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-descrever-um-retangulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: descrever um retângulo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#55-modos-de-recuperacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Modos de recuperação
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.5 Modos de recuperação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#somente-externos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Somente externos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lista-simples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lista simples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hierarquia-completa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hierarquia completa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#56-hierarquia-como-arvore-de-pastas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Hierarquia como árvore de pastas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.6 Hierarquia como árvore de pastas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-diretorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: diretórios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#57-desenhando-contornos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Desenhando contornos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#58-area" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 Área
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.8 Área">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1-filtrando-objetos-pequenos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1 — filtrando objetos pequenos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#59-perimetro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 Perímetro
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#510-bounding-box-alinhada-aos-eixos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.10 Bounding box alinhada aos eixos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.10 Bounding box alinhada aos eixos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#limitacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitação
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#511-caixa-rotacionada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.11 Caixa rotacionada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.11 Caixa rotacionada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#512-momentos-geometricos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.12 Momentos geométricos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.12 Momentos geométricos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#513-por-que-m00-pode-ser-zero" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.13 Por que m00 pode ser zero?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#514-aproximacao-poligonal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.14 Aproximação poligonal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.14 Aproximação poligonal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interpretacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretação
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#515-o-papel-de-epsilon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.15 O papel de epsilon
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.15 O papel de epsilon">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-desenhar-uma-costa-em-um-mapa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: desenhar uma costa em um mapa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#516-circularidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.16 Circularidade
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.16 Circularidade">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#517-razao-de-aspecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.17 Razão de aspecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#518-ordenacao-de-contornos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.18 Ordenação de contornos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.18 Ordenação de contornos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#519-classificador-geometrico-simples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.19 Classificador geométrico simples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#520-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.20 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#521-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.21 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#522-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.22 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-cores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Espaços de cores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detecção e movimento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Detecção e movimento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-deteccao-classica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Template Matching e Haar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-feature-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Feature Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-video/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Vídeo e fluxo óptico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes neurais e aplicações
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redes neurais e aplicações
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-dnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. CNNs e módulo DNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-yolo-nms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. YOLO e NMS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-pose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Estimativa de pose
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-faces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Reconhecimento facial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-ocr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. OCR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-estereo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Visão estéreo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16. Construindo CNNs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-gans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17. GANs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-yolo-moderno/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18. YOLO moderno
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#51-bordas-e-contornos-nao-sao-a-mesma-coisa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Bordas e contornos não são a mesma coisa
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1 Bordas e contornos não são a mesma coisa">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-muro-e-planta-do-terreno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: muro e planta do terreno
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52-preparacao-da-entrada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Preparação da entrada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#53-o-retorno-nao-e-uma-imagem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 O retorno não é uma imagem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#54-chain_approx_none-versus-chain_approx_simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 CHAIN_APPROX_NONE versus CHAIN_APPROX_SIMPLE
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.4 CHAIN_APPROX_NONE versus CHAIN_APPROX_SIMPLE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-descrever-um-retangulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: descrever um retângulo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#55-modos-de-recuperacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Modos de recuperação
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.5 Modos de recuperação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#somente-externos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Somente externos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lista-simples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lista simples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hierarquia-completa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hierarquia completa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#56-hierarquia-como-arvore-de-pastas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Hierarquia como árvore de pastas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.6 Hierarquia como árvore de pastas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-diretorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: diretórios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#57-desenhando-contornos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Desenhando contornos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#58-area" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 Área
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.8 Área">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1-filtrando-objetos-pequenos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1 — filtrando objetos pequenos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#59-perimetro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 Perímetro
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#510-bounding-box-alinhada-aos-eixos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.10 Bounding box alinhada aos eixos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.10 Bounding box alinhada aos eixos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#limitacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitação
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#511-caixa-rotacionada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.11 Caixa rotacionada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.11 Caixa rotacionada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#512-momentos-geometricos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.12 Momentos geométricos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.12 Momentos geométricos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#513-por-que-m00-pode-ser-zero" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.13 Por que m00 pode ser zero?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#514-aproximacao-poligonal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.14 Aproximação poligonal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.14 Aproximação poligonal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interpretacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretação
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#515-o-papel-de-epsilon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.15 O papel de epsilon
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.15 O papel de epsilon">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-desenhar-uma-costa-em-um-mapa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: desenhar uma costa em um mapa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#516-circularidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.16 Circularidade
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.16 Circularidade">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#517-razao-de-aspecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.17 Razão de aspecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#518-ordenacao-de-contornos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.18 Ordenação de contornos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.18 Ordenação de contornos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#519-classificador-geometrico-simples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.19 Classificador geométrico simples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#520-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.20 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#521-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.21 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#522-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.22 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="5-contornos-e-extracao-de-caracteristicas-geometricas">5. Contornos e extração de características geométricas<a class="headerlink" href="#5-contornos-e-extracao-de-caracteristicas-geometricas" title="Permanent link">&para;</a></h1>
+<h2 id="o-que-voce-aprendera">O que você aprenderá<a class="headerlink" href="#o-que-voce-aprendera" title="Permanent link">&para;</a></h2>
+<p>Neste capítulo, você fará uma transição importante: sairemos da análise puramente pixel a pixel para uma representação <strong>vetorial da forma dos objetos</strong>. Em vez de perguntar apenas “qual é o valor deste pixel?”, começaremos a perguntar “quantos objetos existem?”, “qual é a área?”, “onde está o centro?”, “qual é a forma?” e “qual é a orientação?”.</p>
+<p>Ao final, você deverá conseguir:</p>
+<ol>
+<li>diferenciar borda de contorno;</li>
+<li>preparar corretamente uma imagem binária para <code>findContours</code>;</li>
+<li>compreender o formato da lista de contornos;</li>
+<li>escolher modos de recuperação como <code>RETR_EXTERNAL</code> e <code>RETR_TREE</code>;</li>
+<li>interpretar a hierarquia entre contornos;</li>
+<li>calcular área e perímetro;</li>
+<li>obter caixas delimitadoras;</li>
+<li>calcular centroides por momentos;</li>
+<li>tratar o caso <code>m00 = 0</code>;</li>
+<li>aproximar formas com <code>approxPolyDP</code>;</li>
+<li>calcular circularidade;</li>
+<li>ordenar contornos de forma determinística;</li>
+<li>filtrar ruído por medidas geométricas;</li>
+<li>construir classificadores simples baseados em forma.</li>
+</ol>
+<p>Contornos são uma ponte entre segmentação e análise estrutural da cena. Eles transformam regiões binárias em sequências ordenadas de pontos, permitindo medições geométricas e descrições de forma (GONZALEZ; WOODS, 2010; SZELISKI, 2022).</p>
+<hr />
+<h2 id="51-bordas-e-contornos-nao-sao-a-mesma-coisa">5.1 Bordas e contornos não são a mesma coisa<a class="headerlink" href="#51-bordas-e-contornos-nao-sao-a-mesma-coisa" title="Permanent link">&para;</a></h2>
+<p>Uma <strong>borda</strong> é uma resposta local a uma mudança de intensidade.</p>
+<p>Um <strong>contorno</strong> é uma sequência organizada de coordenadas que descreve a fronteira de uma região binária.</p>
+<h3 id="analogia-muro-e-planta-do-terreno">Analogia: muro e planta do terreno<a class="headerlink" href="#analogia-muro-e-planta-do-terreno" title="Permanent link">&para;</a></h3>
+<p>Uma borda é como perceber que existe um muro quando você se aproxima. Um contorno é como desenhar, em uma planta, todo o percurso desse muro ao redor do terreno.</p>
+<p>O detector de Canny pode gerar fragmentos. <code>findContours</code>, por sua vez, percorre componentes conectados em uma máscara binária e devolve estruturas de pontos.</p>
+<hr />
+<h2 id="52-preparacao-da-entrada">5.2 Preparação da entrada<a class="headerlink" href="#52-preparacao-da-entrada" title="Permanent link">&para;</a></h2>
+<p><code>findContours</code> deve receber uma imagem de um canal, normalmente binária.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">cinza</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">imagem</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">_</span><span class="p">,</span> <span class="n">binaria</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">cinza</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="mi">127</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="mi">255</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Depois:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">contornos</span><span class="p">,</span> <span class="n">hierarquia</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findContours</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">binaria</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">RETR_EXTERNAL</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">CHAIN_APPROX_SIMPLE</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="53-o-retorno-nao-e-uma-imagem">5.3 O retorno não é uma imagem<a class="headerlink" href="#53-o-retorno-nao-e-uma-imagem" title="Permanent link">&para;</a></h2>
+<p><code>contornos</code> é uma lista.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">contornos</span><span class="p">))</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">contornos</span><span class="p">))</span>
+</span></code></pre></div>
+<p>Cada elemento contém uma sequência de pontos <code>(x, y)</code>.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">primeiro</span> <span class="o">=</span> <span class="n">contornos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">primeiro</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Em geral, a estrutura é semelhante a:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>(N, 1, 2)
+</span></code></pre></div>
+<p>em que <code>N</code> é a quantidade de pontos armazenados.</p>
+<hr />
+<h2 id="54-chain_approx_none-versus-chain_approx_simple">5.4 <code>CHAIN_APPROX_NONE</code> versus <code>CHAIN_APPROX_SIMPLE</code><a class="headerlink" href="#54-chain_approx_none-versus-chain_approx_simple" title="Permanent link">&para;</a></h2>
+<p>Com:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">cv2</span><span class="o">.</span><span class="n">CHAIN_APPROX_NONE</span>
+</span></code></pre></div>
+<p>muitos pontos ao longo da fronteira são preservados.</p>
+<p>Com:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">cv2</span><span class="o">.</span><span class="n">CHAIN_APPROX_SIMPLE</span>
+</span></code></pre></div>
+<p>segmentos retos são comprimidos.</p>
+<h3 id="analogia-descrever-um-retangulo">Analogia: descrever um retângulo<a class="headerlink" href="#analogia-descrever-um-retangulo" title="Permanent link">&para;</a></h3>
+<p>Você pode registrar cada centímetro dos quatro lados ou apenas guardar os quatro cantos. Para reconstruir o retângulo, os cantos são suficientes.</p>
+<hr />
+<h2 id="55-modos-de-recuperacao">5.5 Modos de recuperação<a class="headerlink" href="#55-modos-de-recuperacao" title="Permanent link">&para;</a></h2>
+<h3 id="somente-externos">Somente externos<a class="headerlink" href="#somente-externos" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">cv2</span><span class="o">.</span><span class="n">RETR_EXTERNAL</span>
+</span></code></pre></div>
+<p>Ignora relações internas. Útil quando desejamos contar objetos externos separados.</p>
+<h3 id="lista-simples">Lista simples<a class="headerlink" href="#lista-simples" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">cv2</span><span class="o">.</span><span class="n">RETR_LIST</span>
+</span></code></pre></div>
+<p>Recupera contornos sem organizar relações pai-filho.</p>
+<h3 id="hierarquia-completa">Hierarquia completa<a class="headerlink" href="#hierarquia-completa" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">cv2</span><span class="o">.</span><span class="n">RETR_TREE</span>
+</span></code></pre></div>
+<p>Preserva relações entre contornos internos e externos.</p>
+<hr />
+<h2 id="56-hierarquia-como-arvore-de-pastas">5.6 Hierarquia como árvore de pastas<a class="headerlink" href="#56-hierarquia-como-arvore-de-pastas" title="Permanent link">&para;</a></h2>
+<p>Imagine um anel:</p>
+<ul>
+<li>existe um contorno externo;</li>
+<li>existe um contorno interno correspondente ao buraco.</li>
+</ul>
+<p>Com <code>RETR_TREE</code>, a hierarquia informa relações como:</p>
+<ul>
+<li>próximo;</li>
+<li>anterior;</li>
+<li>primeiro filho;</li>
+<li>pai.</li>
+</ul>
+<h3 id="analogia-diretorios">Analogia: diretórios<a class="headerlink" href="#analogia-diretorios" title="Permanent link">&para;</a></h3>
+<p>Uma pasta pode conter outra pasta. Da mesma forma, um contorno pode conter outro.</p>
+<hr />
+<h2 id="57-desenhando-contornos">5.7 Desenhando contornos<a class="headerlink" href="#57-desenhando-contornos" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">saida</span> <span class="o">=</span> <span class="n">imagem</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">cv2</span><span class="o">.</span><span class="n">drawContours</span><span class="p">(</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">saida</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">contornos</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="mi">2</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>O índice <code>-1</code> significa desenhar todos.</p>
+<hr />
+<h2 id="58-area">5.8 Área<a class="headerlink" href="#58-area" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">contorno</span><span class="p">)</span>
+</span></code></pre></div>
+<p>A unidade é aproximadamente <strong>pixels quadrados</strong>.</p>
+<h3 id="exemplo-1-filtrando-objetos-pequenos">Exemplo 1 — filtrando objetos pequenos<a class="headerlink" href="#exemplo-1-filtrando-objetos-pequenos" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">contornos_validos</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">contornos</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">500</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="p">]</span>
+</span></code></pre></div>
+<p>Isso pode remover ruído, mas somente se objetos verdadeiros forem maiores que o limiar.</p>
+<div class="admonition warning">
+<p class="admonition-title">Área pequena não significa automaticamente ruído</p>
+<p>Um objeto legítimo pode ser pequeno. O limiar precisa ser definido a partir da aplicação.</p>
+</div>
+<hr />
+<h2 id="59-perimetro">5.9 Perímetro<a class="headerlink" href="#59-perimetro" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">perimetro</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">arcLength</span><span class="p">(</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">contorno</span><span class="p">,</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">closed</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><code>closed=True</code> indica uma curva fechada.</p>
+<p>Área e perímetro são usados juntos em várias medidas de forma.</p>
+<hr />
+<h2 id="510-bounding-box-alinhada-aos-eixos">5.10 Bounding box alinhada aos eixos<a class="headerlink" href="#510-bounding-box-alinhada-aos-eixos" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">boundingRect</span><span class="p">(</span><span class="n">contorno</span><span class="p">)</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">saida</span><span class="p">,</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">h</span><span class="p">),</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    <span class="mi">2</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Essa caixa permanece alinhada ao eixo da imagem.</p>
+<h3 id="limitacao">Limitação<a class="headerlink" href="#limitacao" title="Permanent link">&para;</a></h3>
+<p>Um objeto inclinado pode ocupar uma caixa muito maior do que sua área real.</p>
+<hr />
+<h2 id="511-caixa-rotacionada">5.11 Caixa rotacionada<a class="headerlink" href="#511-caixa-rotacionada" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">retangulo</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">minAreaRect</span><span class="p">(</span><span class="n">contorno</span><span class="p">)</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">caixa</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">boxPoints</span><span class="p">(</span><span class="n">retangulo</span><span class="p">)</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">caixa</span> <span class="o">=</span> <span class="n">caixa</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">cv2</span><span class="o">.</span><span class="n">drawContours</span><span class="p">(</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="n">saida</span><span class="p">,</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    <span class="p">[</span><span class="n">caixa</span><span class="p">],</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="mi">2</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><code>minAreaRect</code> busca um retângulo rotacionado que envolva o contorno com pequena área.</p>
+<h3 id="analogia">Analogia<a class="headerlink" href="#analogia" title="Permanent link">&para;</a></h3>
+<p><code>boundingRect</code> é como guardar uma régua inclinada em uma caixa que não pode girar. <code>minAreaRect</code> permite girar a caixa junto com a régua.</p>
+<hr />
+<h2 id="512-momentos-geometricos">5.12 Momentos geométricos<a class="headerlink" href="#512-momentos-geometricos" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">M</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">moments</span><span class="p">(</span><span class="n">contorno</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Os momentos resumem propriedades da distribuição espacial da região.</p>
+<p>O centroide pode ser calculado por:</p>
+<div class="arithmatex">\[
+c_x=\frac{m_{10}}{m_{00}}
+\]</div>
+<div class="arithmatex">\[
+c_y=\frac{m_{01}}{m_{00}}
+\]</div>
+<p>(GONZALEZ; WOODS, 2010).</p>
+<h3 id="exemplo-2">Exemplo 2<a class="headerlink" href="#exemplo-2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">M</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">moments</span><span class="p">(</span><span class="n">contorno</span><span class="p">)</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">if</span> <span class="n">M</span><span class="p">[</span><span class="s2">"m00"</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">cx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="s2">"m10"</span><span class="p">]</span> <span class="o">/</span> <span class="n">M</span><span class="p">[</span><span class="s2">"m00"</span><span class="p">])</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="n">cy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="s2">"m01"</span><span class="p">]</span> <span class="o">/</span> <span class="n">M</span><span class="p">[</span><span class="s2">"m00"</span><span class="p">])</span>
+</span></code></pre></div>
+<hr />
+<h2 id="513-por-que-m00-pode-ser-zero">5.13 Por que <code>m00</code> pode ser zero?<a class="headerlink" href="#513-por-que-m00-pode-ser-zero" title="Permanent link">&para;</a></h2>
+<p>Um contorno degenerado pode não possuir área significativa.</p>
+<p>Fazer:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">cx</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="s2">"m10"</span><span class="p">]</span> <span class="o">/</span> <span class="n">M</span><span class="p">[</span><span class="s2">"m00"</span><span class="p">]</span>
+</span></code></pre></div>
+<p>sem verificar pode causar divisão por zero.</p>
+<p>Sempre trate o caso explicitamente.</p>
+<hr />
+<h2 id="514-aproximacao-poligonal">5.14 Aproximação poligonal<a class="headerlink" href="#514-aproximacao-poligonal" title="Permanent link">&para;</a></h2>
+<p><code>approxPolyDP</code> simplifica um contorno.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">perimetro</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">arcLength</span><span class="p">(</span><span class="n">contorno</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.02</span> <span class="o">*</span> <span class="n">perimetro</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="n">aproximado</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">approxPolyDP</span><span class="p">(</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="n">contorno</span><span class="p">,</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="n">epsilon</span><span class="p">,</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    <span class="kc">True</span>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="interpretacao">Interpretação<a class="headerlink" href="#interpretacao" title="Permanent link">&para;</a></h3>
+<ul>
+<li>3 vértices → candidato a triângulo;</li>
+<li>4 vértices → candidato a quadrilátero;</li>
+<li>muitos vértices → curva mais complexa.</li>
+</ul>
+<p>Mas o número de vértices depende de <code>epsilon</code> e do ruído.</p>
+<hr />
+<h2 id="515-o-papel-de-epsilon">5.15 O papel de <code>epsilon</code><a class="headerlink" href="#515-o-papel-de-epsilon" title="Permanent link">&para;</a></h2>
+<p>Valor pequeno:</p>
+<ul>
+<li>mantém mais detalhes;</li>
+<li>mais vértices.</li>
+</ul>
+<p>Valor grande:</p>
+<ul>
+<li>simplifica mais;</li>
+<li>pode apagar detalhes importantes.</li>
+</ul>
+<h3 id="analogia-desenhar-uma-costa-em-um-mapa">Analogia: desenhar uma costa em um mapa<a class="headerlink" href="#analogia-desenhar-uma-costa-em-um-mapa" title="Permanent link">&para;</a></h3>
+<p>Em um mapa muito detalhado, registramos pequenas reentrâncias. Em um mapa simplificado, representamos apenas grandes mudanças de direção.</p>
+<hr />
+<h2 id="516-circularidade">5.16 Circularidade<a class="headerlink" href="#516-circularidade" title="Permanent link">&para;</a></h2>
+<p>Uma medida clássica é:</p>
+<div class="arithmatex">\[
+C=\frac{4\pi A}{P^2}
+\]</div>
+<p>em que:</p>
+<ul>
+<li><code>A</code> = área;</li>
+<li><code>P</code> = perímetro.</li>
+</ul>
+<h3 id="exemplo-3">Exemplo 3<a class="headerlink" href="#exemplo-3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="n">area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">contorno</span><span class="p">)</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="n">perimetro</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">arcLength</span><span class="p">(</span><span class="n">contorno</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="k">if</span> <span class="n">perimetro</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="n">circularidade</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">area</span> <span class="o">/</span> <span class="p">(</span><span class="n">perimetro</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Um círculo ideal tende a valor próximo de <code>1</code>. Formas alongadas tendem a valores menores.</p>
+<p>Isso não é um reconhecedor universal: resolução, serrilhamento e ruído alteram área e perímetro.</p>
+<hr />
+<h2 id="517-razao-de-aspecto">5.17 Razão de aspecto<a class="headerlink" href="#517-razao-de-aspecto" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">boundingRect</span><span class="p">(</span><span class="n">contorno</span><span class="p">)</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">razao</span> <span class="o">=</span> <span class="n">w</span> <span class="o">/</span> <span class="n">h</span>
+</span></code></pre></div>
+<p>Uma placa horizontal, por exemplo, tende a ter razão maior que <code>1</code>.</p>
+<p>Combine medidas em vez de confiar em uma só.</p>
+<hr />
+<h2 id="518-ordenacao-de-contornos">5.18 Ordenação de contornos<a class="headerlink" href="#518-ordenacao-de-contornos" title="Permanent link">&para;</a></h2>
+<p>A ordem retornada por <code>findContours</code> não deve ser tratada como significado semântico.</p>
+<p>Se você quer numerar objetos da esquerda para a direita:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">contornos</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>    <span class="n">contornos</span><span class="p">,</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>    <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">cv2</span><span class="o">.</span><span class="n">boundingRect</span><span class="p">(</span><span class="n">c</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="analogia_1">Analogia<a class="headerlink" href="#analogia_1" title="Permanent link">&para;</a></h3>
+<p>É como organizar alunos por ordem alfabética antes de numerá-los. Sem uma regra, a numeração pode variar.</p>
+<hr />
+<h2 id="519-classificador-geometrico-simples">5.19 Classificador geométrico simples<a class="headerlink" href="#519-classificador-geometrico-simples" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">classificar_forma</span><span class="p">(</span><span class="n">contorno</span><span class="p">):</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>    <span class="n">perimetro</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">arcLength</span><span class="p">(</span><span class="n">contorno</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>    <span class="n">aproximado</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">approxPolyDP</span><span class="p">(</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>        <span class="n">contorno</span><span class="p">,</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>        <span class="mf">0.02</span> <span class="o">*</span> <span class="n">perimetro</span><span class="p">,</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>        <span class="kc">True</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>    <span class="p">)</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>    <span class="n">vertices</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">aproximado</span><span class="p">)</span>
+</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>
+</span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>    <span class="k">if</span> <span class="n">vertices</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+</span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>        <span class="k">return</span> <span class="s2">"triangulo"</span>
+</span><span id="__span-23-13"><a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>    <span class="k">if</span> <span class="n">vertices</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+</span><span id="__span-23-14"><a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>        <span class="k">return</span> <span class="s2">"quadrilatero"</span>
+</span><span id="__span-23-15"><a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>    <span class="k">return</span> <span class="s2">"forma arredondada/complexa"</span>
+</span></code></pre></div>
+<p>Esse exemplo é didático. Em dados reais, combine circularidade, razão de aspecto, convexidade e tolerâncias.</p>
+<hr />
+<h2 id="520-exemplo-integrado-do-capitulo">5.20 Exemplo integrado do capítulo<a class="headerlink" href="#520-exemplo-integrado-do-capitulo" title="Permanent link">&para;</a></h2>
+<p>O <a href="https://github.com/vmotta/opera-es-com-imagens/blob/main/exemplos/cap05_contornos.py">código do capítulo 5</a> cria várias formas, extrai os contornos e calcula características.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>python<span class="w"> </span>-m<span class="w"> </span>exemplos.cap05_contornos
+</span></code></pre></div>
+<p>Pipeline:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>formas sintéticas
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>   ↓
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>binarização
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>   ↓
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>findContours
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>   ↓
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>filtro por área
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>   ↓
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>ordenação espacial
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>   ↓
+</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>área / perímetro / centroide
+</span><span id="__span-25-12"><a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>   ↓
+</span><span id="__span-25-13"><a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>bounding boxes
+</span><span id="__span-25-14"><a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>   ↓
+</span><span id="__span-25-15"><a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>aproximação / circularidade
+</span><span id="__span-25-16"><a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>   ↓
+</span><span id="__span-25-17"><a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>anotação e relatório
+</span></code></pre></div>
+<p><img alt="Formas com bounding boxes, identificadores e centroides" src="../../assets/resultados/cap05/02_contornos_medidos.png" /></p>
+<hr />
+<h2 id="521-erros-comuns">5.21 Erros comuns<a class="headerlink" href="#521-erros-comuns" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa provável</th>
+<th>Correção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nenhum contorno</td>
+<td>máscara vazia/polaridade errada</td>
+<td>visualize a binária</td>
+</tr>
+<tr>
+<td>muitos contornos minúsculos</td>
+<td>ruído</td>
+<td>morfologia/filtro por área</td>
+</tr>
+<tr>
+<td>buracos não aparecem</td>
+<td><code>RETR_EXTERNAL</code></td>
+<td>use <code>RETR_TREE</code></td>
+</tr>
+<tr>
+<td>centroide gera erro</td>
+<td><code>m00 == 0</code></td>
+<td>teste antes de dividir</td>
+</tr>
+<tr>
+<td>retângulo ocupa área demais</td>
+<td>objeto rotacionado</td>
+<td>use <code>minAreaRect</code></td>
+</tr>
+<tr>
+<td>forma muda de classe</td>
+<td><code>epsilon</code> inadequado</td>
+<td>calibre por escala/ruído</td>
+</tr>
+<tr>
+<td>IDs mudam entre execuções</td>
+<td>ordem implícita</td>
+<td>ordene explicitamente</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="522-perguntas-de-revisao">5.22 Perguntas de revisão<a class="headerlink" href="#522-perguntas-de-revisao" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Qual a diferença entre borda e contorno?</li>
+<li>O que <code>findContours</code> retorna?</li>
+<li>Para que serve <code>CHAIN_APPROX_SIMPLE</code>?</li>
+<li>Quando usar <code>RETR_TREE</code>?</li>
+<li>Qual unidade da área de um contorno?</li>
+<li>Como calcular centroide?</li>
+<li>Por que verificar <code>m00</code>?</li>
+<li>Qual diferença entre <code>boundingRect</code> e <code>minAreaRect</code>?</li>
+<li>O que <code>epsilon</code> controla em <code>approxPolyDP</code>?</li>
+<li>Por que circularidade não é um reconhecedor perfeito?</li>
+</ol>
+<hr />
+<h1 id="exercicios-de-fixacao">Exercícios de fixação<a class="headerlink" href="#exercicios-de-fixacao" title="Permanent link">&para;</a></h1>
+<h3 id="exercicio-1">Exercício 1<a class="headerlink" href="#exercicio-1" title="Permanent link">&para;</a></h3>
+<p>Crie uma imagem com cinco objetos e conte quantos contornos externos existem.</p>
+<h3 id="exercicio-2">Exercício 2<a class="headerlink" href="#exercicio-2" title="Permanent link">&para;</a></h3>
+<p>Adicione 100 pequenos pontos de ruído e filtre contornos por área.</p>
+<h3 id="exercicio-3">Exercício 3<a class="headerlink" href="#exercicio-3" title="Permanent link">&para;</a></h3>
+<p>Crie um anel e compare <code>RETR_EXTERNAL</code> com <code>RETR_TREE</code>.</p>
+<h3 id="exercicio-4">Exercício 4<a class="headerlink" href="#exercicio-4" title="Permanent link">&para;</a></h3>
+<p>Calcule área e perímetro de um retângulo sintético e compare com os valores teóricos.</p>
+<h3 id="exercicio-5">Exercício 5<a class="headerlink" href="#exercicio-5" title="Permanent link">&para;</a></h3>
+<p>Desenhe os centroides de todos os objetos.</p>
+<h3 id="exercicio-6">Exercício 6<a class="headerlink" href="#exercicio-6" title="Permanent link">&para;</a></h3>
+<p>Rotacione um retângulo e compare <code>boundingRect</code> e <code>minAreaRect</code>.</p>
+<h3 id="exercicio-7">Exercício 7<a class="headerlink" href="#exercicio-7" title="Permanent link">&para;</a></h3>
+<p>Crie triângulo, quadrado, pentágono e círculo. Use <code>approxPolyDP</code> para contar vértices.</p>
+<h3 id="exercicio-8">Exercício 8<a class="headerlink" href="#exercicio-8" title="Permanent link">&para;</a></h3>
+<p>Varie <code>epsilon</code> entre 0,5%, 2%, 5% e 10% do perímetro. Registre o número de vértices.</p>
+<h3 id="exercicio-9">Exercício 9<a class="headerlink" href="#exercicio-9" title="Permanent link">&para;</a></h3>
+<p>Calcule circularidade de círculo, quadrado e retângulo alongado.</p>
+<h3 id="exercicio-10">Exercício 10<a class="headerlink" href="#exercicio-10" title="Permanent link">&para;</a></h3>
+<p>Ordene objetos da esquerda para a direita e escreva <code>1</code>, <code>2</code>, <code>3</code> sobre eles.</p>
+<h3 id="exercicio-11">Exercício 11<a class="headerlink" href="#exercicio-11" title="Permanent link">&para;</a></h3>
+<p>Ordene os mesmos objetos por área, do maior para o menor.</p>
+<h3 id="exercicio-12">Exercício 12<a class="headerlink" href="#exercicio-12" title="Permanent link">&para;</a></h3>
+<p>Implemente um classificador geométrico que combine número de vértices e circularidade.</p>
+<h3 id="exercicio-13">Exercício 13<a class="headerlink" href="#exercicio-13" title="Permanent link">&para;</a></h3>
+<p>Explique por que medir área em pixels quadrados não fornece automaticamente área em centímetros quadrados.</p>
+<hr />
+<h2 id="sintese">Síntese<a class="headerlink" href="#sintese" title="Permanent link">&para;</a></h2>
+<p>Contornos transformam regiões binárias em estruturas geométricas mensuráveis. Área, perímetro, caixas, momentos, vértices e circularidade permitem construir regras simples e interpretáveis. O principal cuidado é lembrar que todas essas medidas dependem da qualidade da segmentação, da escala da imagem e dos parâmetros escolhidos.</p>
+<hr />
+<h2 id="referencias">Referências<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<p>GONZALEZ, Rafael C.; WOODS, Richard E. <em>Processamento Digital de Imagens</em>. 3. ed. São Paulo: Pearson, 2010.</p>
+<p>SZELISKI, Richard. <em>Computer Vision: Algorithms and Applications</em>. 2. ed. Cham: Springer, 2022.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

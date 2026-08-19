@@ -1,0 +1,2677 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Curso didático de processamento de imagens e visão computacional">
+      
+      
+        <meta name="author" content="Vinícius da Rocha Motta">
+      
+      
+      
+        <link rel="prev" href="../15-estereo/">
+      
+      
+        <link rel="next" href="../17-gans/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>16. Construindo CNNs - Operações com Imagens</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Atkinson+Hyperlegible:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Atkinson Hyperlegible";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#16-construindo-redes-neurais-convolucionais" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Operações com Imagens" class="md-header__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Operações com Imagens
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              16. Construindo CNNs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Usar tema escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Usar tema escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Usar tema claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Usar tema claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Operações com Imagens" class="md-nav__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Operações com Imagens
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../como-estudar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Como estudar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ambiente/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Preparação do ambiente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Imagem digital e OpenCV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-transformacoes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformações geométricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-filtros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Filtros, convolução e bordas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-morfologia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Limiarização e morfologia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-contornos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Contornos e características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-cores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Espaços de cores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detecção e movimento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Detecção e movimento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-deteccao-classica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Template Matching e Haar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-feature-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Feature Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-video/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Vídeo e fluxo óptico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes neurais e aplicações
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redes neurais e aplicações
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-dnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. CNNs e módulo DNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-yolo-nms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. YOLO e NMS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-pose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Estimativa de pose
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-faces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Reconhecimento facial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-ocr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. OCR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-estereo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Visão estéreo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16. Construindo CNNs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16. Construindo CNNs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#161-por-que-nao-comecar-com-flatten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.1 Por que não começar com Flatten?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#162-conectividade-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.2 Conectividade local
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.2 Conectividade local">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-lupa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: lupa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#163-pesos-compartilhados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.3 Pesos compartilhados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#164-feature-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.4 Feature map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#165-formula-da-dimensao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.5 Fórmula da dimensão
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.5 Fórmula da dimensão">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#166-padding-same" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.6 Padding same
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#167-stride" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.7 Stride
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#168-quantos-parametros-ha-numa-convolucao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.8 Quantos parâmetros há numa convolução?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.8 Quantos parâmetros há numa convolução?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#169-relu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.9 ReLU
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.9 ReLU">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#importante" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Importante
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1610-max-pooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.10 Max Pooling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.10 Max Pooling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-resumir-um-bairro-pelo-sinal-mais-forte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: resumir um bairro pelo sinal mais forte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1611-o-que-pooling-ganha-e-perde" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.11 O que pooling ganha e perde?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1612-campo-receptivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.12 Campo receptivo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1613-flatten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.13 Flatten
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1614-global-average-pooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.14 Global Average Pooling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1615-softmax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.15 Softmax
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1616-sigmoid-para-multirrotulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.16 Sigmoid para multirrótulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1617-funcao-de-perda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.17 Função de perda
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1618-modelo-keras-didatico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.18 Modelo Keras didático
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1619-calculando-dimensoes-do-exemplo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.19 Calculando dimensões do exemplo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1620-treino-validacao-e-teste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.20 Treino, validação e teste
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.20 Treino, validação e teste">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#treino" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treino
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#teste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Teste
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1621-overfitting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.21 Overfitting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.21 Overfitting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-decorar-o-gabarito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: decorar o gabarito
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1622-data-augmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.22 Data augmentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1623-dropout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.23 Dropout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1624-weight-decay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.24 Weight decay
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1625-early-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.25 Early stopping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1626-vazamento-de-dados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.26 Vazamento de dados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1627-metrica-adequada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.27 Métrica adequada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1628-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.28 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1629-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.29 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1630-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.30 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-gans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17. GANs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-yolo-moderno/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18. YOLO moderno
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#161-por-que-nao-comecar-com-flatten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.1 Por que não começar com Flatten?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#162-conectividade-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.2 Conectividade local
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.2 Conectividade local">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-lupa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: lupa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#163-pesos-compartilhados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.3 Pesos compartilhados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#164-feature-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.4 Feature map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#165-formula-da-dimensao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.5 Fórmula da dimensão
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.5 Fórmula da dimensão">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#166-padding-same" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.6 Padding same
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#167-stride" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.7 Stride
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#168-quantos-parametros-ha-numa-convolucao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.8 Quantos parâmetros há numa convolução?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.8 Quantos parâmetros há numa convolução?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#169-relu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.9 ReLU
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.9 ReLU">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#importante" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Importante
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1610-max-pooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.10 Max Pooling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.10 Max Pooling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-resumir-um-bairro-pelo-sinal-mais-forte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: resumir um bairro pelo sinal mais forte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1611-o-que-pooling-ganha-e-perde" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.11 O que pooling ganha e perde?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1612-campo-receptivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.12 Campo receptivo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1613-flatten" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.13 Flatten
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1614-global-average-pooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.14 Global Average Pooling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1615-softmax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.15 Softmax
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1616-sigmoid-para-multirrotulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.16 Sigmoid para multirrótulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1617-funcao-de-perda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.17 Função de perda
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1618-modelo-keras-didatico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.18 Modelo Keras didático
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1619-calculando-dimensoes-do-exemplo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.19 Calculando dimensões do exemplo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1620-treino-validacao-e-teste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.20 Treino, validação e teste
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.20 Treino, validação e teste">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#treino" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treino
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#teste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Teste
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1621-overfitting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.21 Overfitting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16.21 Overfitting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-decorar-o-gabarito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: decorar o gabarito
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1622-data-augmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.22 Data augmentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1623-dropout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.23 Dropout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1624-weight-decay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.24 Weight decay
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1625-early-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.25 Early stopping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1626-vazamento-de-dados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.26 Vazamento de dados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1627-metrica-adequada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.27 Métrica adequada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1628-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.28 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1629-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.29 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1630-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16.30 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="16-construindo-redes-neurais-convolucionais">16. Construindo Redes Neurais Convolucionais<a class="headerlink" href="#16-construindo-redes-neurais-convolucionais" title="Permanent link">&para;</a></h1>
+<h2 id="o-que-voce-aprendera">O que você aprenderá<a class="headerlink" href="#o-que-voce-aprendera" title="Permanent link">&para;</a></h2>
+<p>Neste capítulo, você deixará de tratar CNN apenas como “caixa pronta de inferência” e estudará como construir uma rede convolucional de classificação. O objetivo é entender dimensões, parâmetros, ativação, pooling, perda, validação e overfitting.</p>
+<p>Ao final, deverá conseguir:</p>
+<ol>
+<li>explicar por que não é ideal achatar uma imagem logo no início;</li>
+<li>compreender conectividade local e pesos compartilhados;</li>
+<li>calcular dimensão de saída de uma convolução;</li>
+<li>compreender filtros e feature maps;</li>
+<li>calcular número de parâmetros de <code>Conv2D</code>;</li>
+<li>explicar ReLU;</li>
+<li>compreender pooling e stride;</li>
+<li>diferenciar <code>Flatten</code> e <code>GlobalAveragePooling</code>;</li>
+<li>diferenciar Softmax e Sigmoid;</li>
+<li>escolher perdas para multiclasse e multirrótulo;</li>
+<li>compreender treino, validação e teste;</li>
+<li>reconhecer overfitting;</li>
+<li>usar augmentation com cautela;</li>
+<li>compreender dropout, weight decay e early stopping;</li>
+<li>evitar vazamento de dados.</li>
+</ol>
+<p>CNNs exploram estrutura espacial e compartilhamento de pesos para aprender representações hierárquicas com menos parâmetros do que camadas densas aplicadas diretamente aos pixels (GOODFELLOW; BENGIO; COURVILLE, 2016; CHOLLET, 2021).</p>
+<hr />
+<h2 id="161-por-que-nao-comecar-com-flatten">16.1 Por que não começar com <code>Flatten</code>?<a class="headerlink" href="#161-por-que-nao-comecar-com-flatten" title="Permanent link">&para;</a></h2>
+<p>Uma imagem <code>1000 × 1000 × 3</code> possui:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>3.000.000 valores
+</span></code></pre></div>
+<p>Se conectarmos diretamente a uma camada densa de 1000 neurônios:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>≈ 3 bilhões de pesos
+</span></code></pre></div>
+<p>Isso ignora explicitamente a estrutura espacial local e cria enorme quantidade de parâmetros.</p>
+<hr />
+<h2 id="162-conectividade-local">16.2 Conectividade local<a class="headerlink" href="#162-conectividade-local" title="Permanent link">&para;</a></h2>
+<p>Uma convolução <code>3 × 3</code> observa apenas uma pequena vizinhança por vez.</p>
+<h3 id="analogia-lupa">Analogia: lupa<a class="headerlink" href="#analogia-lupa" title="Permanent link">&para;</a></h3>
+<p>Em vez de tentar analisar a fotografia inteira com uma regra diferente para cada posição, usamos uma pequena lupa que percorre a imagem procurando o mesmo padrão.</p>
+<hr />
+<h2 id="163-pesos-compartilhados">16.3 Pesos compartilhados<a class="headerlink" href="#163-pesos-compartilhados" title="Permanent link">&para;</a></h2>
+<p>O mesmo kernel é aplicado em várias posições.</p>
+<p>Isso incorpora a hipótese de que uma borda pode ser relevante no canto esquerdo ou direito.</p>
+<p>Essa propriedade reduz drasticamente a quantidade de parâmetros.</p>
+<hr />
+<h2 id="164-feature-map">16.4 Feature map<a class="headerlink" href="#164-feature-map" title="Permanent link">&para;</a></h2>
+<p>Cada filtro produz um mapa de respostas.</p>
+<p>Se uma camada possui 32 filtros:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>saída possui 32 canais
+</span></code></pre></div>
+<p>independentemente de a entrada possuir 1 ou 3 canais.</p>
+<p>Cada filtro aprende uma forma diferente de responder à entrada.</p>
+<hr />
+<h2 id="165-formula-da-dimensao">16.5 Fórmula da dimensão<a class="headerlink" href="#165-formula-da-dimensao" title="Permanent link">&para;</a></h2>
+<p>Para um eixo com:</p>
+<ul>
+<li>entrada <code>N</code>;</li>
+<li>kernel <code>K</code>;</li>
+<li>padding <code>P</code>;</li>
+<li>stride <code>S</code>;</li>
+</ul>
+<div class="arithmatex">\[
+N_{out}=\left\lfloor\frac{N+2P-K}{S}\right\rfloor+1
+\]</div>
+<h3 id="exemplo-1">Exemplo 1<a class="headerlink" href="#exemplo-1" title="Permanent link">&para;</a></h3>
+<p>Entrada <code>32</code>, kernel <code>3</code>, padding <code>0</code>, stride <code>1</code>:</p>
+<div class="arithmatex">\[
+(32-3)+1=30
+\]</div>
+<p>Saída: <code>30</code>.</p>
+<hr />
+<h2 id="166-padding-same">16.6 Padding <code>same</code><a class="headerlink" href="#166-padding-same" title="Permanent link">&para;</a></h2>
+<p>Com kernel ímpar e stride 1, <code>padding="same"</code> normalmente preserva altura e largura.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="mi">32</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="mi">3</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">padding</span><span class="o">=</span><span class="s2">"same"</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Isso adiciona valores nas bordas para permitir convolução também nas posições periféricas.</p>
+<hr />
+<h2 id="167-stride">16.7 Stride<a class="headerlink" href="#167-stride" title="Permanent link">&para;</a></h2>
+<p>Stride define o passo da janela.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>stride 1 → visita posições consecutivas
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>stride 2 → pula posições, reduzindo resolução
+</span></code></pre></div>
+<p>Camadas com stride maior podem substituir ou complementar pooling.</p>
+<hr />
+<h2 id="168-quantos-parametros-ha-numa-convolucao">16.8 Quantos parâmetros há numa convolução?<a class="headerlink" href="#168-quantos-parametros-ha-numa-convolucao" title="Permanent link">&para;</a></h2>
+<p>Para:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kernel = 3 × 3
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>canais entrada = 3
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>filtros saída = 32
+</span></code></pre></div>
+<p>cada filtro possui:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>3 × 3 × 3 = 27 pesos
+</span></code></pre></div>
+<p>mais 1 bias.</p>
+<p>Total:</p>
+<div class="arithmatex">\[
+(3\times3\times3+1)\times32=896
+\]</div>
+<h3 id="exemplo-2">Exemplo 2<a class="headerlink" href="#exemplo-2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">parametros</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">32</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">parametros</span><span class="p">)</span>  <span class="c1"># 896</span>
+</span></code></pre></div>
+<hr />
+<h2 id="169-relu">16.9 ReLU<a class="headerlink" href="#169-relu" title="Permanent link">&para;</a></h2>
+<div class="arithmatex">\[
+ReLU(x)=\max(0,x)
+\]</div>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">relu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">feature_map</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Ela introduz não linearidade.</p>
+<h3 id="importante">Importante<a class="headerlink" href="#importante" title="Permanent link">&para;</a></h3>
+<p>Valores negativos não são necessariamente “erros”. A função simplesmente define uma transformação que a rede aprende a utilizar.</p>
+<hr />
+<h2 id="1610-max-pooling">16.10 Max Pooling<a class="headerlink" href="#1610-max-pooling" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">layers</span><span class="o">.</span><span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Uma janela <code>2 × 2</code> com stride 2 reduz aproximadamente pela metade cada dimensão espacial.</p>
+<h3 id="analogia-resumir-um-bairro-pelo-sinal-mais-forte">Analogia: resumir um bairro pelo sinal mais forte<a class="headerlink" href="#analogia-resumir-um-bairro-pelo-sinal-mais-forte" title="Permanent link">&para;</a></h3>
+<p>Dentro de uma pequena região, preservamos a resposta máxima e descartamos detalhes de posição fina.</p>
+<hr />
+<h2 id="1611-o-que-pooling-ganha-e-perde">16.11 O que pooling ganha e perde?<a class="headerlink" href="#1611-o-que-pooling-ganha-e-perde" title="Permanent link">&para;</a></h2>
+<p>Ganha:</p>
+<ul>
+<li>redução de custo;</li>
+<li>maior campo receptivo relativo;</li>
+<li>tolerância a pequenos deslocamentos.</li>
+</ul>
+<p>Perde:</p>
+<ul>
+<li>resolução espacial;</li>
+<li>localização precisa.</li>
+</ul>
+<p>Por isso, tarefas de segmentação/detecção precisam de arquiteturas que recuperem ou preservem informação espacial.</p>
+<hr />
+<h2 id="1612-campo-receptivo">16.12 Campo receptivo<a class="headerlink" href="#1612-campo-receptivo" title="Permanent link">&para;</a></h2>
+<p>O campo receptivo é a região da entrada que pode influenciar uma ativação.</p>
+<p>Empilhar convoluções aumenta o campo receptivo.</p>
+<p>Duas convoluções <code>3 × 3</code> consecutivas enxergam uma região efetiva maior que uma única <code>3 × 3</code>, além de introduzir mais não linearidades.</p>
+<hr />
+<h2 id="1613-flatten">16.13 <code>Flatten</code><a class="headerlink" href="#1613-flatten" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()</span>
+</span></code></pre></div>
+<p>transforma mapas:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>H × W × C
+</span></code></pre></div>
+<p>em um vetor.</p>
+<p>Pode gerar muitos parâmetros quando seguido por Dense.</p>
+<hr />
+<h2 id="1614-global-average-pooling">16.14 Global Average Pooling<a class="headerlink" href="#1614-global-average-pooling" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">layers</span><span class="o">.</span><span class="n">GlobalAveragePooling2D</span><span class="p">()</span>
+</span></code></pre></div>
+<p>calcula uma média por canal, produzindo um vetor de tamanho igual ao número de canais.</p>
+<p>Isso frequentemente reduz parâmetros em relação a <code>Flatten + Dense</code> grande.</p>
+<hr />
+<h2 id="1615-softmax">16.15 Softmax<a class="headerlink" href="#1615-softmax" title="Permanent link">&para;</a></h2>
+<p>Para classes mutuamente exclusivas:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gato
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>cachorro
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>cavalo
+</span></code></pre></div>
+<p>podemos usar:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"softmax"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>As saídas formam uma distribuição normalizada entre as classes.</p>
+<hr />
+<h2 id="1616-sigmoid-para-multirrotulo">16.16 Sigmoid para multirrótulo<a class="headerlink" href="#1616-sigmoid-para-multirrotulo" title="Permanent link">&para;</a></h2>
+<p>Se uma imagem pode possuir simultaneamente:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>pessoa = sim
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>bicicleta = sim
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>capacete = não
+</span></code></pre></div>
+<p>as classes não competem entre si.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"sigmoid"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Cada saída é independente.</p>
+<div class="admonition warning">
+<p class="admonition-title">Softmax e sigmoid respondem a problemas diferentes</p>
+<p>Escolher a ativação errada altera a própria formulação estatística da tarefa.</p>
+</div>
+<hr />
+<h2 id="1617-funcao-de-perda">16.17 Função de perda<a class="headerlink" href="#1617-funcao-de-perda" title="Permanent link">&para;</a></h2>
+<p>Multiclasse com rótulo inteiro:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">loss</span><span class="o">=</span><span class="s2">"sparse_categorical_crossentropy"</span>
+</span></code></pre></div>
+<p>Multiclasse com one-hot:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">loss</span><span class="o">=</span><span class="s2">"categorical_crossentropy"</span>
+</span></code></pre></div>
+<p>Multirrótulo:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">loss</span><span class="o">=</span><span class="s2">"binary_crossentropy"</span>
+</span></code></pre></div>
+<p>A perda precisa combinar com a representação do alvo e a saída da rede.</p>
+<hr />
+<h2 id="1618-modelo-keras-didatico">16.18 Modelo Keras didático<a class="headerlink" href="#1618-modelo-keras-didatico" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">keras</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">layers</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="n">modelo</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Sequential</span><span class="p">([</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">((</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">"same"</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">),</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="n">layers</span><span class="o">.</span><span class="n">MaxPooling2D</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>    <span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">"same"</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">),</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>    <span class="n">layers</span><span class="o">.</span><span class="n">MaxPooling2D</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>    <span class="n">layers</span><span class="o">.</span><span class="n">GlobalAveragePooling2D</span><span class="p">(),</span>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>    <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">),</span>
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>    <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"softmax"</span><span class="p">),</span>
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="p">])</span>
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
+</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="n">modelo</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</span></code></pre></div>
+<hr />
+<h2 id="1619-calculando-dimensoes-do-exemplo">16.19 Calculando dimensões do exemplo<a class="headerlink" href="#1619-calculando-dimensoes-do-exemplo" title="Permanent link">&para;</a></h2>
+<p>Entrada:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>64 × 64 × 3
+</span></code></pre></div>
+<p>Após Conv <code>same</code> 32 filtros:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>64 × 64 × 32
+</span></code></pre></div>
+<p>Após Pool 2:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>32 × 32 × 32
+</span></code></pre></div>
+<p>Após Conv 64:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>32 × 32 × 64
+</span></code></pre></div>
+<p>Após Pool:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>16 × 16 × 64
+</span></code></pre></div>
+<p>Após Global Average Pooling:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>64
+</span></code></pre></div>
+<hr />
+<h2 id="1620-treino-validacao-e-teste">16.20 Treino, validação e teste<a class="headerlink" href="#1620-treino-validacao-e-teste" title="Permanent link">&para;</a></h2>
+<h3 id="treino">Treino<a class="headerlink" href="#treino" title="Permanent link">&para;</a></h3>
+<p>Usado para atualizar pesos.</p>
+<h3 id="validacao">Validação<a class="headerlink" href="#validacao" title="Permanent link">&para;</a></h3>
+<p>Usada para selecionar hiperparâmetros e acompanhar generalização.</p>
+<h3 id="teste">Teste<a class="headerlink" href="#teste" title="Permanent link">&para;</a></h3>
+<p>Deve permanecer separado para avaliação final.</p>
+<p>Usar teste repetidamente durante desenvolvimento transforma-o, na prática, em validação.</p>
+<hr />
+<h2 id="1621-overfitting">16.21 Overfitting<a class="headerlink" href="#1621-overfitting" title="Permanent link">&para;</a></h2>
+<p>Sintoma típico:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>loss treino ↓
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>acurácia treino ↑
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>loss validação ↑
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>acurácia validação para de melhorar
+</span></code></pre></div>
+<p>A rede está ajustando peculiaridades dos dados de treino que não generalizam.</p>
+<h3 id="analogia-decorar-o-gabarito">Analogia: decorar o gabarito<a class="headerlink" href="#analogia-decorar-o-gabarito" title="Permanent link">&para;</a></h3>
+<p>Um aluno pode memorizar respostas específicas sem aprender o conceito. Vai muito bem nas questões conhecidas e mal nas novas.</p>
+<hr />
+<h2 id="1622-data-augmentation">16.22 Data augmentation<a class="headerlink" href="#1622-data-augmentation" title="Permanent link">&para;</a></h2>
+<p>Exemplos:</p>
+<ul>
+<li>pequenas rotações;</li>
+<li>translações;</li>
+<li>zoom;</li>
+<li>variação de brilho;</li>
+<li>espelhamento.</li>
+</ul>
+<p>Mas a transformação deve preservar o rótulo.</p>
+<div class="admonition danger">
+<p class="admonition-title">Augmentation precisa respeitar semântica</p>
+<p>Espelhar um dígito, uma placa, uma imagem médica ou uma orientação anatômica pode mudar o significado.</p>
+</div>
+<hr />
+<h2 id="1623-dropout">16.23 Dropout<a class="headerlink" href="#1623-dropout" title="Permanent link">&para;</a></h2>
+<p>Durante treinamento, dropout desativa aleatoriamente parte das ativações.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Ele atua como regularização, mas não é remédio universal.</p>
+<hr />
+<h2 id="1624-weight-decay">16.24 Weight decay<a class="headerlink" href="#1624-weight-decay" title="Permanent link">&para;</a></h2>
+<p>Penalizar pesos muito grandes pode ajudar a controlar complexidade.</p>
+<p>Em frameworks modernos, isso pode aparecer como regularização L2 ou variantes desacopladas do otimizador.</p>
+<p>A escolha deve ser validada experimentalmente.</p>
+<hr />
+<h2 id="1625-early-stopping">16.25 Early stopping<a class="headerlink" href="#1625-early-stopping" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="n">callback</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">EarlyStopping</span><span class="p">(</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>    <span class="n">monitor</span><span class="o">=</span><span class="s2">"val_loss"</span><span class="p">,</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>    <span class="n">patience</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>    <span class="n">restore_best_weights</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Interrompe o treino quando a validação deixa de melhorar por um período.</p>
+<hr />
+<h2 id="1626-vazamento-de-dados">16.26 Vazamento de dados<a class="headerlink" href="#1626-vazamento-de-dados" title="Permanent link">&para;</a></h2>
+<p>Se frames do mesmo vídeo aparecem em treino e teste, a rede pode memorizar fundo, iluminação e identidade da sequência.</p>
+<p>Da mesma forma, imagens da mesma pessoa ou objeto físico em diferentes splits podem inflar métricas.</p>
+<p>Divida dados por unidade independente relevante:</p>
+<ul>
+<li>pessoa;</li>
+<li>paciente;</li>
+<li>vídeo;</li>
+<li>propriedade;</li>
+<li>dispositivo;</li>
+<li>sessão.</li>
+</ul>
+<hr />
+<h2 id="1627-metrica-adequada">16.27 Métrica adequada<a class="headerlink" href="#1627-metrica-adequada" title="Permanent link">&para;</a></h2>
+<p>Acurácia pode ser enganosa em classes desbalanceadas.</p>
+<p>Considere também:</p>
+<ul>
+<li>precisão;</li>
+<li>revocação;</li>
+<li>F1;</li>
+<li>matriz de confusão;</li>
+<li>métricas por classe.</li>
+</ul>
+<p>A métrica precisa refletir o custo do erro.</p>
+<hr />
+<h2 id="1628-exemplo-integrado-do-capitulo">16.28 Exemplo integrado do capítulo<a class="headerlink" href="#1628-exemplo-integrado-do-capitulo" title="Permanent link">&para;</a></h2>
+<p>O <a href="https://github.com/vmotta/opera-es-com-imagens/blob/main/exemplos/cap16_cnn.py">código do capítulo 16</a> possui uma parte NumPy/OpenCV autocontida e uma parte Keras opcional.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>python<span class="w"> </span>-m<span class="w"> </span>exemplos.cap16_cnn
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="c1"># parte Keras opcional</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[deep]"</span>
+</span></code></pre></div>
+<p>Pipeline didático:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>imagem sintética
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>  ↓
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>kernels manuais
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>  ↓
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>feature maps
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>  ↓
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>ReLU
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>  ↓
+</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>max pooling
+</span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>  ↓
+</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>cálculo de dimensões
+</span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>  ↓
+</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>CNN Keras opcional
+</span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>  ↓
+</span><span id="__span-31-15"><a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a>summary e parâmetros
+</span></code></pre></div>
+<p><img alt="Entrada, feature maps, ReLU e max pooling" src="../../assets/resultados/cap16/01_feature_maps.png" /></p>
+<hr />
+<h2 id="1629-erros-comuns">16.29 Erros comuns<a class="headerlink" href="#1629-erros-comuns" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa provável</th>
+<th>Correção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dense gigantesca</td>
+<td>Flatten cedo demais</td>
+<td>pooling/GAP</td>
+</tr>
+<tr>
+<td>shape incompatível</td>
+<td>dimensão calculada errada</td>
+<td>acompanhe cada camada</td>
+</tr>
+<tr>
+<td>loss não converge</td>
+<td>alvo/loss/ativação incompatíveis</td>
+<td>revise formulação</td>
+</tr>
+<tr>
+<td>treino ótimo, validação ruim</td>
+<td>overfitting</td>
+<td>regularização/dados</td>
+</tr>
+<tr>
+<td>teste “bom demais”</td>
+<td>vazamento</td>
+<td>refaça split</td>
+</tr>
+<tr>
+<td>augmentation piora</td>
+<td>rótulo não preservado</td>
+<td>restrinja transformações</td>
+</tr>
+<tr>
+<td>acurácia alta em classe dominante</td>
+<td>desbalanceamento</td>
+<td>métricas por classe</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1630-perguntas-de-revisao">16.30 Perguntas de revisão<a class="headerlink" href="#1630-perguntas-de-revisao" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Por que CNN usa conectividade local?</li>
+<li>O que são pesos compartilhados?</li>
+<li>Como calcular dimensão da convolução?</li>
+<li>Quantos parâmetros possui Conv <code>3×3</code>, entrada 3 canais, saída 32 filtros?</li>
+<li>Para que serve ReLU?</li>
+<li>O que pooling perde?</li>
+<li>Qual diferença entre Flatten e GAP?</li>
+<li>Quando usar Softmax?</li>
+<li>Quando usar Sigmoid?</li>
+<li>O que é vazamento de dados?</li>
+</ol>
+<hr />
+<h1 id="exercicios-de-fixacao">Exercícios de fixação<a class="headerlink" href="#exercicios-de-fixacao" title="Permanent link">&para;</a></h1>
+<h3 id="exercicio-1">Exercício 1<a class="headerlink" href="#exercicio-1" title="Permanent link">&para;</a></h3>
+<p>Calcule dimensões de saída para entrada 64, kernels 3 e 5, strides 1 e 2.</p>
+<h3 id="exercicio-2">Exercício 2<a class="headerlink" href="#exercicio-2" title="Permanent link">&para;</a></h3>
+<p>Calcule parâmetros de uma Conv2D <code>5×5</code>, 3 canais de entrada e 16 filtros.</p>
+<h3 id="exercicio-3">Exercício 3<a class="headerlink" href="#exercicio-3" title="Permanent link">&para;</a></h3>
+<p>Calcule parâmetros de uma Conv2D <code>3×3</code>, 32 canais de entrada e 64 filtros.</p>
+<h3 id="exercicio-4">Exercício 4<a class="headerlink" href="#exercicio-4" title="Permanent link">&para;</a></h3>
+<p>Aplique um kernel manual e ReLU a uma imagem simples.</p>
+<h3 id="exercicio-5">Exercício 5<a class="headerlink" href="#exercicio-5" title="Permanent link">&para;</a></h3>
+<p>Implemente max pooling <code>2×2</code> em NumPy para uma matriz pequena.</p>
+<h3 id="exercicio-6">Exercício 6<a class="headerlink" href="#exercicio-6" title="Permanent link">&para;</a></h3>
+<p>Compare <code>Flatten</code> e <code>GlobalAveragePooling2D</code> quanto ao tamanho do vetor produzido.</p>
+<h3 id="exercicio-7">Exercício 7<a class="headerlink" href="#exercicio-7" title="Permanent link">&para;</a></h3>
+<p>Construa uma CNN Keras com duas convoluções e imprima <code>summary()</code>.</p>
+<h3 id="exercicio-8">Exercício 8<a class="headerlink" href="#exercicio-8" title="Permanent link">&para;</a></h3>
+<p>Explique qual saída/perda escolher para 5 espécies mutuamente exclusivas.</p>
+<h3 id="exercicio-9">Exercício 9<a class="headerlink" href="#exercicio-9" title="Permanent link">&para;</a></h3>
+<p>Explique qual saída/perda escolher para uma imagem que pode conter simultaneamente 5 objetos.</p>
+<h3 id="exercicio-10">Exercício 10<a class="headerlink" href="#exercicio-10" title="Permanent link">&para;</a></h3>
+<p>Simule curvas de treino/validação com overfitting e indique onde early stopping deveria agir.</p>
+<h3 id="exercicio-11">Exercício 11<a class="headerlink" href="#exercicio-11" title="Permanent link">&para;</a></h3>
+<p>Proponha cinco augmentations para fotografias de objetos e explique quais preservam o rótulo.</p>
+<h3 id="exercicio-12">Exercício 12<a class="headerlink" href="#exercicio-12" title="Permanent link">&para;</a></h3>
+<p>Dê um exemplo em que espelhamento muda o rótulo.</p>
+<h3 id="exercicio-13">Exercício 13<a class="headerlink" href="#exercicio-13" title="Permanent link">&para;</a></h3>
+<p>Planeje um split correto para um dataset com 100 vídeos de 20 pessoas.</p>
+<h3 id="exercicio-14">Exercício 14<a class="headerlink" href="#exercicio-14" title="Permanent link">&para;</a></h3>
+<p>Explique por que dividir frames aleatoriamente pode causar vazamento.</p>
+<hr />
+<h2 id="sintese">Síntese<a class="headerlink" href="#sintese" title="Permanent link">&para;</a></h2>
+<p>CNNs combinam conectividade local, compartilhamento de pesos e aprendizado hierárquico. Construir uma rede exige acompanhar dimensões e parâmetros, formular corretamente saída e perda e, principalmente, avaliar generalização em dados realmente independentes. Uma arquitetura elegante não compensa um experimento com vazamento ou uma métrica inadequada.</p>
+<hr />
+<h2 id="referencias">Referências<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<p>CHOLLET, François. <em>Deep Learning with Python</em>. 2. ed. Shelter Island: Manning, 2021.</p>
+<p>GOODFELLOW, Ian; BENGIO, Yoshua; COURVILLE, Aaron. <em>Deep Learning</em>. Cambridge: MIT Press, 2016.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

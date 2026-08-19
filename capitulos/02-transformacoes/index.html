@@ -1,0 +1,2654 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Curso didático de processamento de imagens e visão computacional">
+      
+      
+        <meta name="author" content="Vinícius da Rocha Motta">
+      
+      
+      
+        <link rel="prev" href="../01-fundamentos/">
+      
+      
+        <link rel="next" href="../03-filtros/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>2. Transformações geométricas - Operações com Imagens</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Atkinson+Hyperlegible:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Atkinson Hyperlegible";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#2-transformacoes-geometricas-e-interpolacao" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Operações com Imagens" class="md-header__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Operações com Imagens
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2. Transformações geométricas
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Usar tema escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Usar tema escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Usar tema claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Usar tema claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Operações com Imagens" class="md-nav__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Operações com Imagens
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../como-estudar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Como estudar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ambiente/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Preparação do ambiente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Imagem digital e OpenCV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformações geométricas
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformações geométricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#21-duas-perguntas-diferentes-para-onde-vai-o-pixel-e-qual-valor-colocar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Duas perguntas diferentes: para onde vai o pixel e qual valor colocar?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.1 Duas perguntas diferentes: para onde vai o pixel e qual valor colocar?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-mudar-os-moveis-de-uma-sala" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: mudar os móveis de uma sala
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-sistema-de-coordenadas-e-tamanho-da-saida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Sistema de coordenadas e tamanho da saída
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Sistema de coordenadas e tamanho da saída">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1-erro-classico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1 — erro clássico
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-redimensionamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Redimensionamento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Redimensionamento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2-tamanho-explicito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2 — tamanho explícito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-3-usando-fatores-de-escala" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 3 — usando fatores de escala
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#24-preservando-a-proporcao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Preservando a proporção
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.4 Preservando a proporção">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-fotografia-impressa-em-borracha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: fotografia impressa em borracha
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#25-interpolacao-de-onde-vem-o-novo-valor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Interpolação: de onde vem o novo valor?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.5 Interpolação: de onde vem o novo valor?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-estimar-temperatura-entre-sensores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: estimar temperatura entre sensores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#26-por-que-inter_nearest-e-importante-para-mascaras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Por que INTER_NEAREST é importante para máscaras?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#27-mapeamento-direto-e-inverso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Mapeamento direto e inverso
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#28-translacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 Translação
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.8 Translação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-4-deslocando-80-pixels-para-a-direita-e-40-para-baixo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 4 — deslocando 80 pixels para a direita e 40 para baixo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#29-o-que-acontece-com-a-regiao-que-fica-vazia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 O que acontece com a região que “fica vazia”?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.9 O que acontece com a região que “fica vazia”?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-deslizar-uma-fotografia-sobre-uma-moldura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: deslizar uma fotografia sobre uma moldura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#210-rotacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 Rotação
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.10 Rotação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-5-rotacionando-em-torno-do-centro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 5 — rotacionando em torno do centro
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analogia-papel-preso-por-um-alfinete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: papel preso por um alfinete
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#211-por-que-uma-rotacao-pode-cortar-os-cantos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11 Por que uma rotação pode cortar os cantos?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.11 Por que uma rotação pode cortar os cantos?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-6-rotacao-sem-corte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 6 — rotação sem corte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#212-transformacao-afim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12 Transformação afim
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.12 Transformação afim">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 7
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#213-transformacao-de-perspectiva-e-homografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13 Transformação de perspectiva e homografia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.13 Transformação de perspectiva e homografia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-fotografia-de-uma-folha-sobre-a-mesa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: fotografia de uma folha sobre a mesa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-8-corrigindo-perspectiva" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 8 — corrigindo perspectiva
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#214-a-ordem-dos-quatro-pontos-importa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14 A ordem dos quatro pontos importa
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#215-transformacao-afim-versus-perspectiva" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.15 Transformação afim versus perspectiva
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#216-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.16 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#217-erros-comuns-e-como-diagnosticar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.17 Erros comuns e como diagnosticar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#218-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.18 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-filtros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Filtros, convolução e bordas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-morfologia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Limiarização e morfologia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-contornos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Contornos e características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-cores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Espaços de cores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detecção e movimento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Detecção e movimento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-deteccao-classica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Template Matching e Haar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-feature-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Feature Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-video/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Vídeo e fluxo óptico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes neurais e aplicações
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redes neurais e aplicações
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-dnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. CNNs e módulo DNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-yolo-nms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. YOLO e NMS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-pose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Estimativa de pose
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-faces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Reconhecimento facial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-ocr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. OCR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-estereo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Visão estéreo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16. Construindo CNNs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-gans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17. GANs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-yolo-moderno/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18. YOLO moderno
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#21-duas-perguntas-diferentes-para-onde-vai-o-pixel-e-qual-valor-colocar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Duas perguntas diferentes: para onde vai o pixel e qual valor colocar?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.1 Duas perguntas diferentes: para onde vai o pixel e qual valor colocar?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-mudar-os-moveis-de-uma-sala" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: mudar os móveis de uma sala
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-sistema-de-coordenadas-e-tamanho-da-saida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Sistema de coordenadas e tamanho da saída
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Sistema de coordenadas e tamanho da saída">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1-erro-classico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1 — erro clássico
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-redimensionamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Redimensionamento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Redimensionamento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2-tamanho-explicito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2 — tamanho explícito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-3-usando-fatores-de-escala" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 3 — usando fatores de escala
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#24-preservando-a-proporcao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Preservando a proporção
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.4 Preservando a proporção">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-fotografia-impressa-em-borracha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: fotografia impressa em borracha
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#25-interpolacao-de-onde-vem-o-novo-valor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Interpolação: de onde vem o novo valor?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.5 Interpolação: de onde vem o novo valor?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-estimar-temperatura-entre-sensores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: estimar temperatura entre sensores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#26-por-que-inter_nearest-e-importante-para-mascaras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Por que INTER_NEAREST é importante para máscaras?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#27-mapeamento-direto-e-inverso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Mapeamento direto e inverso
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#28-translacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 Translação
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.8 Translação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-4-deslocando-80-pixels-para-a-direita-e-40-para-baixo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 4 — deslocando 80 pixels para a direita e 40 para baixo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#29-o-que-acontece-com-a-regiao-que-fica-vazia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 O que acontece com a região que “fica vazia”?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.9 O que acontece com a região que “fica vazia”?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-deslizar-uma-fotografia-sobre-uma-moldura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: deslizar uma fotografia sobre uma moldura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#210-rotacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 Rotação
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.10 Rotação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-5-rotacionando-em-torno-do-centro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 5 — rotacionando em torno do centro
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analogia-papel-preso-por-um-alfinete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: papel preso por um alfinete
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#211-por-que-uma-rotacao-pode-cortar-os-cantos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11 Por que uma rotação pode cortar os cantos?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.11 Por que uma rotação pode cortar os cantos?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-6-rotacao-sem-corte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 6 — rotação sem corte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#212-transformacao-afim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12 Transformação afim
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.12 Transformação afim">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 7
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#213-transformacao-de-perspectiva-e-homografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13 Transformação de perspectiva e homografia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.13 Transformação de perspectiva e homografia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-fotografia-de-uma-folha-sobre-a-mesa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: fotografia de uma folha sobre a mesa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-8-corrigindo-perspectiva" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 8 — corrigindo perspectiva
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#214-a-ordem-dos-quatro-pontos-importa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14 A ordem dos quatro pontos importa
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#215-transformacao-afim-versus-perspectiva" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.15 Transformação afim versus perspectiva
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#216-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.16 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#217-erros-comuns-e-como-diagnosticar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.17 Erros comuns e como diagnosticar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#218-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.18 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="2-transformacoes-geometricas-e-interpolacao">2. Transformações geométricas e interpolação<a class="headerlink" href="#2-transformacoes-geometricas-e-interpolacao" title="Permanent link">&para;</a></h1>
+<h2 id="o-que-voce-aprendera">O que você aprenderá<a class="headerlink" href="#o-que-voce-aprendera" title="Permanent link">&para;</a></h2>
+<p>Neste capítulo, você aprenderá a modificar <strong>onde os pixels aparecem</strong> sem confundir essa tarefa com a alteração de seus valores de intensidade. Ao final, deverá conseguir explicar e implementar redimensionamento, translação, rotação, transformações afins e transformações de perspectiva, além de escolher conscientemente o método de interpolação adequado.</p>
+<p>Você também deverá ser capaz de:</p>
+<ol>
+<li>diferenciar transformação geométrica de interpolação;</li>
+<li>compreender mapeamento direto e mapeamento inverso;</li>
+<li>interpretar matrizes de transformação;</li>
+<li>escolher entre <code>INTER_NEAREST</code>, <code>INTER_LINEAR</code>, <code>INTER_CUBIC</code>, <code>INTER_AREA</code> e <code>INTER_LANCZOS4</code>;</li>
+<li>redimensionar imagens preservando proporção;</li>
+<li>transladar uma imagem por meio de uma matriz <code>2 × 3</code>;</li>
+<li>rotacionar em torno de diferentes centros;</li>
+<li>compreender por que rotações podem cortar a imagem;</li>
+<li>aplicar transformações afins a partir de três pares de pontos;</li>
+<li>aplicar homografias a partir de quatro pares de pontos;</li>
+<li>compreender o papel das bordas criadas pelas transformações;</li>
+<li>evitar interpolação inadequada em máscaras e rótulos.</li>
+</ol>
+<p>Segundo Gonzalez e Woods (2010), transformações geométricas são fundamentais em processamento de imagens porque permitem corrigir, registrar, alinhar e alterar a geometria da cena. Em visão computacional, elas aparecem em tarefas como correção de documentos, estabilização, aumento de dados, registro de imagens e preparação de entradas para redes neurais (SZELISKI, 2022).</p>
+<hr />
+<h2 id="21-duas-perguntas-diferentes-para-onde-vai-o-pixel-e-qual-valor-colocar">2.1 Duas perguntas diferentes: para onde vai o pixel e qual valor colocar?<a class="headerlink" href="#21-duas-perguntas-diferentes-para-onde-vai-o-pixel-e-qual-valor-colocar" title="Permanent link">&para;</a></h2>
+<p>Uma transformação geométrica responde:</p>
+<blockquote>
+<p><strong>Em que posição da imagem de saída cada informação deverá aparecer?</strong></p>
+</blockquote>
+<p>Já a interpolação responde:</p>
+<blockquote>
+<p><strong>Se a posição calculada cair entre pixels existentes, qual valor deve ser usado?</strong></p>
+</blockquote>
+<h3 id="analogia-mudar-os-moveis-de-uma-sala">Analogia: mudar os móveis de uma sala<a class="headerlink" href="#analogia-mudar-os-moveis-de-uma-sala" title="Permanent link">&para;</a></h3>
+<p>Imagine uma sala quadriculada. Os móveis estão apoiados sobre quadrados inteiros. Ao girar a planta da sala, um móvel pode passar a ocupar uma posição que não coincide exatamente com a nova grade. A transformação decide <strong>onde o móvel deveria estar</strong>; a interpolação decide <strong>como representar essa posição na grade disponível</strong>.</p>
+<hr />
+<h2 id="22-sistema-de-coordenadas-e-tamanho-da-saida">2.2 Sistema de coordenadas e tamanho da saída<a class="headerlink" href="#22-sistema-de-coordenadas-e-tamanho-da-saida" title="Permanent link">&para;</a></h2>
+<p>No OpenCV, a imagem é acessada como:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">imagem</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
+</span></code></pre></div>
+<p>mas funções geométricas normalmente recebem coordenadas como:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(x, y)
+</span></code></pre></div>
+<p>Além disso, parâmetros de tamanho como <code>dsize</code> seguem a ordem:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">(</span><span class="n">largura</span><span class="p">,</span> <span class="n">altura</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="exemplo-1-erro-classico">Exemplo 1 — erro clássico<a class="headerlink" href="#exemplo-1-erro-classico" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">altura</span><span class="p">,</span> <span class="n">largura</span> <span class="o">=</span> <span class="n">imagem</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># correto</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">redimensionada</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">imagem</span><span class="p">,</span> <span class="p">(</span><span class="n">largura</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">altura</span> <span class="o">//</span> <span class="mi">2</span><span class="p">))</span>
+</span></code></pre></div>
+<p>Se você trocar largura e altura em uma imagem não quadrada, o resultado ficará deformado.</p>
+<hr />
+<h2 id="23-redimensionamento">2.3 Redimensionamento<a class="headerlink" href="#23-redimensionamento" title="Permanent link">&para;</a></h2>
+<p>Redimensionar significa criar uma nova grade de pixels com mais ou menos posições.</p>
+<h3 id="exemplo-2-tamanho-explicito">Exemplo 2 — tamanho explícito<a class="headerlink" href="#exemplo-2-tamanho-explicito" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">nova</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">),</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_LINEAR</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>O tamanho final será:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>largura = 800
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>altura  = 600
+</span></code></pre></div>
+<h3 id="exemplo-3-usando-fatores-de-escala">Exemplo 3 — usando fatores de escala<a class="headerlink" href="#exemplo-3-usando-fatores-de-escala" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">metade</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">fx</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">fy</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_AREA</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="24-preservando-a-proporcao">2.4 Preservando a proporção<a class="headerlink" href="#24-preservando-a-proporcao" title="Permanent link">&para;</a></h2>
+<p>Se uma imagem mede <code>1200 × 800</code> e você força para <code>640 × 640</code>, o conteúdo será deformado.</p>
+<h3 id="analogia-fotografia-impressa-em-borracha">Analogia: fotografia impressa em borracha<a class="headerlink" href="#analogia-fotografia-impressa-em-borracha" title="Permanent link">&para;</a></h3>
+<p>É como imprimir uma fotografia em uma folha de borracha e puxá-la apenas em uma direção. Os objetos ficam mais largos ou mais altos do que realmente eram.</p>
+<p>Para preservar a proporção:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">altura</span><span class="p">,</span> <span class="n">largura</span> <span class="o">=</span> <span class="n">imagem</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">nova_largura</span> <span class="o">=</span> <span class="mi">640</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">escala</span> <span class="o">=</span> <span class="n">nova_largura</span> <span class="o">/</span> <span class="n">largura</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">nova_altura</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">altura</span> <span class="o">*</span> <span class="n">escala</span><span class="p">)</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">redimensionada</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="p">(</span><span class="n">nova_largura</span><span class="p">,</span> <span class="n">nova_altura</span><span class="p">),</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_AREA</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="25-interpolacao-de-onde-vem-o-novo-valor">2.5 Interpolação: de onde vem o novo valor?<a class="headerlink" href="#25-interpolacao-de-onde-vem-o-novo-valor" title="Permanent link">&para;</a></h2>
+<p>Quando redimensionamos ou rotacionamos uma imagem, a coordenada procurada pode ser fracionária, como:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>x = 42,3
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>y = 17,8
+</span></code></pre></div>
+<p>Não existe um pixel exatamente nessa posição. Precisamos estimar um valor a partir dos vizinhos.</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ideia</th>
+<th>Uso típico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INTER_NEAREST</code></td>
+<td>usa o vizinho mais próximo</td>
+<td>máscaras, rótulos e pixel art</td>
+</tr>
+<tr>
+<td><code>INTER_LINEAR</code></td>
+<td>combina vizinhos em grade <code>2 × 2</code></td>
+<td>uso geral</td>
+</tr>
+<tr>
+<td><code>INTER_CUBIC</code></td>
+<td>usa vizinhança maior</td>
+<td>ampliação com boa qualidade</td>
+</tr>
+<tr>
+<td><code>INTER_AREA</code></td>
+<td>considera contribuição de áreas</td>
+<td>redução</td>
+</tr>
+<tr>
+<td><code>INTER_LANCZOS4</code></td>
+<td>interpolação de alta ordem</td>
+<td>ampliação com maior custo</td>
+</tr>
+</tbody>
+</table>
+<h3 id="analogia-estimar-temperatura-entre-sensores">Analogia: estimar temperatura entre sensores<a class="headerlink" href="#analogia-estimar-temperatura-entre-sensores" title="Permanent link">&para;</a></h3>
+<p>Se dois sensores próximos marcam 20 °C e 24 °C, uma posição intermediária pode ser estimada pela combinação das medições. A interpolação faz algo análogo com intensidades de pixels.</p>
+<hr />
+<h2 id="26-por-que-inter_nearest-e-importante-para-mascaras">2.6 Por que <code>INTER_NEAREST</code> é importante para máscaras?<a class="headerlink" href="#26-por-que-inter_nearest-e-importante-para-mascaras" title="Permanent link">&para;</a></h2>
+<p>Considere uma máscara de classes:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>0 = fundo
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>1 = pessoa
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>2 = carro
+</span></code></pre></div>
+<p>Uma interpolação suave pode produzir valores intermediários que não correspondem a nenhuma classe válida.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">mascara_ampliada</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">mascara</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">fx</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">fy</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_NEAREST</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">)</span>
+</span></code></pre></div>
+<div class="admonition important">
+<p class="admonition-title">Fotografia e rótulo não são o mesmo tipo de dado</p>
+<p>Em fotografias, criar valores intermediários pode ser desejável. Em mapas de classe, fabricar valores novos pode corromper os rótulos.</p>
+</div>
+<hr />
+<h2 id="27-mapeamento-direto-e-inverso">2.7 Mapeamento direto e inverso<a class="headerlink" href="#27-mapeamento-direto-e-inverso" title="Permanent link">&para;</a></h2>
+<p>No mapeamento direto, cada pixel da origem é projetado para o destino. Arredondamentos podem gerar posições não preenchidas.</p>
+<p>No mapeamento inverso, percorremos cada pixel da imagem de saída e perguntamos:</p>
+<blockquote>
+<p>“De qual posição da imagem original este pixel deve receber informação?”</p>
+</blockquote>
+<p>Essa estratégia ajuda a garantir que todas as posições da saída sejam preenchidas (SZELISKI, 2022).</p>
+<hr />
+<h2 id="28-translacao">2.8 Translação<a class="headerlink" href="#28-translacao" title="Permanent link">&para;</a></h2>
+<p>Translação significa deslocar a imagem horizontal e/ou verticalmente.</p>
+<p>A matriz é:</p>
+<div class="arithmatex">\[
+M=
+\begin{bmatrix}
+1 &amp; 0 &amp; t_x\\
+0 &amp; 1 &amp; t_y
+\end{bmatrix}
+\]</div>
+<h3 id="exemplo-4-deslocando-80-pixels-para-a-direita-e-40-para-baixo">Exemplo 4 — deslocando 80 pixels para a direita e 40 para baixo<a class="headerlink" href="#exemplo-4-deslocando-80-pixels-para-a-direita-e-40-para-baixo" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">altura</span><span class="p">,</span> <span class="n">largura</span> <span class="o">=</span> <span class="n">imagem</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">([</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">],</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">40</span><span class="p">]</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="p">])</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="n">transladada</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">warpAffine</span><span class="p">(</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="n">M</span><span class="p">,</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    <span class="p">(</span><span class="n">largura</span><span class="p">,</span> <span class="n">altura</span><span class="p">)</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Valores negativos deslocam no sentido oposto.</p>
+<hr />
+<h2 id="29-o-que-acontece-com-a-regiao-que-fica-vazia">2.9 O que acontece com a região que “fica vazia”?<a class="headerlink" href="#29-o-que-acontece-com-a-regiao-que-fica-vazia" title="Permanent link">&para;</a></h2>
+<p>Quando uma imagem é deslocada ou rotacionada, surgem regiões que não existiam na entrada.</p>
+<p>Podemos definir como preenchê-las:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">resultado</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">warpAffine</span><span class="p">(</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">M</span><span class="p">,</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="p">(</span><span class="n">largura</span><span class="p">,</span> <span class="n">altura</span><span class="p">),</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">borderMode</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">BORDER_CONSTANT</span><span class="p">,</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">borderValue</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Outros modos incluem repetição e reflexão das bordas.</p>
+<h3 id="analogia-deslizar-uma-fotografia-sobre-uma-moldura">Analogia: deslizar uma fotografia sobre uma moldura<a class="headerlink" href="#analogia-deslizar-uma-fotografia-sobre-uma-moldura" title="Permanent link">&para;</a></h3>
+<p>Ao deslocar uma foto para a direita dentro de uma moldura fixa, aparece uma faixa vazia à esquerda. O <code>borderMode</code> define o que será colocado nessa faixa.</p>
+<hr />
+<h2 id="210-rotacao">2.10 Rotação<a class="headerlink" href="#210-rotacao" title="Permanent link">&para;</a></h2>
+<p>Uma rotação exige:</p>
+<ul>
+<li>centro de rotação;</li>
+<li>ângulo;</li>
+<li>escala.</li>
+</ul>
+<h3 id="exemplo-5-rotacionando-em-torno-do-centro">Exemplo 5 — rotacionando em torno do centro<a class="headerlink" href="#exemplo-5-rotacionando-em-torno-do-centro" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">altura</span><span class="p">,</span> <span class="n">largura</span> <span class="o">=</span> <span class="n">imagem</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">centro</span> <span class="o">=</span> <span class="p">(</span><span class="n">largura</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">altura</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">M</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getRotationMatrix2D</span><span class="p">(</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">centro</span><span class="p">,</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="mi">30</span><span class="p">,</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="mf">1.0</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="p">)</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="n">rotacionada</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">warpAffine</span><span class="p">(</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    <span class="n">M</span><span class="p">,</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>    <span class="p">(</span><span class="n">largura</span><span class="p">,</span> <span class="n">altura</span><span class="p">)</span>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="analogia-papel-preso-por-um-alfinete">Analogia: papel preso por um alfinete<a class="headerlink" href="#analogia-papel-preso-por-um-alfinete" title="Permanent link">&para;</a></h3>
+<p>O centro de rotação é como o ponto onde um alfinete prende uma folha. Mudar a posição do alfinete muda toda a trajetória da rotação.</p>
+<hr />
+<h2 id="211-por-que-uma-rotacao-pode-cortar-os-cantos">2.11 Por que uma rotação pode cortar os cantos?<a class="headerlink" href="#211-por-que-uma-rotacao-pode-cortar-os-cantos" title="Permanent link">&para;</a></h2>
+<p>O tamanho da tela de saída normalmente permanece o mesmo. Quando a imagem gira, os cantos podem ultrapassar os limites dessa tela.</p>
+<p>Uma solução é calcular uma nova caixa envolvente.</p>
+<h3 id="exemplo-6-rotacao-sem-corte">Exemplo 6 — rotação sem corte<a class="headerlink" href="#exemplo-6-rotacao-sem-corte" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">altura</span><span class="p">,</span> <span class="n">largura</span> <span class="o">=</span> <span class="n">imagem</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="n">angulo</span> <span class="o">=</span> <span class="mi">45</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="n">M</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getRotationMatrix2D</span><span class="p">(</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="p">(</span><span class="n">largura</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">altura</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    <span class="n">angulo</span><span class="p">,</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    <span class="mf">1.0</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="p">)</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="n">cos</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="n">sin</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="n">nova_largura</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">altura</span> <span class="o">*</span> <span class="n">sin</span> <span class="o">+</span> <span class="n">largura</span> <span class="o">*</span> <span class="n">cos</span><span class="p">)</span>
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="n">nova_altura</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">altura</span> <span class="o">*</span> <span class="n">cos</span> <span class="o">+</span> <span class="n">largura</span> <span class="o">*</span> <span class="n">sin</span><span class="p">)</span>
+</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
+</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">nova_largura</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">largura</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="__span-14-19"><a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">nova_altura</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">altura</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="__span-14-20"><a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>
+</span><span id="__span-14-21"><a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="n">sem_corte</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">warpAffine</span><span class="p">(</span>
+</span><span id="__span-14-22"><a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-14-23"><a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>    <span class="n">M</span><span class="p">,</span>
+</span><span id="__span-14-24"><a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>    <span class="p">(</span><span class="n">nova_largura</span><span class="p">,</span> <span class="n">nova_altura</span><span class="p">)</span>
+</span><span id="__span-14-25"><a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="212-transformacao-afim">2.12 Transformação afim<a class="headerlink" href="#212-transformacao-afim" title="Permanent link">&para;</a></h2>
+<p>Uma transformação afim preserva:</p>
+<ul>
+<li>linhas retas;</li>
+<li>paralelismo;</li>
+<li>razões ao longo de uma mesma linha.</li>
+</ul>
+<p>Ela pode combinar translação, rotação, escala e cisalhamento.</p>
+<p>A matriz possui formato <code>2 × 3</code>:</p>
+<div class="arithmatex">\[
+\begin{bmatrix}x'\\y'\end{bmatrix}=
+\begin{bmatrix}a &amp; b &amp; t_x\\c &amp; d &amp; t_y\end{bmatrix}
+\begin{bmatrix}x\\y\\1\end{bmatrix}
+\]</div>
+<p>Três pares de pontos não colineares determinam a transformação.</p>
+<h3 id="exemplo-7">Exemplo 7<a class="headerlink" href="#exemplo-7" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">origem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">([</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="p">[</span><span class="mi">250</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">250</span><span class="p">]</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="p">])</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="n">destino</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">([</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">80</span><span class="p">],</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="p">[</span><span class="mi">270</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">270</span><span class="p">]</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="p">])</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="n">M</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getAffineTransform</span><span class="p">(</span><span class="n">origem</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="n">afim</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">warpAffine</span><span class="p">(</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>    <span class="n">M</span><span class="p">,</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>    <span class="p">(</span><span class="n">largura</span><span class="p">,</span> <span class="n">altura</span><span class="p">)</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="213-transformacao-de-perspectiva-e-homografia">2.13 Transformação de perspectiva e homografia<a class="headerlink" href="#213-transformacao-de-perspectiva-e-homografia" title="Permanent link">&para;</a></h2>
+<p>Uma transformação projetiva consegue modelar a aparência de um plano visto sob perspectiva.</p>
+<p>Ela usa uma matriz <code>3 × 3</code> e quatro pares de pontos.</p>
+<h3 id="analogia-fotografia-de-uma-folha-sobre-a-mesa">Analogia: fotografia de uma folha sobre a mesa<a class="headerlink" href="#analogia-fotografia-de-uma-folha-sobre-a-mesa" title="Permanent link">&para;</a></h3>
+<p>Uma folha A4 é retangular, mas numa fotografia inclinada pode parecer um trapézio. A homografia permite mapear os quatro cantos fotografados para os quatro cantos de um retângulo frontal.</p>
+<h3 id="exemplo-8-corrigindo-perspectiva">Exemplo 8 — corrigindo perspectiva<a class="headerlink" href="#exemplo-8-corrigindo-perspectiva" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">origem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">([</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="p">[</span><span class="mi">120</span><span class="p">,</span> <span class="mi">80</span><span class="p">],</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="p">[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="p">[</span><span class="mi">540</span><span class="p">,</span> <span class="mi">580</span><span class="p">]</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">])</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="n">destino</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">([</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span>
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>    <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">600</span><span class="p">]</span>
+</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="p">])</span>
+</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>
+</span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="n">H</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getPerspectiveTransform</span><span class="p">(</span><span class="n">origem</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
+</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>
+</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="n">corrigida</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">warpPerspective</span><span class="p">(</span>
+</span><span id="__span-16-18"><a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-16-19"><a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>    <span class="n">H</span><span class="p">,</span>
+</span><span id="__span-16-20"><a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>    <span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+</span><span id="__span-16-21"><a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="214-a-ordem-dos-quatro-pontos-importa">2.14 A ordem dos quatro pontos importa<a class="headerlink" href="#214-a-ordem-dos-quatro-pontos-importa" title="Permanent link">&para;</a></h2>
+<p>Os pontos de origem e destino devem corresponder entre si.</p>
+<p>Uma regra prática é usar sempre:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>superior esquerdo
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>superior direito
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>inferior esquerdo
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>inferior direito
+</span></code></pre></div>
+<p>Trocar apenas dois pontos pode provocar:</p>
+<ul>
+<li>espelhamento;</li>
+<li>torção;</li>
+<li>deformação inesperada.</li>
+</ul>
+<hr />
+<h2 id="215-transformacao-afim-versus-perspectiva">2.15 Transformação afim versus perspectiva<a class="headerlink" href="#215-transformacao-afim-versus-perspectiva" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Característica</th>
+<th>Afim</th>
+<th>Perspectiva</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>matriz</td>
+<td><code>2 × 3</code></td>
+<td><code>3 × 3</code></td>
+</tr>
+<tr>
+<td>pares mínimos</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>preserva linhas retas</td>
+<td>sim</td>
+<td>sim</td>
+</tr>
+<tr>
+<td>preserva paralelismo</td>
+<td>sim</td>
+<td>não necessariamente</td>
+</tr>
+<tr>
+<td>corrige documento fotografado</td>
+<td>limitada</td>
+<td>adequada</td>
+</tr>
+<tr>
+<td>modela efeito de profundidade de plano</td>
+<td>não completamente</td>
+<td>sim, para um plano</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="216-exemplo-integrado-do-capitulo">2.16 Exemplo integrado do capítulo<a class="headerlink" href="#216-exemplo-integrado-do-capitulo" title="Permanent link">&para;</a></h2>
+<p>O <a href="https://github.com/vmotta/opera-es-com-imagens/blob/main/exemplos/cap02_transformacoes.py">código completo do capítulo 2</a> executa uma sequência de operações e salva os resultados para comparação.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>python<span class="w"> </span>-m<span class="w"> </span>exemplos.cap02_transformacoes
+</span></code></pre></div>
+<p>Pipeline:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>imagem sintética
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    ↓
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>redimensionamentos
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    ↓
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>comparação de interpolações
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    ↓
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>translação
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    ↓
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>rotação
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    ↓
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>rotação sem corte
+</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>    ↓
+</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>transformação afim
+</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>    ↓
+</span><span id="__span-19-15"><a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>homografia/perspectiva
+</span><span id="__span-19-16"><a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>    ↓
+</span><span id="__span-19-17"><a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>painel comparativo
+</span></code></pre></div>
+<p><img alt="Painel de redução, translação, rotação, transformação afim e perspectiva" src="../../assets/resultados/cap02/painel.png" /></p>
+<hr />
+<h2 id="217-erros-comuns-e-como-diagnosticar">2.17 Erros comuns e como diagnosticar<a class="headerlink" href="#217-erros-comuns-e-como-diagnosticar" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa provável</th>
+<th>Correção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>imagem deformada</td>
+<td>largura e altura invertidas</td>
+<td>use <code>(largura, altura)</code></td>
+</tr>
+<tr>
+<td>máscara com valores estranhos</td>
+<td>interpolação suave</td>
+<td>use <code>INTER_NEAREST</code></td>
+</tr>
+<tr>
+<td>cantos desaparecem após rotação</td>
+<td>canvas pequeno</td>
+<td>calcule nova caixa envolvente</td>
+</tr>
+<tr>
+<td>transformação afim absurda</td>
+<td>pontos quase colineares ou ordem errada</td>
+<td>revise os três pares</td>
+</tr>
+<tr>
+<td>perspectiva torcida</td>
+<td>correspondência dos quatro pontos errada</td>
+<td>padronize a ordem</td>
+</tr>
+<tr>
+<td>borda preta inesperada</td>
+<td>área sem origem</td>
+<td>configure <code>borderMode</code>/<code>borderValue</code></td>
+</tr>
+<tr>
+<td>objeto parece achatado</td>
+<td>proporção não preservada</td>
+<td>calcule escala uniforme</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="218-perguntas-de-revisao">2.18 Perguntas de revisão<a class="headerlink" href="#218-perguntas-de-revisao" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Qual é a diferença entre transformação geométrica e interpolação?</li>
+<li>Por que mapeamento inverso evita buracos?</li>
+<li>Por que máscaras devem usar <code>INTER_NEAREST</code>?</li>
+<li>O que representam <code>tx</code> e <code>ty</code> em uma matriz de translação?</li>
+<li>Por que o centro de rotação altera o resultado?</li>
+<li>Por que uma imagem rotacionada pode ser cortada?</li>
+<li>Quantos pares de pontos definem uma transformação afim?</li>
+<li>Quantos pares definem uma homografia?</li>
+<li>Qual propriedade a perspectiva pode quebrar que a afim preserva?</li>
+<li>O que acontece quando a ordem dos cantos está incorreta?</li>
+</ol>
+<hr />
+<h1 id="exercicios-de-fixacao">Exercícios de fixação<a class="headerlink" href="#exercicios-de-fixacao" title="Permanent link">&para;</a></h1>
+<h2 id="parte-a-redimensionamento-e-interpolacao">Parte A — redimensionamento e interpolação<a class="headerlink" href="#parte-a-redimensionamento-e-interpolacao" title="Permanent link">&para;</a></h2>
+<h3 id="exercicio-1">Exercício 1<a class="headerlink" href="#exercicio-1" title="Permanent link">&para;</a></h3>
+<p>Reduza uma fotografia para 25% do tamanho usando <code>INTER_AREA</code> e <code>INTER_LINEAR</code>. Compare visualmente e explique qual é mais apropriado para redução.</p>
+<h3 id="exercicio-2">Exercício 2<a class="headerlink" href="#exercicio-2" title="Permanent link">&para;</a></h3>
+<p>Crie uma máscara com valores <code>0</code>, <code>1</code> e <code>2</code>. Amplie-a com <code>INTER_NEAREST</code> e <code>INTER_LINEAR</code>. Use <code>np.unique()</code> para listar os valores resultantes.</p>
+<h3 id="exercicio-3">Exercício 3<a class="headerlink" href="#exercicio-3" title="Permanent link">&para;</a></h3>
+<p>Escreva uma função:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">redimensionar_preservando_proporcao</span><span class="p">(</span><span class="n">imagem</span><span class="p">,</span> <span class="n">largura_alvo</span><span class="p">):</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<p>que calcule automaticamente a altura.</p>
+<h2 id="parte-b-translacao-e-rotacao">Parte B — translação e rotação<a class="headerlink" href="#parte-b-translacao-e-rotacao" title="Permanent link">&para;</a></h2>
+<h3 id="exercicio-4">Exercício 4<a class="headerlink" href="#exercicio-4" title="Permanent link">&para;</a></h3>
+<p>Translade uma imagem 100 pixels para a esquerda e 50 para baixo. Escreva a matriz usada.</p>
+<h3 id="exercicio-5">Exercício 5<a class="headerlink" href="#exercicio-5" title="Permanent link">&para;</a></h3>
+<p>Rotacione a mesma imagem em <code>30°</code>, <code>90°</code> e <code>180°</code>. Compare as áreas vazias.</p>
+<h3 id="exercicio-6">Exercício 6<a class="headerlink" href="#exercicio-6" title="Permanent link">&para;</a></h3>
+<p>Implemente rotação de <code>45°</code> sem cortar cantos.</p>
+<h3 id="exercicio-7">Exercício 7<a class="headerlink" href="#exercicio-7" title="Permanent link">&para;</a></h3>
+<p>Rotacione a imagem em torno do canto superior esquerdo e depois em torno do centro. Explique geometricamente a diferença.</p>
+<h2 id="parte-c-afim-e-perspectiva">Parte C — afim e perspectiva<a class="headerlink" href="#parte-c-afim-e-perspectiva" title="Permanent link">&para;</a></h2>
+<h3 id="exercicio-8">Exercício 8<a class="headerlink" href="#exercicio-8" title="Permanent link">&para;</a></h3>
+<p>Crie três pares de pontos e aplique uma transformação afim que simule cisalhamento.</p>
+<h3 id="exercicio-9">Exercício 9<a class="headerlink" href="#exercicio-9" title="Permanent link">&para;</a></h3>
+<p>Fotografe ou gere sinteticamente um retângulo em perspectiva. Selecione quatro cantos e produza uma vista frontal.</p>
+<h3 id="exercicio-10">Exercício 10<a class="headerlink" href="#exercicio-10" title="Permanent link">&para;</a></h3>
+<p>Troque propositalmente dois pontos da homografia. Descreva o defeito produzido.</p>
+<h2 id="parte-d-desafios">Parte D — desafios<a class="headerlink" href="#parte-d-desafios" title="Permanent link">&para;</a></h2>
+<h3 id="exercicio-11">Exercício 11<a class="headerlink" href="#exercicio-11" title="Permanent link">&para;</a></h3>
+<p>Crie uma função que receba uma imagem e um ângulo qualquer e devolva a rotação sem corte.</p>
+<h3 id="exercicio-12">Exercício 12<a class="headerlink" href="#exercicio-12" title="Permanent link">&para;</a></h3>
+<p>Implemente um pequeno “scanner de documento”: carregue uma imagem, receba quatro pontos manualmente e gere uma imagem retificada.</p>
+<h3 id="exercicio-13">Exercício 13<a class="headerlink" href="#exercicio-13" title="Permanent link">&para;</a></h3>
+<p>Explique por que uma homografia funciona bem para uma folha de papel, mas não consegue alinhar perfeitamente todos os objetos de uma cena 3D com profundidades diferentes.</p>
+<hr />
+<h2 id="sintese">Síntese<a class="headerlink" href="#sintese" title="Permanent link">&para;</a></h2>
+<p>Transformar uma imagem geometricamente não significa simplesmente “mover pixels”. O computador precisa relacionar sistemas de coordenadas, preencher uma nova grade e decidir como estimar valores em posições que não existiam originalmente. Redimensionamento, translação, rotação, transformação afim e perspectiva formam uma base que reaparece em registro de imagens, OCR, visão estéreo, redes neurais e detecção de objetos.</p>
+<hr />
+<h2 id="referencias">Referências<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<p>BRADSKI, Gary; KAEHLER, Adrian. <em>Learning OpenCV: Computer Vision with the OpenCV Library</em>. Sebastopol: O'Reilly Media, 2008.</p>
+<p>GONZALEZ, Rafael C.; WOODS, Richard E. <em>Processamento Digital de Imagens</em>. 3. ed. São Paulo: Pearson, 2010.</p>
+<p>SZELISKI, Richard. <em>Computer Vision: Algorithms and Applications</em>. 2. ed. Cham: Springer, 2022.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
