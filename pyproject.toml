@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "operacoes-com-imagens"
+version = "1.0.0"
+description = "Curso prático de processamento de imagens e visão computacional com Python e OpenCV"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Vinícius da Rocha Motta" }]
+dependencies = [
+  "matplotlib>=3.8,<4",
+  "numpy>=1.26,<3",
+  "opencv-python-headless>=4.10,<5",
+]
+
+[project.optional-dependencies]
+ocr = ["pytesseract>=0.3.13,<1"]
+deep = ["tensorflow>=2.16,<3"]
+yolo = ["ultralytics>=8.3,<9"]
+docs = ["mkdocs-material>=9.6,<10"]
+dev = [
+  "mkdocs-material>=9.6,<10",
+  "pytest>=8.3,<9",
+  "ruff>=0.9,<1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
