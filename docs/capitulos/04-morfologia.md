@@ -36,13 +36,13 @@ Uma analogia simples é uma regra de aprovação por nota: a nota pode assumir m
 
 Para uma imagem de intensidade \(I\), um limiar \(T\) e uma saída binária \(B\), usaremos:
 
-\[
+$$
 B(y,x)=
 \begin{cases}
-255, & I(y,x)>T,\\
-0, & I(y,x)\leq T.
+255, & \text{se } I(y,x)>T,\\
+0, & \text{se } I(y,x)\leq T.
 \end{cases}
-\]
+$$
 
 O símbolo \(I(y,x)\) significa “intensidade do pixel na linha \(y\) e na coluna \(x\)”. O resultado \(B(y,x)\) é a classificação desse pixel. A expressão não calcula uma média nem reconhece uma forma: ela faz uma comparação.
 
