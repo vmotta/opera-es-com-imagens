@@ -1,0 +1,2581 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Curso didático de processamento de imagens e visão computacional">
+      
+      
+        <meta name="author" content="Vinícius da Rocha Motta">
+      
+      
+      
+        <link rel="prev" href="../06-cores/">
+      
+      
+        <link rel="next" href="../08-feature-matching/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>7. Template Matching e Haar - Operações com Imagens</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Atkinson+Hyperlegible:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Atkinson Hyperlegible";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#7-template-matching-e-haar-cascades" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Operações com Imagens" class="md-header__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Operações com Imagens
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              7. Template Matching e Haar
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Usar tema escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Usar tema escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Usar tema claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Usar tema claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Operações com Imagens" class="md-nav__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Operações com Imagens
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../como-estudar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Como estudar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ambiente/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Preparação do ambiente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Imagem digital e OpenCV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-transformacoes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformações geométricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-filtros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Filtros, convolução e bordas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-morfologia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Limiarização e morfologia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-contornos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Contornos e características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-cores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Espaços de cores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detecção e movimento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Detecção e movimento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Template Matching e Haar
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Template Matching e Haar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#71-duas-nocoes-de-parecido" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Duas noções de “parecido”
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.1 Duas noções de “parecido”">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#template-matching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template Matching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#haar-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Haar Cascade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analogia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#72-o-que-e-um-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 O que é um template?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#73-como-matchtemplate-funciona-conceitualmente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Como matchTemplate funciona conceitualmente?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.3 Como matchTemplate funciona conceitualmente?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-prova-de-encaixe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: prova de encaixe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#74-dimensao-do-mapa-de-similaridade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Dimensão do mapa de similaridade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#75-encontrando-a-melhor-posicao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 Encontrando a melhor posição
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#76-desenhando-a-deteccao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 Desenhando a detecção
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#77-metricas-diferentes-mudam-a-interpretacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7 Métricas diferentes mudam a interpretação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#78-procurando-multiplas-ocorrencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.8 Procurando múltiplas ocorrências
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#79-limitacao-fundamental-escala" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.9 Limitação fundamental: escala
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.9 Limitação fundamental: escala">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-chave-e-fechadura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: chave e fechadura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#710-limitacao-rotacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.10 Limitação: rotação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#711-limitacao-iluminacao-e-deformacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.11 Limitação: iluminação e deformação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#712-de-templates-para-caracteristicas-haar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.12 De templates para características Haar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#713-por-que-comparar-regioes-pode-ajudar-a-detectar-rostos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.13 Por que comparar regiões pode ajudar a detectar rostos?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#714-imagem-integral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.14 Imagem integral
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.14 Imagem integral">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-tabela-de-soma-acumulada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: tabela de soma acumulada
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#715-adaboost-e-selecao-de-caracteristicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.15 AdaBoost e seleção de características
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#716-cascata-rejeitar-cedo-para-economizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.16 Cascata: rejeitar cedo para economizar
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.16 Cascata: rejeitar cedo para economizar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-triagem-em-aeroporto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: triagem em aeroporto
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#717-carregando-uma-haar-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.17 Carregando uma Haar Cascade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#718-detectmultiscale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.18 detectMultiScale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#719-scalefactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.19 scaleFactor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#720-minneighbors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.20 minNeighbors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#721-minsize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.21 minSize
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#722-falso-positivo-e-falso-negativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.22 Falso positivo e falso negativo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.22 Falso positivo e falso negativo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#falso-positivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Falso positivo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#falso-negativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Falso negativo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analogia-alarme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: alarme
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#723-template-matching-versus-haar-versus-rede-neural" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.23 Template Matching versus Haar versus rede neural
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#724-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.24 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#725-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.25 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#726-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.26 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-feature-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Feature Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-video/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Vídeo e fluxo óptico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes neurais e aplicações
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redes neurais e aplicações
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-dnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. CNNs e módulo DNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-yolo-nms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. YOLO e NMS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-pose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Estimativa de pose
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-faces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Reconhecimento facial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-ocr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. OCR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-estereo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Visão estéreo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16. Construindo CNNs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-gans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17. GANs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-yolo-moderno/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18. YOLO moderno
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#71-duas-nocoes-de-parecido" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Duas noções de “parecido”
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.1 Duas noções de “parecido”">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#template-matching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template Matching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#haar-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Haar Cascade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analogia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#72-o-que-e-um-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 O que é um template?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#73-como-matchtemplate-funciona-conceitualmente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Como matchTemplate funciona conceitualmente?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.3 Como matchTemplate funciona conceitualmente?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-prova-de-encaixe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: prova de encaixe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#74-dimensao-do-mapa-de-similaridade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Dimensão do mapa de similaridade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#75-encontrando-a-melhor-posicao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 Encontrando a melhor posição
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#76-desenhando-a-deteccao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 Desenhando a detecção
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#77-metricas-diferentes-mudam-a-interpretacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7 Métricas diferentes mudam a interpretação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#78-procurando-multiplas-ocorrencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.8 Procurando múltiplas ocorrências
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#79-limitacao-fundamental-escala" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.9 Limitação fundamental: escala
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.9 Limitação fundamental: escala">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-chave-e-fechadura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: chave e fechadura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#710-limitacao-rotacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.10 Limitação: rotação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#711-limitacao-iluminacao-e-deformacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.11 Limitação: iluminação e deformação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#712-de-templates-para-caracteristicas-haar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.12 De templates para características Haar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#713-por-que-comparar-regioes-pode-ajudar-a-detectar-rostos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.13 Por que comparar regiões pode ajudar a detectar rostos?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#714-imagem-integral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.14 Imagem integral
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.14 Imagem integral">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-tabela-de-soma-acumulada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: tabela de soma acumulada
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#715-adaboost-e-selecao-de-caracteristicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.15 AdaBoost e seleção de características
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#716-cascata-rejeitar-cedo-para-economizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.16 Cascata: rejeitar cedo para economizar
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.16 Cascata: rejeitar cedo para economizar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-triagem-em-aeroporto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: triagem em aeroporto
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#717-carregando-uma-haar-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.17 Carregando uma Haar Cascade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#718-detectmultiscale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.18 detectMultiScale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#719-scalefactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.19 scaleFactor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#720-minneighbors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.20 minNeighbors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#721-minsize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.21 minSize
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#722-falso-positivo-e-falso-negativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.22 Falso positivo e falso negativo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.22 Falso positivo e falso negativo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#falso-positivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Falso positivo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#falso-negativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Falso negativo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analogia-alarme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: alarme
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#723-template-matching-versus-haar-versus-rede-neural" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.23 Template Matching versus Haar versus rede neural
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#724-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.24 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#725-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.25 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#726-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.26 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="7-template-matching-e-haar-cascades">7. Template Matching e Haar Cascades<a class="headerlink" href="#7-template-matching-e-haar-cascades" title="Permanent link">&para;</a></h1>
+<h2 id="o-que-voce-aprendera">O que você aprenderá<a class="headerlink" href="#o-que-voce-aprendera" title="Permanent link">&para;</a></h2>
+<p>Neste capítulo, você conhecerá duas estratégias clássicas de detecção que representam maneiras diferentes de definir “parecido”. O <strong>Template Matching</strong> procura uma aparência muito específica; a <strong>Haar Cascade</strong> procura padrões aprendidos de uma classe.</p>
+<p>Ao final, você deverá conseguir:</p>
+<ol>
+<li>explicar Template Matching como busca por similaridade;</li>
+<li>compreender o mapa produzido por <code>matchTemplate</code>;</li>
+<li>interpretar <code>minMaxLoc</code>;</li>
+<li>diferenciar métricas baseadas em correlação e erro;</li>
+<li>compreender por que escala e rotação prejudicam templates rígidos;</li>
+<li>construir busca multiescala simples;</li>
+<li>explicar a ideia de características Haar;</li>
+<li>compreender o papel da imagem integral;</li>
+<li>explicar a lógica de uma cascata;</li>
+<li>interpretar <code>scaleFactor</code>, <code>minNeighbors</code> e <code>minSize</code>;</li>
+<li>diferenciar correlação de probabilidade;</li>
+<li>compreender falsos positivos e falsos negativos;</li>
+<li>comparar situações adequadas para Template Matching, Haar e redes neurais.</li>
+</ol>
+<p>Template Matching é uma técnica direta de correspondência por aparência. Viola e Jones (2001), por sua vez, mostraram que características Haar, imagens integrais, AdaBoost e cascatas permitem detecção eficiente de objetos, especialmente rostos frontais, em cenários controlados.</p>
+<hr />
+<h2 id="71-duas-nocoes-de-parecido">7.1 Duas noções de “parecido”<a class="headerlink" href="#71-duas-nocoes-de-parecido" title="Permanent link">&para;</a></h2>
+<h3 id="template-matching">Template Matching<a class="headerlink" href="#template-matching" title="Permanent link">&para;</a></h3>
+<p>Pergunta:</p>
+<blockquote>
+<p>“Em qual posição existe uma região visualmente parecida com esta pequena imagem?”</p>
+</blockquote>
+<h3 id="haar-cascade">Haar Cascade<a class="headerlink" href="#haar-cascade" title="Permanent link">&para;</a></h3>
+<p>Pergunta:</p>
+<blockquote>
+<p>“Em qual janela aparecem relações de contraste semelhantes às aprendidas durante o treinamento?”</p>
+</blockquote>
+<h3 id="analogia">Analogia<a class="headerlink" href="#analogia" title="Permanent link">&para;</a></h3>
+<p>Template Matching é como procurar uma peça usando uma <strong>fotocópia em tamanho real</strong>.</p>
+<p>Haar Cascade é como um <strong>porteiro treinado</strong> que faz uma sequência de perguntas rápidas sobre a aparência antes de permitir que um candidato avance.</p>
+<hr />
+<h2 id="72-o-que-e-um-template">7.2 O que é um template?<a class="headerlink" href="#72-o-que-e-um-template" title="Permanent link">&para;</a></h2>
+<p>Template é uma pequena imagem de referência.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">template</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s2">"alvo.png"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Ele precisa ser menor ou igual à imagem em que será procurado.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">imagem</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s2">"cena.png"</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="73-como-matchtemplate-funciona-conceitualmente">7.3 Como <code>matchTemplate</code> funciona conceitualmente?<a class="headerlink" href="#73-como-matchtemplate-funciona-conceitualmente" title="Permanent link">&para;</a></h2>
+<p>O template é deslocado por todas as posições válidas da cena.</p>
+<p>Em cada posição, é calculada uma pontuação.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">resultado</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">matchTemplate</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">template</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">TM_CCOEFF_NORMED</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>O resultado <strong>não é uma imagem detectada pronta</strong>. É um mapa de pontuações.</p>
+<h3 id="analogia-prova-de-encaixe">Analogia: prova de encaixe<a class="headerlink" href="#analogia-prova-de-encaixe" title="Permanent link">&para;</a></h3>
+<p>Imagine colocar uma transparência sobre uma fotografia e deslizá-la. Em cada posição, você mede o quanto as marcas coincidem.</p>
+<hr />
+<h2 id="74-dimensao-do-mapa-de-similaridade">7.4 Dimensão do mapa de similaridade<a class="headerlink" href="#74-dimensao-do-mapa-de-similaridade" title="Permanent link">&para;</a></h2>
+<p>Se a imagem possui:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>W × H
+</span></code></pre></div>
+<p>e o template possui:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>w × h
+</span></code></pre></div>
+<p>então o mapa possui aproximadamente:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(W - w + 1) × (H - h + 1)
+</span></code></pre></div>
+<p>porque o template só pode ser colocado onde cabe completamente.</p>
+<hr />
+<h2 id="75-encontrando-a-melhor-posicao">7.5 Encontrando a melhor posição<a class="headerlink" href="#75-encontrando-a-melhor-posicao" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_loc</span><span class="p">,</span> <span class="n">max_loc</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">minMaxLoc</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Para <code>TM_CCOEFF_NORMED</code>, normalmente interessa <code>max_val</code> e <code>max_loc</code>.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">if</span> <span class="n">max_val</span> <span class="o">&gt;=</span> <span class="mf">0.80</span><span class="p">:</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">canto_superior</span> <span class="o">=</span> <span class="n">max_loc</span>
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">0,80 não significa 80% de probabilidade</p>
+<p>Trata-se de uma medida de similaridade/correlação definida pelo método. Ela não é automaticamente uma probabilidade calibrada.</p>
+</div>
+<hr />
+<h2 id="76-desenhando-a-deteccao">7.6 Desenhando a detecção<a class="headerlink" href="#76-desenhando-a-deteccao" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">max_loc</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">h</span><span class="p">),</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="mi">2</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="77-metricas-diferentes-mudam-a-interpretacao">7.7 Métricas diferentes mudam a interpretação<a class="headerlink" href="#77-metricas-diferentes-mudam-a-interpretacao" title="Permanent link">&para;</a></h2>
+<p>Alguns métodos buscam <strong>máximo</strong>; outros buscam <strong>mínimo</strong>.</p>
+<p>Exemplos:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>TM_CCOEFF_NORMED → maior costuma ser melhor
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>TM_CCORR_NORMED  → maior costuma ser melhor
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>TM_SQDIFF        → menor é melhor
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>TM_SQDIFF_NORMED → menor é melhor
+</span></code></pre></div>
+<p>Sempre confira a métrica antes de interpretar <code>minMaxLoc</code>.</p>
+<hr />
+<h2 id="78-procurando-multiplas-ocorrencias">7.8 Procurando múltiplas ocorrências<a class="headerlink" href="#78-procurando-multiplas-ocorrencias" title="Permanent link">&para;</a></h2>
+<p>Em vez de escolher apenas o máximo:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">locais</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">resultado</span> <span class="o">&gt;=</span> <span class="mf">0.85</span><span class="p">)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">locais</span><span class="p">):</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>        <span class="n">saida</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>        <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>        <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">h</span><span class="p">),</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>        <span class="mi">2</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="p">)</span>
+</span></code></pre></div>
+<p>Isso pode gerar várias caixas sobre o mesmo objeto. Técnicas de agrupamento ou NMS podem ser necessárias.</p>
+<hr />
+<h2 id="79-limitacao-fundamental-escala">7.9 Limitação fundamental: escala<a class="headerlink" href="#79-limitacao-fundamental-escala" title="Permanent link">&para;</a></h2>
+<p>Se o template mede <code>80 × 80</code> e o objeto aparece com <code>100 × 100</code>, a correspondência pode cair muito.</p>
+<h3 id="analogia-chave-e-fechadura">Analogia: chave e fechadura<a class="headerlink" href="#analogia-chave-e-fechadura" title="Permanent link">&para;</a></h3>
+<p>Uma chave com desenho correto mas tamanho errado não encaixa.</p>
+<p>Uma solução simples é testar várias escalas.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">for</span> <span class="n">escala</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">]:</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">t</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>        <span class="n">template</span><span class="p">,</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>        <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        <span class="n">fx</span><span class="o">=</span><span class="n">escala</span><span class="p">,</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>        <span class="n">fy</span><span class="o">=</span><span class="n">escala</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="p">)</span>
+</span></code></pre></div>
+<p>O custo aumenta porque realizamos várias buscas.</p>
+<hr />
+<h2 id="710-limitacao-rotacao">7.10 Limitação: rotação<a class="headerlink" href="#710-limitacao-rotacao" title="Permanent link">&para;</a></h2>
+<p>Um template vertical pode falhar quando o objeto gira.</p>
+<p>Podemos criar versões rotacionadas, mas isso aumenta a quantidade de comparações.</p>
+<p>Características locais, como veremos no próximo capítulo, lidam melhor com algumas dessas variações.</p>
+<hr />
+<h2 id="711-limitacao-iluminacao-e-deformacao">7.11 Limitação: iluminação e deformação<a class="headerlink" href="#711-limitacao-iluminacao-e-deformacao" title="Permanent link">&para;</a></h2>
+<p>Mudanças intensas de:</p>
+<ul>
+<li>brilho;</li>
+<li>contraste;</li>
+<li>perspectiva;</li>
+<li>deformação;</li>
+<li>oclusão;</li>
+</ul>
+<p>podem prejudicar uma comparação pixel a pixel.</p>
+<p>Template Matching funciona melhor quando a câmera e o objeto são relativamente controlados.</p>
+<hr />
+<h2 id="712-de-templates-para-caracteristicas-haar">7.12 De templates para características Haar<a class="headerlink" href="#712-de-templates-para-caracteristicas-haar" title="Permanent link">&para;</a></h2>
+<p>Viola e Jones (2001) propuseram um detector de objetos extremamente influente baseado em características simples de contraste.</p>
+<p>Uma característica Haar compara somas de regiões claras e escuras.</p>
+<p>Exemplo conceitual:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>[ região clara ][ região escura ]
+</span></code></pre></div>
+<p>A diferença entre as duas somas produz uma característica.</p>
+<hr />
+<h2 id="713-por-que-comparar-regioes-pode-ajudar-a-detectar-rostos">7.13 Por que comparar regiões pode ajudar a detectar rostos?<a class="headerlink" href="#713-por-que-comparar-regioes-pode-ajudar-a-detectar-rostos" title="Permanent link">&para;</a></h2>
+<p>Em muitos rostos frontais:</p>
+<ul>
+<li>região dos olhos tende a ser mais escura que parte das bochechas;</li>
+<li>ponte do nariz possui padrões de contraste específicos;</li>
+<li>testa e olhos formam relações espaciais recorrentes.</li>
+</ul>
+<p>O classificador não procura “olhos” semanticamente; ele aprende combinações de contrastes que ajudam a separar positivos e negativos.</p>
+<hr />
+<h2 id="714-imagem-integral">7.14 Imagem integral<a class="headerlink" href="#714-imagem-integral" title="Permanent link">&para;</a></h2>
+<p>Calcular soma de muitos retângulos diretamente seria caro.</p>
+<p>A <strong>imagem integral</strong> permite obter a soma de qualquer região retangular usando poucos acessos, independentemente do tamanho do retângulo (VIOLA; JONES, 2001).</p>
+<h3 id="analogia-tabela-de-soma-acumulada">Analogia: tabela de soma acumulada<a class="headerlink" href="#analogia-tabela-de-soma-acumulada" title="Permanent link">&para;</a></h3>
+<p>É como manter uma planilha em que cada posição já sabe o total acumulado até aquele ponto. Assim, calcular a soma de uma área deixa de exigir visitar todos os elementos internos.</p>
+<hr />
+<h2 id="715-adaboost-e-selecao-de-caracteristicas">7.15 AdaBoost e seleção de características<a class="headerlink" href="#715-adaboost-e-selecao-de-caracteristicas" title="Permanent link">&para;</a></h2>
+<p>Existe uma quantidade enorme de possíveis características Haar.</p>
+<p>AdaBoost seleciona características úteis e combina classificadores fracos em uma decisão mais forte.</p>
+<p>A ideia didática:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>muitas perguntas possíveis
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>      ↓
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>selecionar perguntas informativas
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>      ↓
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>combinar respostas
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>      ↓
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>decisão mais robusta
+</span></code></pre></div>
+<hr />
+<h2 id="716-cascata-rejeitar-cedo-para-economizar">7.16 Cascata: rejeitar cedo para economizar<a class="headerlink" href="#716-cascata-rejeitar-cedo-para-economizar" title="Permanent link">&para;</a></h2>
+<p>Uma cascata possui estágios.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>janela candidata
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>   ↓
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>estágio 1 → rejeita muitos
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>   ↓
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>estágio 2 → rejeita outros
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>   ↓
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>...
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>   ↓
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>estágios finais → candidatos difíceis
+</span></code></pre></div>
+<h3 id="analogia-triagem-em-aeroporto">Analogia: triagem em aeroporto<a class="headerlink" href="#analogia-triagem-em-aeroporto" title="Permanent link">&para;</a></h3>
+<p>A maioria das situações simples é resolvida rapidamente. Apenas casos que continuam plausíveis seguem para inspeções mais custosas.</p>
+<hr />
+<h2 id="717-carregando-uma-haar-cascade">7.17 Carregando uma Haar Cascade<a class="headerlink" href="#717-carregando-uma-haar-cascade" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">cascade</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CascadeClassifier</span><span class="p">(</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">haarcascades</span> <span class="o">+</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="s2">"haarcascade_frontalface_default.xml"</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>É importante verificar:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">if</span> <span class="n">cascade</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Cascade não carregada"</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="718-detectmultiscale">7.18 <code>detectMultiScale</code><a class="headerlink" href="#718-detectmultiscale" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">rostos</span> <span class="o">=</span> <span class="n">cascade</span><span class="o">.</span><span class="n">detectMultiScale</span><span class="p">(</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="n">cinza</span><span class="p">,</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="n">scaleFactor</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">minNeighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="n">minSize</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="719-scalefactor">7.19 <code>scaleFactor</code><a class="headerlink" href="#719-scalefactor" title="Permanent link">&para;</a></h2>
+<p>Controla como a escala da janela muda.</p>
+<p>Valor mais próximo de <code>1</code>:</p>
+<ul>
+<li>busca mais detalhada;</li>
+<li>mais escalas;</li>
+<li>maior custo.</li>
+</ul>
+<p>Valor maior:</p>
+<ul>
+<li>busca mais rápida;</li>
+<li>pode pular tamanhos relevantes.</li>
+</ul>
+<hr />
+<h2 id="720-minneighbors">7.20 <code>minNeighbors</code><a class="headerlink" href="#720-minneighbors" title="Permanent link">&para;</a></h2>
+<p>Múltiplas detecções próximas podem sustentar uma caixa final.</p>
+<p>Aumentar <code>minNeighbors</code> tende a:</p>
+<ul>
+<li>reduzir falsos positivos;</li>
+<li>possivelmente aumentar falsos negativos.</li>
+</ul>
+<p>Não existe valor universal.</p>
+<hr />
+<h2 id="721-minsize">7.21 <code>minSize</code><a class="headerlink" href="#721-minsize" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">minSize</span><span class="o">=</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+</span></code></pre></div>
+<p>ignora candidatos menores.</p>
+<p>Isso pode economizar processamento quando sabemos que objetos muito pequenos não interessam ou não possuem resolução suficiente.</p>
+<hr />
+<h2 id="722-falso-positivo-e-falso-negativo">7.22 Falso positivo e falso negativo<a class="headerlink" href="#722-falso-positivo-e-falso-negativo" title="Permanent link">&para;</a></h2>
+<h3 id="falso-positivo">Falso positivo<a class="headerlink" href="#falso-positivo" title="Permanent link">&para;</a></h3>
+<p>O algoritmo afirma que existe objeto, mas não existe.</p>
+<h3 id="falso-negativo">Falso negativo<a class="headerlink" href="#falso-negativo" title="Permanent link">&para;</a></h3>
+<p>Existe objeto, mas o algoritmo não detecta.</p>
+<h3 id="analogia-alarme">Analogia: alarme<a class="headerlink" href="#analogia-alarme" title="Permanent link">&para;</a></h3>
+<p>Um alarme muito sensível dispara com qualquer movimento. Um alarme muito rígido pode não disparar quando deveria.</p>
+<p>Parâmetros controlam esse compromisso.</p>
+<hr />
+<h2 id="723-template-matching-versus-haar-versus-rede-neural">7.23 Template Matching versus Haar versus rede neural<a class="headerlink" href="#723-template-matching-versus-haar-versus-rede-neural" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Cenário</th>
+<th>Técnica plausível</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>logotipo rígido, câmera fixa, escala constante</td>
+<td>Template Matching</td>
+</tr>
+<tr>
+<td>rostos frontais em CPU limitada</td>
+<td>Haar Cascade</td>
+</tr>
+<tr>
+<td>grande variação de pose, escala e oclusão</td>
+<td>detector neural</td>
+</tr>
+<tr>
+<td>peça industrial com aparência exata</td>
+<td>Template Matching pode ser suficiente</td>
+</tr>
+<tr>
+<td>classe visual complexa</td>
+<td>rede neural costuma ser mais adequada</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="724-exemplo-integrado-do-capitulo">7.24 Exemplo integrado do capítulo<a class="headerlink" href="#724-exemplo-integrado-do-capitulo" title="Permanent link">&para;</a></h2>
+<p>O <a href="https://github.com/vmotta/opera-es-com-imagens/blob/main/exemplos/cap07_template_haar.py">código do capítulo 7</a> oferece uma experiência autocontida para Template Matching e demonstra o carregamento de Haar Cascade.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>python<span class="w"> </span>-m<span class="w"> </span>exemplos.cap07_template_haar
+</span></code></pre></div>
+<p>Pipeline:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>cena sintética
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>   ↓
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>template
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>   ↓
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>mapa de similaridade
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>   ↓
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>melhor posição
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>   ↓
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>limiar de decisão
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>   ↓
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>busca multiescala didática
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>   ↓
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>Haar frontal
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>   ↓
+</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>detectMultiScale
+</span></code></pre></div>
+<p><img alt="Alvo geométrico localizado por Template Matching" src="../../assets/resultados/cap07/02_template_encontrado.png" /></p>
+<hr />
+<h2 id="725-erros-comuns">7.25 Erros comuns<a class="headerlink" href="#725-erros-comuns" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa provável</th>
+<th>Correção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>matchTemplate</code> falha</td>
+<td>template maior que imagem</td>
+<td>confira dimensões</td>
+</tr>
+<tr>
+<td>pontuação cai ao redimensionar</td>
+<td>escala diferente</td>
+<td>busca multiescala</td>
+</tr>
+<tr>
+<td>objeto girado não aparece</td>
+<td>template rígido</td>
+<td>versões rotacionadas/features</td>
+</tr>
+<tr>
+<td>muitas caixas próximas</td>
+<td>vários picos</td>
+<td>agrupamento/NMS</td>
+</tr>
+<tr>
+<td>interpretação invertida</td>
+<td>métrica <code>SQDIFF</code></td>
+<td>menor é melhor</td>
+</tr>
+<tr>
+<td>Haar não carrega</td>
+<td>caminho XML incorreto</td>
+<td>teste <code>.empty()</code></td>
+</tr>
+<tr>
+<td>muitos falsos positivos Haar</td>
+<td><code>minNeighbors</code> baixo</td>
+<td>aumente e valide</td>
+</tr>
+<tr>
+<td>objetos pequenos não aparecem</td>
+<td><code>minSize</code> alto</td>
+<td>reduza com cautela</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="726-perguntas-de-revisao">7.26 Perguntas de revisão<a class="headerlink" href="#726-perguntas-de-revisao" title="Permanent link">&para;</a></h2>
+<ol>
+<li>O que <code>matchTemplate</code> produz?</li>
+<li>Por que o mapa é menor que a imagem original?</li>
+<li><code>0,9</code> significa 90% de probabilidade?</li>
+<li>Em <code>TM_SQDIFF</code>, buscamos máximo ou mínimo?</li>
+<li>Por que escala prejudica Template Matching?</li>
+<li>O que uma característica Haar mede?</li>
+<li>Qual é a vantagem da imagem integral?</li>
+<li>Por que uma cascata é eficiente?</li>
+<li>O que <code>scaleFactor</code> controla?</li>
+<li>O que ocorre ao aumentar <code>minNeighbors</code>?</li>
+</ol>
+<hr />
+<h1 id="exercicios-de-fixacao">Exercícios de fixação<a class="headerlink" href="#exercicios-de-fixacao" title="Permanent link">&para;</a></h1>
+<h3 id="exercicio-1">Exercício 1<a class="headerlink" href="#exercicio-1" title="Permanent link">&para;</a></h3>
+<p>Crie uma cena sintética com um quadrado e recorte-o como template. Localize-o com <code>TM_CCOEFF_NORMED</code>.</p>
+<h3 id="exercicio-2">Exercício 2<a class="headerlink" href="#exercicio-2" title="Permanent link">&para;</a></h3>
+<p>Compare <code>TM_CCOEFF_NORMED</code> e <code>TM_SQDIFF_NORMED</code>. Mostre qual extremo deve ser usado.</p>
+<h3 id="exercicio-3">Exercício 3<a class="headerlink" href="#exercicio-3" title="Permanent link">&para;</a></h3>
+<p>Redimensione o objeto da cena em <code>+10%</code>, <code>+20%</code> e <code>+40%</code>. Registre a pontuação.</p>
+<h3 id="exercicio-4">Exercício 4<a class="headerlink" href="#exercicio-4" title="Permanent link">&para;</a></h3>
+<p>Rotacione o objeto em <code>15°</code>, <code>30°</code> e <code>60°</code>. Registre a degradação.</p>
+<h3 id="exercicio-5">Exercício 5<a class="headerlink" href="#exercicio-5" title="Permanent link">&para;</a></h3>
+<p>Implemente busca em cinco escalas do template.</p>
+<h3 id="exercicio-6">Exercício 6<a class="headerlink" href="#exercicio-6" title="Permanent link">&para;</a></h3>
+<p>Insira três cópias do mesmo template na cena e detecte todas acima de um limiar.</p>
+<h3 id="exercicio-7">Exercício 7<a class="headerlink" href="#exercicio-7" title="Permanent link">&para;</a></h3>
+<p>Explique por que aparecem múltiplas caixas sobre uma mesma ocorrência.</p>
+<h3 id="exercicio-8">Exercício 8<a class="headerlink" href="#exercicio-8" title="Permanent link">&para;</a></h3>
+<p>Carregue a Haar frontal e confirme que <code>.empty()</code> é falso.</p>
+<h3 id="exercicio-9">Exercício 9<a class="headerlink" href="#exercicio-9" title="Permanent link">&para;</a></h3>
+<p>Em fotografias autorizadas, varie <code>minNeighbors</code> de 2 a 8 e registre resultados.</p>
+<h3 id="exercicio-10">Exercício 10<a class="headerlink" href="#exercicio-10" title="Permanent link">&para;</a></h3>
+<p>Varie <code>scaleFactor</code> entre <code>1.05</code>, <code>1.1</code> e <code>1.3</code>. Compare tempo e detecções.</p>
+<h3 id="exercicio-11">Exercício 11<a class="headerlink" href="#exercicio-11" title="Permanent link">&para;</a></h3>
+<p>Construa uma tabela com verdadeiros positivos, falsos positivos e falsos negativos.</p>
+<h3 id="exercicio-12">Exercício 12<a class="headerlink" href="#exercicio-12" title="Permanent link">&para;</a></h3>
+<p>Para três cenários diferentes, justifique tecnicamente a escolha entre Template Matching, Haar e detector neural.</p>
+<h3 id="exercicio-13">Exercício 13<a class="headerlink" href="#exercicio-13" title="Permanent link">&para;</a></h3>
+<p>Explique por que uma ilustração que parece um rosto para uma pessoa pode não ser detectada por uma Haar Cascade treinada com fotografias.</p>
+<hr />
+<h2 id="sintese">Síntese<a class="headerlink" href="#sintese" title="Permanent link">&para;</a></h2>
+<p>Template Matching é uma busca direta por aparência e funciona muito bem em ambientes controlados. Haar Cascades introduzem uma ideia diferente: uma classe pode ser reconhecida por combinações de características aprendidas e avaliadas em cascata. As limitações dessas técnicas ajudam a motivar métodos de características locais e redes neurais dos capítulos seguintes.</p>
+<hr />
+<h2 id="referencias">Referências<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<p>BRADSKI, Gary; KAEHLER, Adrian. <em>Learning OpenCV: Computer Vision with the OpenCV Library</em>. Sebastopol: O'Reilly Media, 2008.</p>
+<p>SZELISKI, Richard. <em>Computer Vision: Algorithms and Applications</em>. 2. ed. Cham: Springer, 2022.</p>
+<p>VIOLA, Paul; JONES, Michael. Rapid object detection using a boosted cascade of simple features. In: <em>Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition</em>. 2001.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

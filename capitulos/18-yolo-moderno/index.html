@@ -1,0 +1,2847 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Curso didático de processamento de imagens e visão computacional">
+      
+      
+        <meta name="author" content="Vinícius da Rocha Motta">
+      
+      
+      
+        <link rel="prev" href="../17-gans/">
+      
+      
+        <link rel="next" href="../../glossario/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>18. YOLO moderno - Operações com Imagens</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Atkinson+Hyperlegible:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Atkinson Hyperlegible";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#18-yolo-moderno-e-inferencia-pratica" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Operações com Imagens" class="md-header__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Operações com Imagens
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              18. YOLO moderno
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Usar tema escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Usar tema escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Usar tema claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Usar tema claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Operações com Imagens" class="md-nav__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Operações com Imagens
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../como-estudar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Como estudar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ambiente/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Preparação do ambiente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Imagem digital e OpenCV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-transformacoes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformações geométricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-filtros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Filtros, convolução e bordas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-morfologia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Limiarização e morfologia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-contornos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Contornos e características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-cores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Espaços de cores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detecção e movimento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Detecção e movimento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-deteccao-classica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Template Matching e Haar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-feature-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Feature Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-video/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Vídeo e fluxo óptico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes neurais e aplicações
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redes neurais e aplicações
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-dnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. CNNs e módulo DNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-yolo-nms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. YOLO e NMS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-pose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Estimativa de pose
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-faces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Reconhecimento facial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-ocr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. OCR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-estereo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Visão estéreo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16. Construindo CNNs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-gans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17. GANs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18. YOLO moderno
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18. YOLO moderno
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#181-o-que-permanece-da-ideia-yolo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.1 O que permanece da ideia YOLO?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.1 O que permanece da ideia YOLO?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-fiscal-olhando-a-praca-inteira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: fiscal olhando a praça inteira
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#182-a-explicacao-classica-da-grade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.2 A explicação clássica da grade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#183-centro-do-objeto-e-celula-responsavel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.3 Centro do objeto e célula responsável
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.3 Centro do objeto e célula responsável">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#184-objetos-pequenos-sao-dificeis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.4 Objetos pequenos são difíceis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#185-cabecas-multiescala" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.5 Cabeças multiescala
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.5 Cabeças multiescala">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-mapas-da-cidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: mapas da cidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#186-o-problema-de-redimensionar-para-quadrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.6 O problema de redimensionar para quadrado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#187-letterbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.7 Letterbox
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.7 Letterbox">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#passo-1-escala" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 1 — escala
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passo-2-tamanho-redimensionado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 2 — tamanho redimensionado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passo-3-padding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 3 — padding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#188-exemplo-numerico-de-letterbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.8 Exemplo numérico de letterbox
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#189-implementacao-didatica-de-letterbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.9 Implementação didática de letterbox
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1810-caixas-pertencem-ao-espaco-em-que-foram-previstas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.10 Caixas pertencem ao espaço em que foram previstas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1811-invertendo-letterbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.11 Invertendo letterbox
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.11 Invertendo letterbox">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1812-formatos-comuns-de-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.12 Formatos comuns de caixa
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.12 Formatos comuns de caixa">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xyxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        xyxy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xywh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        xywh
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1813-inferencia-com-biblioteca-de-alto-nivel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.13 Inferência com biblioteca de alto nível
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1814-objeto-de-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.14 Objeto de resultados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1815-transferencia-gpu-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.15 Transferência GPU → CPU
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1816-confianca-minima" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.16 Confiança mínima
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1817-iou-e-nms-continuam-relevantes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.17 IoU e NMS continuam relevantes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1818-precisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.18 Precisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1819-revocacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.19 Revocação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1820-compromisso-precisaorevocacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.20 Compromisso precisão–revocação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1821-ap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.21 AP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1822-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.22 mAP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1823-latencia-versus-throughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.23 Latência versus throughput
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.23 Latência versus throughput">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#latencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latência
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#throughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Throughput
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1824-fps-nao-e-comparacao-suficiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.24 FPS não é comparação suficiente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1825-benchmark-reproduzivel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.25 Benchmark reproduzível
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1826-modelo-maior-nao-e-automaticamente-melhor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.26 Modelo maior não é automaticamente melhor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.26 Modelo maior não é automaticamente melhor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-caminhao-e-motocicleta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: caminhão e motocicleta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1827-objetos-pequenos-e-resolucao-de-entrada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.27 Objetos pequenos e resolução de entrada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1828-inferencia-em-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.28 Inferência em vídeo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1829-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.29 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1830-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.30 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1831-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.31 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#181-o-que-permanece-da-ideia-yolo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.1 O que permanece da ideia YOLO?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.1 O que permanece da ideia YOLO?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-fiscal-olhando-a-praca-inteira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: fiscal olhando a praça inteira
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#182-a-explicacao-classica-da-grade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.2 A explicação clássica da grade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#183-centro-do-objeto-e-celula-responsavel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.3 Centro do objeto e célula responsável
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.3 Centro do objeto e célula responsável">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#184-objetos-pequenos-sao-dificeis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.4 Objetos pequenos são difíceis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#185-cabecas-multiescala" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.5 Cabeças multiescala
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.5 Cabeças multiescala">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-mapas-da-cidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: mapas da cidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#186-o-problema-de-redimensionar-para-quadrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.6 O problema de redimensionar para quadrado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#187-letterbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.7 Letterbox
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.7 Letterbox">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#passo-1-escala" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 1 — escala
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passo-2-tamanho-redimensionado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 2 — tamanho redimensionado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passo-3-padding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 3 — padding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#188-exemplo-numerico-de-letterbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.8 Exemplo numérico de letterbox
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#189-implementacao-didatica-de-letterbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.9 Implementação didática de letterbox
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1810-caixas-pertencem-ao-espaco-em-que-foram-previstas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.10 Caixas pertencem ao espaço em que foram previstas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1811-invertendo-letterbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.11 Invertendo letterbox
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.11 Invertendo letterbox">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1812-formatos-comuns-de-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.12 Formatos comuns de caixa
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.12 Formatos comuns de caixa">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xyxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        xyxy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xywh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        xywh
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1813-inferencia-com-biblioteca-de-alto-nivel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.13 Inferência com biblioteca de alto nível
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1814-objeto-de-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.14 Objeto de resultados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1815-transferencia-gpu-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.15 Transferência GPU → CPU
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1816-confianca-minima" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.16 Confiança mínima
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1817-iou-e-nms-continuam-relevantes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.17 IoU e NMS continuam relevantes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1818-precisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.18 Precisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1819-revocacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.19 Revocação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1820-compromisso-precisaorevocacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.20 Compromisso precisão–revocação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1821-ap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.21 AP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1822-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.22 mAP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1823-latencia-versus-throughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.23 Latência versus throughput
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.23 Latência versus throughput">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#latencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latência
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#throughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Throughput
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1824-fps-nao-e-comparacao-suficiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.24 FPS não é comparação suficiente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1825-benchmark-reproduzivel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.25 Benchmark reproduzível
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1826-modelo-maior-nao-e-automaticamente-melhor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.26 Modelo maior não é automaticamente melhor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.26 Modelo maior não é automaticamente melhor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-caminhao-e-motocicleta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: caminhão e motocicleta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1827-objetos-pequenos-e-resolucao-de-entrada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.27 Objetos pequenos e resolução de entrada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1828-inferencia-em-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.28 Inferência em vídeo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1829-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.29 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1830-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.30 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1831-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.31 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="18-yolo-moderno-e-inferencia-pratica">18. YOLO moderno e inferência prática<a class="headerlink" href="#18-yolo-moderno-e-inferencia-pratica" title="Permanent link">&para;</a></h1>
+<h2 id="o-que-voce-aprendera">O que você aprenderá<a class="headerlink" href="#o-que-voce-aprendera" title="Permanent link">&para;</a></h2>
+<p>Neste capítulo final, você integrará vários conceitos anteriores em um pipeline moderno de detecção: preparação da imagem, responsabilidade espacial, múltiplas escalas, coordenadas, <em>letterbox</em>, inferência, resultados, métricas e desempenho.</p>
+<p>Ao final, deverá conseguir:</p>
+<ol>
+<li>compreender a ideia histórica de responsabilidade espacial do YOLO;</li>
+<li>reconhecer que implementações modernas diferem das versões iniciais;</li>
+<li>explicar por que detectores usam múltiplas escalas;</li>
+<li>compreender <em>letterbox</em>;</li>
+<li>calcular escala e padding;</li>
+<li>converter caixas entre espaço original e espaço preparado;</li>
+<li>interpretar coordenadas <code>xyxy</code> e <code>xywh</code>;</li>
+<li>compreender confiança e classe;</li>
+<li>interpretar objetos <code>Results</code> em alto nível;</li>
+<li>compreender IoU, NMS e avaliação como parte do pipeline;</li>
+<li>diferenciar precisão e revocação;</li>
+<li>compreender AP e mAP;</li>
+<li>diferenciar latência e throughput;</li>
+<li>planejar benchmarks reproduzíveis;</li>
+<li>comparar modelos pelo compromisso entre qualidade e custo.</li>
+</ol>
+<p>YOLO foi originalmente apresentado como detector unificado de uma etapa (REDMON et al., 2016). A família evoluiu profundamente; por isso, este capítulo separa conceitos duradouros de detalhes específicos de uma versão.</p>
+<hr />
+<h2 id="181-o-que-permanece-da-ideia-yolo">18.1 O que permanece da ideia YOLO?<a class="headerlink" href="#181-o-que-permanece-da-ideia-yolo" title="Permanent link">&para;</a></h2>
+<p>A ideia didática central é evitar uma busca independente por milhares de recortes. Uma rede compartilha computação sobre a imagem e produz previsões densas de objetos.</p>
+<h3 id="analogia-fiscal-olhando-a-praca-inteira">Analogia: fiscal olhando a praça inteira<a class="headerlink" href="#analogia-fiscal-olhando-a-praca-inteira" title="Permanent link">&para;</a></h3>
+<p>Em vez de fotografar cada metro quadrado da praça separadamente e perguntar “há alguém aqui?”, o fiscal observa a cena inteira e aponta posições onde acredita existirem objetos.</p>
+<hr />
+<h2 id="182-a-explicacao-classica-da-grade">18.2 A explicação clássica da grade<a class="headerlink" href="#182-a-explicacao-classica-da-grade" title="Permanent link">&para;</a></h2>
+<p>Nas primeiras formulações, uma grade dividia a imagem e a célula que continha o centro do objeto assumia responsabilidade por ele (REDMON et al., 2016).</p>
+<p><img alt="Grade YOLO com centro do objeto na célula responsável" src="../../assets/resultados/cap18/01_responsabilidade_celular.png" /></p>
+<p>Essa ideia continua útil para compreender a relação entre mapas de features e posições espaciais.</p>
+<div class="admonition note">
+<p class="admonition-title">Modelo didático não é descrição literal de toda versão moderna</p>
+<p>Detectores atuais podem usar atribuição dinâmica, estratégias anchor-free, diferentes cabeças e múltiplas escalas. Sempre consulte a arquitetura específica do modelo utilizado.</p>
+</div>
+<hr />
+<h2 id="183-centro-do-objeto-e-celula-responsavel">18.3 Centro do objeto e célula responsável<a class="headerlink" href="#183-centro-do-objeto-e-celula-responsavel" title="Permanent link">&para;</a></h2>
+<p>Se uma grade é <code>7 × 7</code> e a imagem mede <code>700 × 700</code>, cada célula didática mede <code>100 × 100</code>.</p>
+<p>Um centro em:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>(x=350, y=250)
+</span></code></pre></div>
+<p>pertence aproximadamente à:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>coluna 3
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>linha 2
+</span></code></pre></div>
+<p>considerando índice iniciado em zero.</p>
+<h3 id="exemplo-1">Exemplo 1<a class="headerlink" href="#exemplo-1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">coluna</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cx</span> <span class="o">/</span> <span class="n">largura</span> <span class="o">*</span> <span class="n">grade</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">linha</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cy</span> <span class="o">/</span> <span class="n">altura</span> <span class="o">*</span> <span class="n">grade</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="184-objetos-pequenos-sao-dificeis">18.4 Objetos pequenos são difíceis<a class="headerlink" href="#184-objetos-pequenos-sao-dificeis" title="Permanent link">&para;</a></h2>
+<p>Um objeto pequeno pode ocupar poucos pixels e desaparecer progressivamente em mapas de baixa resolução.</p>
+<p>Por isso, detectores modernos combinam representações de diferentes escalas.</p>
+<hr />
+<h2 id="185-cabecas-multiescala">18.5 Cabeças multiescala<a class="headerlink" href="#185-cabecas-multiescala" title="Permanent link">&para;</a></h2>
+<p>Mapas de alta resolução:</p>
+<ul>
+<li>preservam detalhes espaciais;</li>
+<li>ajudam objetos pequenos.</li>
+</ul>
+<p>Mapas profundos de menor resolução:</p>
+<ul>
+<li>possuem contexto semântico maior;</li>
+<li>ajudam objetos grandes e padrões complexos.</li>
+</ul>
+<h3 id="analogia-mapas-da-cidade">Analogia: mapas da cidade<a class="headerlink" href="#analogia-mapas-da-cidade" title="Permanent link">&para;</a></h3>
+<p>Um mapa de bairro mostra ruas pequenas; um mapa estadual mostra contexto amplo. Um detector combina escalas para enxergar detalhes e contexto.</p>
+<hr />
+<h2 id="186-o-problema-de-redimensionar-para-quadrado">18.6 O problema de redimensionar para quadrado<a class="headerlink" href="#186-o-problema-de-redimensionar-para-quadrado" title="Permanent link">&para;</a></h2>
+<p>Imagem original:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1280 × 720
+</span></code></pre></div>
+<p>Entrada do modelo:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>640 × 640
+</span></code></pre></div>
+<p>Se simplesmente fizermos:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">imagem</span><span class="p">,</span> <span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">640</span><span class="p">))</span>
+</span></code></pre></div>
+<p>os objetos serão deformados.</p>
+<hr />
+<h2 id="187-letterbox">18.7 Letterbox<a class="headerlink" href="#187-letterbox" title="Permanent link">&para;</a></h2>
+<p><em>Letterbox</em> preserva proporção e adiciona padding.</p>
+<h3 id="passo-1-escala">Passo 1 — escala<a class="headerlink" href="#passo-1-escala" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">escala</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">alvo_w</span> <span class="o">/</span> <span class="n">largura</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">alvo_h</span> <span class="o">/</span> <span class="n">altura</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="passo-2-tamanho-redimensionado">Passo 2 — tamanho redimensionado<a class="headerlink" href="#passo-2-tamanho-redimensionado" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">novo_w</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">largura</span> <span class="o">*</span> <span class="n">escala</span><span class="p">)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">novo_h</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">altura</span> <span class="o">*</span> <span class="n">escala</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="passo-3-padding">Passo 3 — padding<a class="headerlink" href="#passo-3-padding" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">pad_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">alvo_w</span> <span class="o">-</span> <span class="n">novo_w</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">pad_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">alvo_h</span> <span class="o">-</span> <span class="n">novo_h</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+</span></code></pre></div>
+<hr />
+<h2 id="188-exemplo-numerico-de-letterbox">18.8 Exemplo numérico de letterbox<a class="headerlink" href="#188-exemplo-numerico-de-letterbox" title="Permanent link">&para;</a></h2>
+<p>Original:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>1280 × 720
+</span></code></pre></div>
+<p>Alvo:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>640 × 640
+</span></code></pre></div>
+<p>Escala:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>min(640/1280, 640/720)
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>= min(0.5, 0.888...)
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>= 0.5
+</span></code></pre></div>
+<p>Novo tamanho:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>640 × 360
+</span></code></pre></div>
+<p>Padding vertical total:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>640 - 360 = 280
+</span></code></pre></div>
+<p>aproximadamente <code>140</code> pixels acima e <code>140</code> abaixo.</p>
+<hr />
+<h2 id="189-implementacao-didatica-de-letterbox">18.9 Implementação didática de letterbox<a class="headerlink" href="#189-implementacao-didatica-de-letterbox" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">letterbox</span><span class="p">(</span><span class="n">imagem</span><span class="p">,</span> <span class="n">alvo</span><span class="o">=</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">640</span><span class="p">)):</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">imagem</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">alvo_w</span><span class="p">,</span> <span class="n">alvo_h</span> <span class="o">=</span> <span class="n">alvo</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="n">escala</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">alvo_w</span> <span class="o">/</span> <span class="n">w</span><span class="p">,</span> <span class="n">alvo_h</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="n">novo_w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">escala</span><span class="p">))</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    <span class="n">novo_h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">escala</span><span class="p">))</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    <span class="n">red</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>        <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>        <span class="p">(</span><span class="n">novo_w</span><span class="p">,</span> <span class="n">novo_h</span><span class="p">),</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>        <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_LINEAR</span>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>    <span class="p">)</span>
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>    <span class="n">esquerda</span> <span class="o">=</span> <span class="p">(</span><span class="n">alvo_w</span> <span class="o">-</span> <span class="n">novo_w</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>    <span class="n">direita</span> <span class="o">=</span> <span class="n">alvo_w</span> <span class="o">-</span> <span class="n">novo_w</span> <span class="o">-</span> <span class="n">esquerda</span>
+</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>    <span class="n">topo</span> <span class="o">=</span> <span class="p">(</span><span class="n">alvo_h</span> <span class="o">-</span> <span class="n">novo_h</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+</span><span id="__span-14-19"><a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>    <span class="n">baixo</span> <span class="o">=</span> <span class="n">alvo_h</span> <span class="o">-</span> <span class="n">novo_h</span> <span class="o">-</span> <span class="n">topo</span>
+</span><span id="__span-14-20"><a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>
+</span><span id="__span-14-21"><a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>    <span class="n">saida</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">copyMakeBorder</span><span class="p">(</span>
+</span><span id="__span-14-22"><a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>        <span class="n">red</span><span class="p">,</span>
+</span><span id="__span-14-23"><a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>        <span class="n">topo</span><span class="p">,</span>
+</span><span id="__span-14-24"><a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>        <span class="n">baixo</span><span class="p">,</span>
+</span><span id="__span-14-25"><a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>        <span class="n">esquerda</span><span class="p">,</span>
+</span><span id="__span-14-26"><a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>        <span class="n">direita</span><span class="p">,</span>
+</span><span id="__span-14-27"><a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>        <span class="n">cv2</span><span class="o">.</span><span class="n">BORDER_CONSTANT</span><span class="p">,</span>
+</span><span id="__span-14-28"><a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>        <span class="n">value</span><span class="o">=</span><span class="p">(</span><span class="mi">114</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">114</span><span class="p">)</span>
+</span><span id="__span-14-29"><a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>    <span class="p">)</span>
+</span><span id="__span-14-30"><a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a>
+</span><span id="__span-14-31"><a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a>    <span class="k">return</span> <span class="n">saida</span><span class="p">,</span> <span class="n">escala</span><span class="p">,</span> <span class="n">esquerda</span><span class="p">,</span> <span class="n">topo</span>
+</span></code></pre></div>
+<hr />
+<h2 id="1810-caixas-pertencem-ao-espaco-em-que-foram-previstas">18.10 Caixas pertencem ao espaço em que foram previstas<a class="headerlink" href="#1810-caixas-pertencem-ao-espaco-em-que-foram-previstas" title="Permanent link">&para;</a></h2>
+<p>Se uma rede prevê uma caixa no espaço letterbox, ela não pode ser desenhada diretamente na imagem original.</p>
+<p>Precisamos remover padding e desfazer escala.</p>
+<hr />
+<h2 id="1811-invertendo-letterbox">18.11 Invertendo letterbox<a class="headerlink" href="#1811-invertendo-letterbox" title="Permanent link">&para;</a></h2>
+<p>Para coordenadas <code>x</code>:</p>
+<div class="arithmatex">\[
+x_{orig} = \frac{x_{prep}-pad_x}{escala}
+\]</div>
+<p>Para <code>y</code>:</p>
+<div class="arithmatex">\[
+y_{orig} = \frac{y_{prep}-pad_y}{escala}
+\]</div>
+<h3 id="exemplo-2">Exemplo 2<a class="headerlink" href="#exemplo-2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">desfazer_letterbox</span><span class="p">(</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="n">caixa</span><span class="p">,</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">escala</span><span class="p">,</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="n">pad_x</span><span class="p">,</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="n">pad_y</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="p">):</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">caixa</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="n">x1</span> <span class="o">=</span> <span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">pad_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">escala</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="n">x2</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">pad_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">escala</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="n">y1</span> <span class="o">=</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">pad_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">escala</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>    <span class="n">y2</span> <span class="o">=</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">pad_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">escala</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>    <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span>
+</span></code></pre></div>
+<p>Depois aplique clipping aos limites da imagem.</p>
+<hr />
+<h2 id="1812-formatos-comuns-de-caixa">18.12 Formatos comuns de caixa<a class="headerlink" href="#1812-formatos-comuns-de-caixa" title="Permanent link">&para;</a></h2>
+<h3 id="xyxy"><code>xyxy</code><a class="headerlink" href="#xyxy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>x1, y1, x2, y2
+</span></code></pre></div>
+<h3 id="xywh"><code>xywh</code><a class="headerlink" href="#xywh" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>centro_x, centro_y, largura, altura
+</span></code></pre></div>
+<p>ou, em algumas APIs, topo esquerdo + largura/altura.</p>
+<div class="admonition warning">
+<p class="admonition-title">O nome sozinho pode não ser suficiente</p>
+<p>Confirme sempre a documentação da biblioteca. Convenções de <code>xywh</code> podem variar.</p>
+</div>
+<hr />
+<h2 id="1813-inferencia-com-biblioteca-de-alto-nivel">18.13 Inferência com biblioteca de alto nível<a class="headerlink" href="#1813-inferencia-com-biblioteca-de-alto-nivel" title="Permanent link">&para;</a></h2>
+<p>Um exemplo conceitual com Ultralytics pode ser:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ultralytics</span><span class="w"> </span><span class="kn">import</span> <span class="n">YOLO</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="n">modelo</span> <span class="o">=</span> <span class="n">YOLO</span><span class="p">(</span><span class="s2">"yolov8n.pt"</span><span class="p">)</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="n">resultados</span> <span class="o">=</span> <span class="n">modelo</span><span class="p">(</span><span class="s2">"imagem.jpg"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Versões, nomes de modelos e APIs evoluem. Consulte a documentação correspondente à versão instalada.</p>
+<hr />
+<h2 id="1814-objeto-de-resultados">18.14 Objeto de resultados<a class="headerlink" href="#1814-objeto-de-resultados" title="Permanent link">&para;</a></h2>
+<p>Bibliotecas de alto nível normalmente agrupam:</p>
+<ul>
+<li>caixas;</li>
+<li>classes;</li>
+<li>confianças;</li>
+<li>imagem original;</li>
+<li>metadados de transformação;</li>
+<li>resultados adicionais conforme a tarefa.</li>
+</ul>
+<p>Uma aplicação não deve depender de atributos não documentados sem testes de versão.</p>
+<hr />
+<h2 id="1815-transferencia-gpu-cpu">18.15 Transferência GPU → CPU<a class="headerlink" href="#1815-transferencia-gpu-cpu" title="Permanent link">&para;</a></h2>
+<p>Tensores podem estar na GPU.</p>
+<p>Converter repetidamente:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>GPU → CPU → NumPy
+</span></code></pre></div>
+<p>pode gerar overhead.</p>
+<p>Converta apenas quando necessário para integração com código NumPy/OpenCV.</p>
+<hr />
+<h2 id="1816-confianca-minima">18.16 Confiança mínima<a class="headerlink" href="#1816-confianca-minima" title="Permanent link">&para;</a></h2>
+<p>Limiar baixo:</p>
+<ul>
+<li>mais detecções;</li>
+<li>maior revocação potencial;</li>
+<li>mais falsos positivos.</li>
+</ul>
+<p>Limiar alto:</p>
+<ul>
+<li>menos detecções;</li>
+<li>maior seletividade;</li>
+<li>pode perder objetos.</li>
+</ul>
+<p>Avalie no seu conjunto, não em uma única fotografia.</p>
+<hr />
+<h2 id="1817-iou-e-nms-continuam-relevantes">18.17 IoU e NMS continuam relevantes<a class="headerlink" href="#1817-iou-e-nms-continuam-relevantes" title="Permanent link">&para;</a></h2>
+<p>Mesmo que uma biblioteca encapsule o pós-processamento, os conceitos do capítulo 11 permanecem.</p>
+<p>Você precisa compreender:</p>
+<ul>
+<li>quando caixas são consideradas duplicatas;</li>
+<li>se NMS é por classe;</li>
+<li>quais limiares foram usados;</li>
+<li>como resultados mudam ao alterar configuração.</li>
+</ul>
+<hr />
+<h2 id="1818-precisao">18.18 Precisão<a class="headerlink" href="#1818-precisao" title="Permanent link">&para;</a></h2>
+<div class="arithmatex">\[
+Precisão=\frac{TP}{TP+FP}
+\]</div>
+<p>Pergunta:</p>
+<blockquote>
+<p>“Entre as detecções produzidas, quantas estavam corretas?”</p>
+</blockquote>
+<p>Alta precisão significa poucos falsos positivos entre as previsões.</p>
+<hr />
+<h2 id="1819-revocacao">18.19 Revocação<a class="headerlink" href="#1819-revocacao" title="Permanent link">&para;</a></h2>
+<div class="arithmatex">\[
+Revocação=\frac{TP}{TP+FN}
+\]</div>
+<p>Pergunta:</p>
+<blockquote>
+<p>“Entre os objetos reais, quantos foram encontrados?”</p>
+</blockquote>
+<p>Alta revocação significa poucos objetos perdidos.</p>
+<hr />
+<h2 id="1820-compromisso-precisaorevocacao">18.20 Compromisso precisão–revocação<a class="headerlink" href="#1820-compromisso-precisaorevocacao" title="Permanent link">&para;</a></h2>
+<p>Reduzir o limiar de confiança tende a aumentar a quantidade de detecções.</p>
+<p>Isso pode:</p>
+<ul>
+<li>aumentar revocação;</li>
+<li>reduzir precisão.</li>
+</ul>
+<p>A curva precisão–revocação analisa esse compromisso em vários limiares.</p>
+<hr />
+<h2 id="1821-ap">18.21 AP<a class="headerlink" href="#1821-ap" title="Permanent link">&para;</a></h2>
+<p>Average Precision resume o desempenho de uma classe ao longo da curva precisão–revocação sob determinado critério de IoU.</p>
+<p>Não interprete AP como “porcentagem simples de acertos”. É uma métrica agregada sobre diferentes limiares de confiança.</p>
+<hr />
+<h2 id="1822-map">18.22 mAP<a class="headerlink" href="#1822-map" title="Permanent link">&para;</a></h2>
+<p>Mean Average Precision calcula média das APs entre classes e, conforme o protocolo, entre limiares de IoU.</p>
+<p>Ao comparar resultados, informe o protocolo completo.</p>
+<p>Exemplos diferentes de mAP podem não ser diretamente comparáveis se usarem critérios diferentes.</p>
+<hr />
+<h2 id="1823-latencia-versus-throughput">18.23 Latência versus throughput<a class="headerlink" href="#1823-latencia-versus-throughput" title="Permanent link">&para;</a></h2>
+<h3 id="latencia">Latência<a class="headerlink" href="#latencia" title="Permanent link">&para;</a></h3>
+<p>Tempo para processar uma entrada.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ms/imagem
+</span></code></pre></div>
+<h3 id="throughput">Throughput<a class="headerlink" href="#throughput" title="Permanent link">&para;</a></h3>
+<p>Quantidade processada por unidade de tempo.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>imagens/s
+</span></code></pre></div>
+<p>Batch maior pode aumentar throughput e, ao mesmo tempo, aumentar latência individual.</p>
+<hr />
+<h2 id="1824-fps-nao-e-comparacao-suficiente">18.24 FPS não é comparação suficiente<a class="headerlink" href="#1824-fps-nao-e-comparacao-suficiente" title="Permanent link">&para;</a></h2>
+<p>Ao comparar dois detectores, registre:</p>
+<ul>
+<li>hardware;</li>
+<li>CPU/GPU;</li>
+<li>versão da biblioteca;</li>
+<li>precisão numérica;</li>
+<li>tamanho da entrada;</li>
+<li>batch;</li>
+<li>aquecimento;</li>
+<li>pré-processamento incluído ou não;</li>
+<li>pós-processamento incluído ou não.</li>
+</ul>
+<p>Sem isso, “120 FPS” tem pouco valor científico.</p>
+<hr />
+<h2 id="1825-benchmark-reproduzivel">18.25 Benchmark reproduzível<a class="headerlink" href="#1825-benchmark-reproduzivel" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="n">tempos</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>    <span class="n">inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>    <span class="c1"># inferência</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>
+</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>    <span class="n">duracao</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">inicio</span>
+</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>
+</span><span id="__span-22-13"><a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>  <span class="c1"># descarta aquecimento</span>
+</span><span id="__span-22-14"><a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>        <span class="n">tempos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">duracao</span><span class="p">)</span>
+</span><span id="__span-22-15"><a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>
+</span><span id="__span-22-16"><a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"mediana ms:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">tempos</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Meça em várias entradas representativas.</p>
+<hr />
+<h2 id="1826-modelo-maior-nao-e-automaticamente-melhor">18.26 Modelo maior não é automaticamente melhor<a class="headerlink" href="#1826-modelo-maior-nao-e-automaticamente-melhor" title="Permanent link">&para;</a></h2>
+<p>Um modelo maior pode melhorar alguma métrica, mas exigir:</p>
+<ul>
+<li>mais memória;</li>
+<li>maior latência;</li>
+<li>mais energia;</li>
+<li>hardware mais caro.</li>
+</ul>
+<p>O melhor modelo é aquele que satisfaz as restrições reais da aplicação.</p>
+<h3 id="analogia-caminhao-e-motocicleta">Analogia: caminhão e motocicleta<a class="headerlink" href="#analogia-caminhao-e-motocicleta" title="Permanent link">&para;</a></h3>
+<p>Um caminhão carrega mais, mas não é melhor veículo para toda tarefa. A escolha depende da carga, estrada, velocidade e custo.</p>
+<hr />
+<h2 id="1827-objetos-pequenos-e-resolucao-de-entrada">18.27 Objetos pequenos e resolução de entrada<a class="headerlink" href="#1827-objetos-pequenos-e-resolucao-de-entrada" title="Permanent link">&para;</a></h2>
+<p>Aumentar a resolução pode tornar objetos pequenos mais visíveis ao detector.</p>
+<p>Mas aumenta:</p>
+<ul>
+<li>memória;</li>
+<li>operações;</li>
+<li>latência.</li>
+</ul>
+<p>Teste a relação entre ganho de AP/recall e custo.</p>
+<hr />
+<h2 id="1828-inferencia-em-video">18.28 Inferência em vídeo<a class="headerlink" href="#1828-inferencia-em-video" title="Permanent link">&para;</a></h2>
+<p>Em vídeo, também entram questões temporais:</p>
+<ul>
+<li>decodificação;</li>
+<li>fila de frames;</li>
+<li>atraso acumulado;</li>
+<li>batch/streaming;</li>
+<li>tracking entre frames.</li>
+</ul>
+<p>Um detector rápido isoladamente pode não garantir pipeline em tempo real se captura e renderização forem gargalos.</p>
+<hr />
+<h2 id="1829-exemplo-integrado-do-capitulo">18.29 Exemplo integrado do capítulo<a class="headerlink" href="#1829-exemplo-integrado-do-capitulo" title="Permanent link">&para;</a></h2>
+<p>O <a href="https://github.com/vmotta/opera-es-com-imagens/blob/main/exemplos/cap18_yolo_moderno.py">código do capítulo 18</a> possui uma parte autocontida e uma parte opcional com modelo real.</p>
+<p>Execução sem rede:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>python<span class="w"> </span>-m<span class="w"> </span>exemplos.cap18_yolo_moderno
+</span></code></pre></div>
+<p>Inferência opcional:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[yolo]"</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>python<span class="w"> </span>-m<span class="w"> </span>exemplos.cap18_yolo_moderno<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">    </span>--imagem<span class="w"> </span>caminho/rua.jpg<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">    </span>--modelo<span class="w"> </span>yolov8n.pt
+</span></code></pre></div>
+<p>O primeiro uso de alguns modelos pode depender de pesos externos. Verifique origem, licença e políticas de rede do ambiente.</p>
+<p>Pipeline didático:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>imagem
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>  ↓
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>grade/centro didático
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>  ↓
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>letterbox
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>  ↓
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>escala + padding
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>  ↓
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>caixa em espaço preparado
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>  ↓
+</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>transformação inversa
+</span><span id="__span-25-12"><a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>  ↓
+</span><span id="__span-25-13"><a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>IoU
+</span><span id="__span-25-14"><a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>  ↓
+</span><span id="__span-25-15"><a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>inferência opcional
+</span><span id="__span-25-16"><a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>  ↓
+</span><span id="__span-25-17"><a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>resultados
+</span><span id="__span-25-18"><a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>  ↓
+</span><span id="__span-25-19"><a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>benchmark
+</span></code></pre></div>
+<hr />
+<h2 id="1830-erros-comuns">18.30 Erros comuns<a class="headerlink" href="#1830-erros-comuns" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa provável</th>
+<th>Correção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>caixas deslocadas</td>
+<td>padding não removido</td>
+<td>reverta letterbox</td>
+</tr>
+<tr>
+<td>objetos achatados</td>
+<td>resize direto</td>
+<td>preserve proporção</td>
+</tr>
+<tr>
+<td><code>xywh</code> interpretado errado</td>
+<td>convenção diferente</td>
+<td>consulte API</td>
+</tr>
+<tr>
+<td>benchmark inconsistente</td>
+<td>sem aquecimento/protocolo</td>
+<td>padronize medição</td>
+</tr>
+<tr>
+<td>FPS alto e resultado ruim</td>
+<td>resolução/modelo pequeno</td>
+<td>avalie qualidade + custo</td>
+</tr>
+<tr>
+<td>mAP comparado incorretamente</td>
+<td>protocolos diferentes</td>
+<td>informe IoU/classes/dataset</td>
+</tr>
+<tr>
+<td>memória alta</td>
+<td>resolução/batch/modelo</td>
+<td>ajuste compromisso</td>
+</tr>
+<tr>
+<td>vídeo atrasa</td>
+<td>pipeline total &gt; orçamento</td>
+<td>medir captura+inferência+saída</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1831-perguntas-de-revisao">18.31 Perguntas de revisão<a class="headerlink" href="#1831-perguntas-de-revisao" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Para que serve a explicação de grade no YOLO clássico?</li>
+<li>Por que ela não descreve literalmente todo detector moderno?</li>
+<li>Por que múltiplas escalas ajudam objetos pequenos?</li>
+<li>O que é letterbox?</li>
+<li>Como desfazer a transformação de uma coordenada?</li>
+<li>Qual diferença entre precisão e revocação?</li>
+<li>O que AP resume?</li>
+<li>O que mAP agrega?</li>
+<li>Qual diferença entre latência e throughput?</li>
+<li>Por que comparar somente FPS é inadequado?</li>
+</ol>
+<hr />
+<h1 id="exercicios-de-fixacao">Exercícios de fixação<a class="headerlink" href="#exercicios-de-fixacao" title="Permanent link">&para;</a></h1>
+<h3 id="exercicio-1">Exercício 1<a class="headerlink" href="#exercicio-1" title="Permanent link">&para;</a></h3>
+<p>Para imagem <code>1280×720</code> e alvo <code>640×640</code>, calcule escala e padding do letterbox.</p>
+<h3 id="exercicio-2">Exercício 2<a class="headerlink" href="#exercicio-2" title="Permanent link">&para;</a></h3>
+<p>Faça o mesmo para imagem <code>480×800</code>.</p>
+<h3 id="exercicio-3">Exercício 3<a class="headerlink" href="#exercicio-3" title="Permanent link">&para;</a></h3>
+<p>Implemente <code>letterbox()</code> e confirme o tamanho final.</p>
+<h3 id="exercicio-4">Exercício 4<a class="headerlink" href="#exercicio-4" title="Permanent link">&para;</a></h3>
+<p>Crie uma caixa na imagem original, transforme-a para o espaço letterbox e depois reverta. Compare o erro numérico.</p>
+<h3 id="exercicio-5">Exercício 5<a class="headerlink" href="#exercicio-5" title="Permanent link">&para;</a></h3>
+<p>Implemente clipping após desfazer letterbox.</p>
+<h3 id="exercicio-6">Exercício 6<a class="headerlink" href="#exercicio-6" title="Permanent link">&para;</a></h3>
+<p>Calcule precisão para <code>TP=80</code>, <code>FP=20</code>.</p>
+<h3 id="exercicio-7">Exercício 7<a class="headerlink" href="#exercicio-7" title="Permanent link">&para;</a></h3>
+<p>Calcule revocação para <code>TP=80</code>, <code>FN=40</code>.</p>
+<h3 id="exercicio-8">Exercício 8<a class="headerlink" href="#exercicio-8" title="Permanent link">&para;</a></h3>
+<p>Explique como diminuir o limiar de confiança pode afetar ambas.</p>
+<h3 id="exercicio-9">Exercício 9<a class="headerlink" href="#exercicio-9" title="Permanent link">&para;</a></h3>
+<p>Meça latência mediana de uma função após cinco execuções de aquecimento.</p>
+<h3 id="exercicio-10">Exercício 10<a class="headerlink" href="#exercicio-10" title="Permanent link">&para;</a></h3>
+<p>Compare throughput com batch 1 e batch maior em um ambiente que suporte execução em lote.</p>
+<h3 id="exercicio-11">Exercício 11<a class="headerlink" href="#exercicio-11" title="Permanent link">&para;</a></h3>
+<p>Execute, quando disponível, modelos de dois tamanhos sobre o mesmo conjunto e registre latência e número de detecções.</p>
+<h3 id="exercicio-12">Exercício 12<a class="headerlink" href="#exercicio-12" title="Permanent link">&para;</a></h3>
+<p>Teste duas resoluções de entrada em objetos pequenos e compare resultados.</p>
+<h3 id="exercicio-13">Exercício 13<a class="headerlink" href="#exercicio-13" title="Permanent link">&para;</a></h3>
+<p>Crie uma ficha de benchmark contendo hardware, software, tamanho, batch, limiar, NMS e métrica.</p>
+<h3 id="exercicio-14">Exercício 14<a class="headerlink" href="#exercicio-14" title="Permanent link">&para;</a></h3>
+<p>Escreva uma recomendação técnica para escolher entre modelo rápido e modelo mais preciso em uma aplicação embarcada.</p>
+<hr />
+<h2 id="sintese-do-curso">Síntese do curso<a class="headerlink" href="#sintese-do-curso" title="Permanent link">&para;</a></h2>
+<p>O capítulo final reúne várias ideias construídas ao longo do material: imagem como matriz, transformação geométrica, filtros, máscaras, contornos, características, redes, caixas, IoU e inferência. Um detector moderno encapsula muita complexidade, mas continua sujeito às mesmas perguntas fundamentais: <strong>qual é o sistema de coordenadas, como os dados foram preparados, como a saída é interpretada, como os erros são medidos e quais restrições a aplicação possui?</strong></p>
+<p>Dominar essas perguntas é mais importante do que decorar uma chamada de biblioteca.</p>
+<hr />
+<h2 id="referencias">Referências<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<p>REDMON, Joseph et al. You Only Look Once: Unified, Real-Time Object Detection. In: <em>IEEE Conference on Computer Vision and Pattern Recognition</em>. 2016.</p>
+<p>SZELISKI, Richard. <em>Computer Vision: Algorithms and Applications</em>. 2. ed. Cham: Springer, 2022.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
