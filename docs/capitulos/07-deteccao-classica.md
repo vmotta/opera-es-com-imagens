@@ -157,6 +157,8 @@ TM_SQDIFF        → menor é melhor
 TM_SQDIFF_NORMED → menor é melhor
 ```
 
+O sufixo **NORMED** (Normalizado) significa que o resultado foi redimensionado matematicamente para um intervalo fixo (geralmente de 0 a 1, ou -1 a 1). Isso é crucial porque torna a detecção **robusta a mudanças globais de iluminação**. Sem a normalização, uma imagem muito clara poderia gerar pontuações de correlação artificialmente altas, mesmo sem combinar com a forma do template.
+
 Sempre confira a métrica antes de interpretar `minMaxLoc`.
 
 ---
@@ -236,15 +238,19 @@ Template Matching funciona melhor quando a câmera e o objeto são relativamente
 
 Viola e Jones (2001) propuseram um detector de objetos extremamente influente baseado em características simples de contraste.
 
-Uma característica Haar compara somas de regiões claras e escuras.
+Uma característica Haar compara somas de regiões claras e escuras. Existem três tipos clássicos de características Haar:
+
+1. **Características de borda (duas regiões):** Úteis para detectar mudanças bruscas, como a linha do maxilar.
+2. **Características de linha (três regiões):** Úteis para detectar feições como a ponte do nariz (clara no centro, escura nas laterais).
+3. **Características de centro/quadrado (quatro regiões):** Úteis para detectar cantos e pontos focais, como as pupilas.
+
+O valor de uma característica é simplesmente a **soma dos pixels na região escura subtraída da soma dos pixels na região clara**.
 
 Exemplo conceitual:
 
 ```text
 [ região clara ][ região escura ]
 ```
-
-A diferença entre as duas somas produz uma característica.
 
 ---
 
@@ -266,6 +272,12 @@ Calcular soma de muitos retângulos diretamente seria caro.
 
 A **imagem integral** permite obter a soma de qualquer região retangular usando poucos acessos, independentemente do tamanho do retângulo (VIOLA; JONES, 2001).
 
+Com a imagem integral pré-calculada, a soma dos pixels de um retângulo de QUALQUER tamanho (seja 10x10 ou 1000x1000) pode ser obtida acessando exatamente **apenas quatro valores** da matriz (os quatro cantos do retângulo desejado), usando a fórmula matemática: 
+
+$$Soma = CantoInferiorDireito + CantoSuperiorEsquerdo - CantoSuperiorDireito - CantoInferiorEsquerdo$$
+
+Isso transforma uma operação super custosa em um cálculo instantâneo.
+
 ### Analogia: tabela de soma acumulada
 
 É como manter uma planilha em que cada posição já sabe o total acumulado até aquele ponto. Assim, calcular a soma de uma área deixa de exigir visitar todos os elementos internos.
@@ -282,11 +294,11 @@ A ideia didática:
 
 ```text
 muitas perguntas possíveis
-      ↓
+   ↓
 selecionar perguntas informativas
-      ↓
+   ↓
 combinar respostas
-      ↓
+   ↓
 decisão mais robusta
 ```
 
@@ -299,14 +311,16 @@ Uma cascata possui estágios.
 ```text
 janela candidata
    ↓
-estágio 1 → rejeita muitos
+estágio 1 → rejeita muitos (avalia ~2 características)
    ↓
 estágio 2 → rejeita outros
    ↓
 ...
    ↓
-estágios finais → candidatos difíceis
+estágios finais → candidatos difíceis (centenas de características)
 ```
+
+No **estágio 1**, o classificador avalia talvez apenas duas características Haar fundamentais. Se a janela falhar nisso, é descartada imediatamente (economizando muito processamento). Se passar, vai para um estágio mais complexo (ex: avaliando 10 características). As janelas que chegam aos últimos estágios são submetidas a centenas de verificações rigorosas.
 
 ### Analogia: triagem em aeroporto
 
@@ -364,7 +378,9 @@ Valor maior:
 
 ## 7.20 `minNeighbors`
 
-Múltiplas detecções próximas podem sustentar uma caixa final.
+Como o algoritmo desliza a janela de busca pixel por pixel, um rosto real será detectado várias vezes em posições ligeiramente deslocadas. 
+
+O `minNeighbors` age como um sistema de agrupamento (clustering): ele exige que uma detecção tenha **pelo menos N outros retângulos detectados sobrepostos a ela** para ser considerada válida. Múltiplas detecções próximas podem sustentar uma caixa final, eliminando falsos positivos isolados.
 
 Aumentar `minNeighbors` tende a:
 
