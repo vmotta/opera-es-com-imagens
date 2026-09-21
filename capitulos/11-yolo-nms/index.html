@@ -1,0 +1,2487 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Curso didático de processamento de imagens e visão computacional">
+      
+      
+        <meta name="author" content="Vinícius da Rocha Motta">
+      
+      
+      
+        <link rel="prev" href="../10-dnn/">
+      
+      
+        <link rel="next" href="../12-pose/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>11. YOLO e NMS - Operações com Imagens</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Atkinson+Hyperlegible:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Atkinson Hyperlegible";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#11-yolo-caixas-iou-e-nms" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Operações com Imagens" class="md-header__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Operações com Imagens
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              11. YOLO e NMS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Usar tema escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Usar tema escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Usar tema claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Usar tema claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Operações com Imagens" class="md-nav__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Operações com Imagens
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../como-estudar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Como estudar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ambiente/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Preparação do ambiente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Imagem digital e OpenCV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-transformacoes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformações geométricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-filtros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Filtros, convolução e bordas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-morfologia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Limiarização e morfologia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-contornos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Contornos e características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-cores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Espaços de cores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detecção e movimento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Detecção e movimento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-deteccao-classica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Template Matching e Haar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-feature-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Feature Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-video/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Vídeo e fluxo óptico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes neurais e aplicações
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redes neurais e aplicações
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-dnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. CNNs e módulo DNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. YOLO e NMS
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. YOLO e NMS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#111-classificacao-versus-deteccao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Classificação versus detecção
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#112-por-que-surgem-muitas-hipoteses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 Por que surgem muitas hipóteses?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.2 Por que surgem muitas hipóteses?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-varias-testemunhas-apontando-o-mesmo-objeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: várias testemunhas apontando o mesmo objeto
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#113-formatos-de-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 Formatos de caixa
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.3 Formatos de caixa">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cantos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cantos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#topo-esquerdo-tamanho" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topo esquerdo + tamanho
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centro-tamanho" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centro + tamanho
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#114-centro-para-cantos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.4 Centro para cantos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.4 Centro para cantos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#115-coordenadas-normalizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.5 Coordenadas normalizadas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#116-intersecao-entre-duas-caixas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.6 Interseção entre duas caixas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#117-area-de-intersecao-e-uniao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.7 Área de interseção e união
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#118-iou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.8 IoU
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.8 IoU">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interpretacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#119-iou-mede-geometria-nao-semantica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.9 IoU mede geometria, não semântica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1110-limiar-de-confianca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.10 Limiar de confiança
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1111-nms-supressao-nao-maxima" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.11 NMS: supressão não máxima
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.11 NMS: supressão não máxima">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-representante-de-um-grupo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: representante de um grupo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1112-nms-manual-didatico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.12 NMS manual didático
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1113-nms-no-opencv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.13 NMS no OpenCV
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1114-por-que-nms-deve-considerar-classe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.14 Por que NMS deve considerar classe?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.14 Por que NMS deve considerar classe?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#estrategia-didatica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estratégia didática
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1115-limiar-de-iou-do-nms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.15 Limiar de IoU do NMS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1116-exemplo-duas-pessoas-proximas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.16 Exemplo: duas pessoas próximas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1117-nms-nao-e-parte-magica-da-rede" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.17 NMS não é parte “mágica” da rede
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1118-soft-nms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.18 Soft-NMS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1119-weighted-boxes-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.19 Weighted Boxes Fusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1120-espaco-da-imagem-versus-espaco-de-entrada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.20 Espaço da imagem versus espaço de entrada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1121-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.21 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1122-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.22 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1123-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.23 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-pose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Estimativa de pose
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-faces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Reconhecimento facial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-ocr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. OCR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-estereo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Visão estéreo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16. Construindo CNNs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-gans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17. GANs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-yolo-moderno/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18. YOLO moderno
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#111-classificacao-versus-deteccao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Classificação versus detecção
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#112-por-que-surgem-muitas-hipoteses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 Por que surgem muitas hipóteses?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.2 Por que surgem muitas hipóteses?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-varias-testemunhas-apontando-o-mesmo-objeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: várias testemunhas apontando o mesmo objeto
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#113-formatos-de-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 Formatos de caixa
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.3 Formatos de caixa">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cantos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cantos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#topo-esquerdo-tamanho" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topo esquerdo + tamanho
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centro-tamanho" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centro + tamanho
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#114-centro-para-cantos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.4 Centro para cantos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.4 Centro para cantos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#115-coordenadas-normalizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.5 Coordenadas normalizadas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#116-intersecao-entre-duas-caixas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.6 Interseção entre duas caixas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#117-area-de-intersecao-e-uniao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.7 Área de interseção e união
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#118-iou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.8 IoU
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.8 IoU">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interpretacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpretação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemplo-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplo 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#119-iou-mede-geometria-nao-semantica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.9 IoU mede geometria, não semântica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1110-limiar-de-confianca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.10 Limiar de confiança
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1111-nms-supressao-nao-maxima" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.11 NMS: supressão não máxima
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.11 NMS: supressão não máxima">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-representante-de-um-grupo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: representante de um grupo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1112-nms-manual-didatico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.12 NMS manual didático
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1113-nms-no-opencv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.13 NMS no OpenCV
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1114-por-que-nms-deve-considerar-classe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.14 Por que NMS deve considerar classe?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.14 Por que NMS deve considerar classe?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#estrategia-didatica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estratégia didática
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1115-limiar-de-iou-do-nms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.15 Limiar de IoU do NMS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1116-exemplo-duas-pessoas-proximas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.16 Exemplo: duas pessoas próximas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1117-nms-nao-e-parte-magica-da-rede" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.17 NMS não é parte “mágica” da rede
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1118-soft-nms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.18 Soft-NMS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1119-weighted-boxes-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.19 Weighted Boxes Fusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1120-espaco-da-imagem-versus-espaco-de-entrada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.20 Espaço da imagem versus espaço de entrada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1121-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.21 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1122-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.22 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1123-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.23 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="11-yolo-caixas-iou-e-nms">11. YOLO, caixas, IoU e NMS<a class="headerlink" href="#11-yolo-caixas-iou-e-nms" title="Permanent link">&para;</a></h1>
+<h2 id="o-que-voce-aprendera">O que você aprenderá<a class="headerlink" href="#o-que-voce-aprendera" title="Permanent link">&para;</a></h2>
+<p>Neste capítulo, você aprenderá a interpretar o resultado de um detector de objetos: muitas hipóteses de caixas, classes e escores precisam ser transformadas em uma saída coerente. O foco não será apenas “rodar YOLO”, mas entender a matemática e a lógica do pós-processamento.</p>
+<p>Ao final, deverá conseguir:</p>
+<ol>
+<li>diferenciar classificação e detecção;</li>
+<li>compreender a ideia de detecção em uma passagem;</li>
+<li>interpretar caixas em diferentes formatos;</li>
+<li>converter centro/tamanho em cantos;</li>
+<li>compreender coordenadas normalizadas;</li>
+<li>calcular interseção e união;</li>
+<li>calcular IoU;</li>
+<li>interpretar IoU geometricamente;</li>
+<li>compreender por que um detector gera caixas duplicadas;</li>
+<li>explicar NMS passo a passo;</li>
+<li>aplicar NMS por classe;</li>
+<li>analisar efeitos do limiar de confiança;</li>
+<li>analisar efeitos do limiar de IoU;</li>
+<li>compreender limitações do NMS clássico.</li>
+</ol>
+<p>YOLO reformulou detecção como um problema de regressão densa sobre a imagem, compartilhando computação em uma única rede (REDMON et al., 2016). Embora versões modernas tenham mudado bastante, compreender caixas, IoU e supressão continua essencial.</p>
+<hr />
+<h2 id="111-classificacao-versus-deteccao">11.1 Classificação versus detecção<a class="headerlink" href="#111-classificacao-versus-deteccao" title="Permanent link">&para;</a></h2>
+<p>Classificação responde:</p>
+<blockquote>
+<p>“O que há nesta imagem?”</p>
+</blockquote>
+<p>Detecção responde:</p>
+<blockquote>
+<p>“Quais objetos existem e onde estão?”</p>
+</blockquote>
+<p>Uma detecção precisa, no mínimo, representar:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>classe
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>confiança
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>posição
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>largura/altura ou cantos
+</span></code></pre></div>
+<hr />
+<h2 id="112-por-que-surgem-muitas-hipoteses">11.2 Por que surgem muitas hipóteses?<a class="headerlink" href="#112-por-que-surgem-muitas-hipoteses" title="Permanent link">&para;</a></h2>
+<p>Detectores densos avaliam muitas posições e escalas. Várias regiões podem responder ao mesmo objeto.</p>
+<p>Assim, um carro real pode gerar:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>caixa A: 0.91
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>caixa B: 0.86
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>caixa C: 0.72
+</span></code></pre></div>
+<p>com grande sobreposição.</p>
+<p>Precisamos escolher uma representação final.</p>
+<h3 id="analogia-varias-testemunhas-apontando-o-mesmo-objeto">Analogia: várias testemunhas apontando o mesmo objeto<a class="headerlink" href="#analogia-varias-testemunhas-apontando-o-mesmo-objeto" title="Permanent link">&para;</a></h3>
+<p>Três pessoas podem desenhar caixas ligeiramente diferentes ao redor do mesmo carro. O pós-processamento deve identificar que estão falando do mesmo objeto.</p>
+<hr />
+<h2 id="113-formatos-de-caixa">11.3 Formatos de caixa<a class="headerlink" href="#113-formatos-de-caixa" title="Permanent link">&para;</a></h2>
+<h3 id="cantos">Cantos<a class="headerlink" href="#cantos" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>(x1, y1, x2, y2)
+</span></code></pre></div>
+<h3 id="topo-esquerdo-tamanho">Topo esquerdo + tamanho<a class="headerlink" href="#topo-esquerdo-tamanho" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(x, y, w, h)
+</span></code></pre></div>
+<h3 id="centro-tamanho">Centro + tamanho<a class="headerlink" href="#centro-tamanho" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>(cx, cy, w, h)
+</span></code></pre></div>
+<p>Nunca misture formatos sem converter explicitamente.</p>
+<hr />
+<h2 id="114-centro-para-cantos">11.4 Centro para cantos<a class="headerlink" href="#114-centro-para-cantos" title="Permanent link">&para;</a></h2>
+<div class="arithmatex">\[
+x_1=c_x-\frac{w}{2}
+\]</div>
+<div class="arithmatex">\[
+y_1=c_y-\frac{h}{2}
+\]</div>
+<div class="arithmatex">\[
+x_2=c_x+\frac{w}{2}
+\]</div>
+<div class="arithmatex">\[
+y_2=c_y+\frac{h}{2}
+\]</div>
+<h3 id="exemplo-1">Exemplo 1<a class="headerlink" href="#exemplo-1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">centro_para_cantos</span><span class="p">(</span><span class="n">cx</span><span class="p">,</span> <span class="n">cy</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">x1</span> <span class="o">=</span> <span class="n">cx</span> <span class="o">-</span> <span class="n">w</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">y1</span> <span class="o">=</span> <span class="n">cy</span> <span class="o">-</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">x2</span> <span class="o">=</span> <span class="n">cx</span> <span class="o">+</span> <span class="n">w</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">y2</span> <span class="o">=</span> <span class="n">cy</span> <span class="o">+</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span>
+</span></code></pre></div>
+<hr />
+<h2 id="115-coordenadas-normalizadas">11.5 Coordenadas normalizadas<a class="headerlink" href="#115-coordenadas-normalizadas" title="Permanent link">&para;</a></h2>
+<p>Algumas saídas usam valores entre <code>0</code> e <code>1</code>.</p>
+<p>Se:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cx = 0.5
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cy = 0.5
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>w  = 0.25
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>h  = 0.4
+</span></code></pre></div>
+<p>em imagem <code>800 × 600</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">cx_px</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mi">800</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">cy_px</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mi">600</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">w_px</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="mi">800</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">h_px</span> <span class="o">=</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="mi">600</span>
+</span></code></pre></div>
+<p>Sempre identifique em qual sistema de coordenadas a rede trabalha.</p>
+<hr />
+<h2 id="116-intersecao-entre-duas-caixas">11.6 Interseção entre duas caixas<a class="headerlink" href="#116-intersecao-entre-duas-caixas" title="Permanent link">&para;</a></h2>
+<p>Para caixas A e B em <code>(x1,y1,x2,y2)</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">ix1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">bx1</span><span class="p">)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">iy1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ay1</span><span class="p">,</span> <span class="n">by1</span><span class="p">)</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">ix2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ax2</span><span class="p">,</span> <span class="n">bx2</span><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">iy2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ay2</span><span class="p">,</span> <span class="n">by2</span><span class="p">)</span>
+</span></code></pre></div>
+<p>A largura de interseção é:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">iw</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ix2</span> <span class="o">-</span> <span class="n">ix1</span><span class="p">)</span>
+</span></code></pre></div>
+<p>A altura:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">ih</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">iy2</span> <span class="o">-</span> <span class="n">iy1</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Se não houver sobreposição, pelo menos uma dimensão será zero.</p>
+<hr />
+<h2 id="117-area-de-intersecao-e-uniao">11.7 Área de interseção e união<a class="headerlink" href="#117-area-de-intersecao-e-uniao" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">intersecao</span> <span class="o">=</span> <span class="n">iw</span> <span class="o">*</span> <span class="n">ih</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">area_a</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">-</span> <span class="n">ax1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ay2</span> <span class="o">-</span> <span class="n">ay1</span><span class="p">)</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">area_b</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bx2</span> <span class="o">-</span> <span class="n">bx1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">by2</span> <span class="o">-</span> <span class="n">by1</span><span class="p">)</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">uniao</span> <span class="o">=</span> <span class="n">area_a</span> <span class="o">+</span> <span class="n">area_b</span> <span class="o">-</span> <span class="n">intersecao</span>
+</span></code></pre></div>
+<p>Subtraímos a interseção porque ela foi contada duas vezes.</p>
+<hr />
+<h2 id="118-iou">11.8 IoU<a class="headerlink" href="#118-iou" title="Permanent link">&para;</a></h2>
+<p>Intersection over Union:</p>
+<div class="arithmatex">\[
+IoU(A,B)=\frac{|A\cap B|}{|A\cup B|}
+\]</div>
+<h3 id="interpretacao">Interpretação<a class="headerlink" href="#interpretacao" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>IoU = 0   → sem sobreposição
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>IoU ≈ 0.5 → sobreposição moderada
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>IoU = 1   → caixas idênticas
+</span></code></pre></div>
+<h3 id="exemplo-2">Exemplo 2<a class="headerlink" href="#exemplo-2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">iou</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">ax1</span><span class="p">,</span> <span class="n">ay1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ay2</span> <span class="o">=</span> <span class="n">a</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">bx1</span><span class="p">,</span> <span class="n">by1</span><span class="p">,</span> <span class="n">bx2</span><span class="p">,</span> <span class="n">by2</span> <span class="o">=</span> <span class="n">b</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">ix1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">bx1</span><span class="p">)</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">iy1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ay1</span><span class="p">,</span> <span class="n">by1</span><span class="p">)</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="n">ix2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ax2</span><span class="p">,</span> <span class="n">bx2</span><span class="p">)</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="n">iy2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ay2</span><span class="p">,</span> <span class="n">by2</span><span class="p">)</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="n">iw</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ix2</span> <span class="o">-</span> <span class="n">ix1</span><span class="p">)</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="n">ih</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">iy2</span> <span class="o">-</span> <span class="n">iy1</span><span class="p">)</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>    <span class="n">inter</span> <span class="o">=</span> <span class="n">iw</span> <span class="o">*</span> <span class="n">ih</span>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>    <span class="n">area_a</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">-</span> <span class="n">ax1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ay2</span> <span class="o">-</span> <span class="n">ay1</span><span class="p">)</span>
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>    <span class="n">area_b</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bx2</span> <span class="o">-</span> <span class="n">bx1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">by2</span> <span class="o">-</span> <span class="n">by1</span><span class="p">)</span>
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>    <span class="n">uniao</span> <span class="o">=</span> <span class="n">area_a</span> <span class="o">+</span> <span class="n">area_b</span> <span class="o">-</span> <span class="n">inter</span>
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>    <span class="k">return</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">uniao</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">inter</span> <span class="o">/</span> <span class="n">uniao</span>
+</span></code></pre></div>
+<hr />
+<h2 id="119-iou-mede-geometria-nao-semantica">11.9 IoU mede geometria, não semântica<a class="headerlink" href="#119-iou-mede-geometria-nao-semantica" title="Permanent link">&para;</a></h2>
+<p>Duas caixas de classes diferentes podem ter IoU alto.</p>
+<p>Exemplo:</p>
+<ul>
+<li>pessoa sentada numa bicicleta;</li>
+<li>pessoa segurando mochila;</li>
+<li>prato sobre mesa.</li>
+</ul>
+<p>IoU apenas responde quanto as regiões se sobrepõem.</p>
+<hr />
+<h2 id="1110-limiar-de-confianca">11.10 Limiar de confiança<a class="headerlink" href="#1110-limiar-de-confianca" title="Permanent link">&para;</a></h2>
+<p>Antes de NMS, normalmente descartamos hipóteses muito fracas.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">if</span> <span class="n">confianca</span> <span class="o">&gt;=</span> <span class="mf">0.50</span><span class="p">:</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">candidatos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Limiar baixo:</p>
+<ul>
+<li>maior revocação;</li>
+<li>mais candidatos;</li>
+<li>mais falsos positivos e custo de NMS.</li>
+</ul>
+<p>Limiar alto:</p>
+<ul>
+<li>menos candidatos;</li>
+<li>pode perder objetos reais.</li>
+</ul>
+<hr />
+<h2 id="1111-nms-supressao-nao-maxima">11.11 NMS: supressão não máxima<a class="headerlink" href="#1111-nms-supressao-nao-maxima" title="Permanent link">&para;</a></h2>
+<p>Algoritmo conceitual:</p>
+<ol>
+<li>ordenar caixas por confiança;</li>
+<li>manter a melhor;</li>
+<li>calcular IoU dela com as restantes;</li>
+<li>remover duplicatas acima do limiar;</li>
+<li>repetir.</li>
+</ol>
+<h3 id="analogia-representante-de-um-grupo">Analogia: representante de um grupo<a class="headerlink" href="#analogia-representante-de-um-grupo" title="Permanent link">&para;</a></h3>
+<p>Várias caixas representam o mesmo objeto. A de maior confiança permanece; as muito parecidas são tratadas como duplicatas.</p>
+<hr />
+<h2 id="1112-nms-manual-didatico">11.12 NMS manual didático<a class="headerlink" href="#1112-nms-manual-didatico" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">nms</span><span class="p">(</span><span class="n">caixas</span><span class="p">,</span> <span class="n">escores</span><span class="p">,</span> <span class="n">limiar_iou</span><span class="p">):</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="n">ordem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">escores</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">manter</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">ordem</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>        <span class="n">i</span> <span class="o">=</span> <span class="n">ordem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>        <span class="n">manter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>        <span class="n">restantes</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">ordem</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>            <span class="k">if</span> <span class="n">iou</span><span class="p">(</span><span class="n">caixas</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">caixas</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">limiar_iou</span><span class="p">:</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>                <span class="n">restantes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>        <span class="n">ordem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">restantes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>    <span class="k">return</span> <span class="n">manter</span>
+</span></code></pre></div>
+<p>Esse código privilegia clareza, não desempenho.</p>
+<hr />
+<h2 id="1113-nms-no-opencv">11.13 NMS no OpenCV<a class="headerlink" href="#1113-nms-no-opencv" title="Permanent link">&para;</a></h2>
+<p><code>cv2.dnn.NMSBoxes</code> normalmente trabalha com caixas no formato <code>(x,y,w,h)</code>.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">indices</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">dnn</span><span class="o">.</span><span class="n">NMSBoxes</span><span class="p">(</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="n">bboxes</span><span class="p">,</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">scores</span><span class="p">,</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">score_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="n">nms_threshold</span><span class="o">=</span><span class="mf">0.4</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Confirme o formato exigido pela função usada.</p>
+<hr />
+<h2 id="1114-por-que-nms-deve-considerar-classe">11.14 Por que NMS deve considerar classe?<a class="headerlink" href="#1114-por-que-nms-deve-considerar-classe" title="Permanent link">&para;</a></h2>
+<p>Uma pessoa e uma bicicleta podem ocupar regiões semelhantes.</p>
+<p>Se NMS for aplicado indiscriminadamente, a caixa de pessoa pode suprimir a bicicleta.</p>
+<h3 id="estrategia-didatica">Estratégia didática<a class="headerlink" href="#estrategia-didatica" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">for</span> <span class="n">classe</span> <span class="ow">in</span> <span class="n">classes_unicas</span><span class="p">:</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="n">indices_classe</span> <span class="o">=</span> <span class="o">...</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="c1"># NMS apenas nas caixas dessa classe</span>
+</span></code></pre></div>
+<div class="admonition important">
+<p class="admonition-title">Sobreposição não significa duplicata</p>
+<p>A classe é parte da decisão. Objetos diferentes podem ocupar a mesma área espacial.</p>
+</div>
+<hr />
+<h2 id="1115-limiar-de-iou-do-nms">11.15 Limiar de IoU do NMS<a class="headerlink" href="#1115-limiar-de-iou-do-nms" title="Permanent link">&para;</a></h2>
+<p>Limiar baixo, como <code>0.2</code>:</p>
+<ul>
+<li>supressão agressiva;</li>
+<li>pode remover objetos próximos.</li>
+</ul>
+<p>Limiar alto, como <code>0.8</code>:</p>
+<ul>
+<li>supressão permissiva;</li>
+<li>pode manter duplicatas.</li>
+</ul>
+<p>O melhor valor depende da densidade de objetos e do comportamento do detector.</p>
+<hr />
+<h2 id="1116-exemplo-duas-pessoas-proximas">11.16 Exemplo: duas pessoas próximas<a class="headerlink" href="#1116-exemplo-duas-pessoas-proximas" title="Permanent link">&para;</a></h2>
+<p>Imagine duas pessoas lado a lado com caixas verdadeiras sobrepostas em 35%.</p>
+<p>Se NMS usar limiar <code>0.25</code>, uma caixa real pode ser suprimida.</p>
+<p>Esse é um dos motivos pelos quais cenas densas são desafiadoras.</p>
+<hr />
+<h2 id="1117-nms-nao-e-parte-magica-da-rede">11.17 NMS não é parte “mágica” da rede<a class="headerlink" href="#1117-nms-nao-e-parte-magica-da-rede" title="Permanent link">&para;</a></h2>
+<p>Pós-processamento altera métricas finais.</p>
+<p>Mudar:</p>
+<ul>
+<li>confiança mínima;</li>
+<li>IoU do NMS;</li>
+<li>regra por classe;</li>
+</ul>
+<p>pode mudar bastante precisão e revocação sem alterar os pesos da rede.</p>
+<hr />
+<h2 id="1118-soft-nms">11.18 Soft-NMS<a class="headerlink" href="#1118-soft-nms" title="Permanent link">&para;</a></h2>
+<p>No NMS clássico, uma caixa é removida abruptamente.</p>
+<p>Soft-NMS reduz gradualmente seu escore conforme a sobreposição.</p>
+<p>Isso pode ajudar quando objetos reais ficam muito próximos.</p>
+<hr />
+<h2 id="1119-weighted-boxes-fusion">11.19 Weighted Boxes Fusion<a class="headerlink" href="#1119-weighted-boxes-fusion" title="Permanent link">&para;</a></h2>
+<p>Outra ideia é combinar coordenadas de caixas semelhantes ponderando por confiança, em vez de manter apenas uma.</p>
+<p>É especialmente conhecida em ensembles.</p>
+<p>Não substitua NMS automaticamente: compare métricas no domínio da aplicação.</p>
+<hr />
+<h2 id="1120-espaco-da-imagem-versus-espaco-de-entrada">11.20 Espaço da imagem versus espaço de entrada<a class="headerlink" href="#1120-espaco-da-imagem-versus-espaco-de-entrada" title="Permanent link">&para;</a></h2>
+<p>Se a rede usa <em>letterbox</em> ou resize, a caixa prevista pertence ao espaço preparado.</p>
+<p>Antes de desenhar na imagem original, é necessário inverter a transformação.</p>
+<p>Esse assunto será aprofundado no capítulo 18.</p>
+<hr />
+<h2 id="1121-exemplo-integrado-do-capitulo">11.21 Exemplo integrado do capítulo<a class="headerlink" href="#1121-exemplo-integrado-do-capitulo" title="Permanent link">&para;</a></h2>
+<p>O <a href="https://github.com/vmotta/opera-es-com-imagens/blob/main/exemplos/cap11_yolo_nms.py">código do capítulo 11</a> usa caixas sintéticas para tornar IoU e NMS observáveis sem depender de pesos.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>python<span class="w"> </span>-m<span class="w"> </span>exemplos.cap11_yolo_nms
+</span></code></pre></div>
+<p>Pipeline:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>objetos sintéticos
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>   ↓
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>hipóteses duplicadas
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>   ↓
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>conversão de coordenadas
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>   ↓
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>cálculo de IoU
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>   ↓
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>filtro por confiança
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>   ↓
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>NMS por classe
+</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>   ↓
+</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>caixas sobreviventes
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Antes</th>
+<th>Depois</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img alt="Caixas duplicadas antes da supressão" src="../../assets/resultados/cap11/01_antes_nms.png" /></td>
+<td><img alt="Uma caixa por objeto após NMS" src="../../assets/resultados/cap11/02_depois_nms.png" /></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1122-erros-comuns">11.22 Erros comuns<a class="headerlink" href="#1122-erros-comuns" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa provável</th>
+<th>Correção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IoU &gt; 1</td>
+<td>fórmula/áreas erradas</td>
+<td>revise interseção e união</td>
+</tr>
+<tr>
+<td>IoU negativo</td>
+<td>largura/altura sem <code>max(0, ...)</code></td>
+<td>limite interseção</td>
+</tr>
+<tr>
+<td>NMS remove classe diferente</td>
+<td>NMS global</td>
+<td>aplique por classe</td>
+</tr>
+<tr>
+<td>duplicatas permanecem</td>
+<td>limiar IoU alto</td>
+<td>reduza/valide</td>
+</tr>
+<tr>
+<td>objetos próximos somem</td>
+<td>limiar IoU baixo</td>
+<td>aumente/avalie</td>
+</tr>
+<tr>
+<td>caixas deslocadas</td>
+<td>sistema de coordenadas errado</td>
+<td>reverta resize/letterbox</td>
+</tr>
+<tr>
+<td>NMSBoxes estranho</td>
+<td>formato de bbox errado</td>
+<td>use <code>(x,y,w,h)</code> conforme API</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1123-perguntas-de-revisao">11.23 Perguntas de revisão<a class="headerlink" href="#1123-perguntas-de-revisao" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Qual diferença existe entre classificação e detecção?</li>
+<li>Por que detectores geram várias caixas para um objeto?</li>
+<li>Quais formatos de caixa são comuns?</li>
+<li>Como converter centro/tamanho para cantos?</li>
+<li>O que IoU mede?</li>
+<li>Por que IoU não considera classe?</li>
+<li>Qual é a primeira etapa do NMS?</li>
+<li>O que acontece com um limiar NMS muito baixo?</li>
+<li>Por que aplicar NMS por classe?</li>
+<li>Qual diferença conceitual existe entre NMS e Soft-NMS?</li>
+</ol>
+<hr />
+<h1 id="exercicios-de-fixacao">Exercícios de fixação<a class="headerlink" href="#exercicios-de-fixacao" title="Permanent link">&para;</a></h1>
+<h3 id="exercicio-1">Exercício 1<a class="headerlink" href="#exercicio-1" title="Permanent link">&para;</a></h3>
+<p>Converta manualmente <code>(cx=100, cy=80, w=40, h=20)</code> para cantos.</p>
+<h3 id="exercicio-2">Exercício 2<a class="headerlink" href="#exercicio-2" title="Permanent link">&para;</a></h3>
+<p>Implemente <code>iou()</code> e teste caixas idênticas.</p>
+<h3 id="exercicio-3">Exercício 3<a class="headerlink" href="#exercicio-3" title="Permanent link">&para;</a></h3>
+<p>Teste caixas totalmente separadas.</p>
+<h3 id="exercicio-4">Exercício 4<a class="headerlink" href="#exercicio-4" title="Permanent link">&para;</a></h3>
+<p>Teste duas caixas que apenas encostam pela borda.</p>
+<h3 id="exercicio-5">Exercício 5<a class="headerlink" href="#exercicio-5" title="Permanent link">&para;</a></h3>
+<p>Calcule IoU à mão para duas caixas simples e compare com o código.</p>
+<h3 id="exercicio-6">Exercício 6<a class="headerlink" href="#exercicio-6" title="Permanent link">&para;</a></h3>
+<p>Crie cinco caixas duplicadas sobre um objeto com escores diferentes e implemente NMS manual.</p>
+<h3 id="exercicio-7">Exercício 7<a class="headerlink" href="#exercicio-7" title="Permanent link">&para;</a></h3>
+<p>Varie o limiar IoU de <code>0.1</code> a <code>0.9</code>.</p>
+<h3 id="exercicio-8">Exercício 8<a class="headerlink" href="#exercicio-8" title="Permanent link">&para;</a></h3>
+<p>Simule pessoa e bicicleta com grande sobreposição. Compare NMS global e por classe.</p>
+<h3 id="exercicio-9">Exercício 9<a class="headerlink" href="#exercicio-9" title="Permanent link">&para;</a></h3>
+<p>Varie o limiar de confiança e conte candidatos antes do NMS.</p>
+<h3 id="exercicio-10">Exercício 10<a class="headerlink" href="#exercicio-10" title="Permanent link">&para;</a></h3>
+<p>Crie duas pessoas muito próximas e encontre um limiar que preserve ambas.</p>
+<h3 id="exercicio-11">Exercício 11<a class="headerlink" href="#exercicio-11" title="Permanent link">&para;</a></h3>
+<p>Compare seu NMS manual com <code>cv2.dnn.NMSBoxes</code>.</p>
+<h3 id="exercicio-12">Exercício 12<a class="headerlink" href="#exercicio-12" title="Permanent link">&para;</a></h3>
+<p>Explique por que alterar NMS pode melhorar uma métrica e piorar outra.</p>
+<h3 id="exercicio-13">Exercício 13<a class="headerlink" href="#exercicio-13" title="Permanent link">&para;</a></h3>
+<p>Implemente uma versão simples de Soft-NMS que reduza escores em vez de apagar caixas.</p>
+<hr />
+<h2 id="sintese">Síntese<a class="headerlink" href="#sintese" title="Permanent link">&para;</a></h2>
+<p>Um detector neural não termina quando produz tensores. Caixas precisam ser convertidas, validadas, comparadas e filtradas. IoU fornece uma medida geométrica de sobreposição; NMS resolve duplicatas; e os limiares controlam compromissos entre manter hipóteses e eliminar redundâncias. Compreender esse pós-processamento é indispensável para interpretar qualquer detector moderno.</p>
+<hr />
+<h2 id="referencias">Referências<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<p>REDMON, Joseph et al. You Only Look Once: Unified, Real-Time Object Detection. In: <em>IEEE Conference on Computer Vision and Pattern Recognition</em>. 2016.</p>
+<p>SZELISKI, Richard. <em>Computer Vision: Algorithms and Applications</em>. 2. ed. Cham: Springer, 2022.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

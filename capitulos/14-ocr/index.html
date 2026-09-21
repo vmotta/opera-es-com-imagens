@@ -1,0 +1,2502 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Curso didático de processamento de imagens e visão computacional">
+      
+      
+        <meta name="author" content="Vinícius da Rocha Motta">
+      
+      
+      
+        <link rel="prev" href="../13-faces/">
+      
+      
+        <link rel="next" href="../15-estereo/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>14. OCR - Operações com Imagens</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Atkinson+Hyperlegible:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Atkinson Hyperlegible";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#14-ocr-e-extracao-de-texto" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Operações com Imagens" class="md-header__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Operações com Imagens
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              14. OCR
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Usar tema escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Usar tema escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Usar tema claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Usar tema claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Operações com Imagens" class="md-nav__button md-logo" aria-label="Operações com Imagens" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Operações com Imagens
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vmotta/opera-es-com-imagens" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vmotta/opera-es-com-imagens
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../como-estudar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Como estudar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ambiente/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Preparação do ambiente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-fundamentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Imagem digital e OpenCV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-transformacoes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformações geométricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-filtros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Filtros, convolução e bordas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-morfologia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Limiarização e morfologia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-contornos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Contornos e características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-cores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Espaços de cores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detecção e movimento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Detecção e movimento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-deteccao-classica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Template Matching e Haar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-feature-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Feature Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-video/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Vídeo e fluxo óptico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes neurais e aplicações
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Redes neurais e aplicações
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-dnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. CNNs e módulo DNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-yolo-nms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. YOLO e NMS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-pose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Estimativa de pose
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-faces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. Reconhecimento facial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. OCR
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. OCR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#141-duas-tarefas-diferentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.1 Duas tarefas diferentes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.1 Duas tarefas diferentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deteccao-de-texto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detecção de texto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reconhecimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reconhecimento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#142-ocr-e-um-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.2 OCR é um pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.2 OCR é um pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-preparar-uma-folha-para-um-leitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: preparar uma folha para um leitor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#143-convertendo-para-tons-de-cinza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.3 Convertendo para tons de cinza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#144-aumentando-resolucao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.4 Aumentando resolução
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#145-suavizacao-com-cautela" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.5 Suavização com cautela
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#146-otsu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.6 Otsu
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#147-limiar-adaptativo-para-iluminacao-irregular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.7 Limiar adaptativo para iluminação irregular
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#148-polaridade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.8 Polaridade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#149-morfologia-em-texto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.9 Morfologia em texto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.9 Morfologia em texto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fechar-pequenas-falhas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fechar pequenas falhas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cuidado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cuidado
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1410-inclinacao-skew" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.10 Inclinação (skew)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1411-exemplo-didatico-de-deskew-por-pixels-de-texto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.11 Exemplo didático de deskew por pixels de texto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1412-corrigindo-rotacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.12 Corrigindo rotação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1413-tesseract-e-psm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.13 Tesseract e PSM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.13 Tesseract e PSM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-dizer-ao-leitor-o-que-esperar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: dizer ao leitor o que esperar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1414-ocr-com-pytesseract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.14 OCR com pytesseract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1415-fallback-de-idioma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.15 Fallback de idioma
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1416-image_to_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.16 image_to_data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1417-texto-reconhecido-ainda-nao-e-dado-estruturado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.17 Texto reconhecido ainda não é dado estruturado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1418-expressoes-regulares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.18 Expressões regulares
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1419-validacao-por-consistencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.19 Validação por consistência
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1420-cer-e-wer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.20 CER e WER
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.20 CER e WER">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cer-character-error-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CER — Character Error Rate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wer-word-error-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WER — Word Error Rate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1421-ocr-de-cena-versus-documento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.21 OCR de cena versus documento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1422-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.22 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1423-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.23 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1424-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.24 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-estereo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15. Visão estéreo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16. Construindo CNNs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-gans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17. GANs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-yolo-moderno/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18. YOLO moderno
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-que-voce-aprendera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que você aprenderá
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#141-duas-tarefas-diferentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.1 Duas tarefas diferentes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.1 Duas tarefas diferentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deteccao-de-texto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detecção de texto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reconhecimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reconhecimento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#142-ocr-e-um-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.2 OCR é um pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.2 OCR é um pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-preparar-uma-folha-para-um-leitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: preparar uma folha para um leitor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#143-convertendo-para-tons-de-cinza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.3 Convertendo para tons de cinza
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#144-aumentando-resolucao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.4 Aumentando resolução
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#145-suavizacao-com-cautela" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.5 Suavização com cautela
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#146-otsu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.6 Otsu
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#147-limiar-adaptativo-para-iluminacao-irregular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.7 Limiar adaptativo para iluminação irregular
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#148-polaridade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.8 Polaridade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#149-morfologia-em-texto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.9 Morfologia em texto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.9 Morfologia em texto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fechar-pequenas-falhas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fechar pequenas falhas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cuidado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cuidado
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1410-inclinacao-skew" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.10 Inclinação (skew)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1411-exemplo-didatico-de-deskew-por-pixels-de-texto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.11 Exemplo didático de deskew por pixels de texto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1412-corrigindo-rotacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.12 Corrigindo rotação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1413-tesseract-e-psm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.13 Tesseract e PSM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.13 Tesseract e PSM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analogia-dizer-ao-leitor-o-que-esperar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analogia: dizer ao leitor o que esperar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1414-ocr-com-pytesseract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.14 OCR com pytesseract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1415-fallback-de-idioma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.15 Fallback de idioma
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1416-image_to_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.16 image_to_data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1417-texto-reconhecido-ainda-nao-e-dado-estruturado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.17 Texto reconhecido ainda não é dado estruturado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1418-expressoes-regulares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.18 Expressões regulares
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1419-validacao-por-consistencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.19 Validação por consistência
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1420-cer-e-wer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.20 CER e WER
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.20 CER e WER">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cer-character-error-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CER — Character Error Rate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wer-word-error-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WER — Word Error Rate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1421-ocr-de-cena-versus-documento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.21 OCR de cena versus documento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1422-exemplo-integrado-do-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.22 Exemplo integrado do capítulo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1423-erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.23 Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1424-perguntas-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.24 Perguntas de revisão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="14-ocr-e-extracao-de-texto">14. OCR e extração de texto<a class="headerlink" href="#14-ocr-e-extracao-de-texto" title="Permanent link">&para;</a></h1>
+<h2 id="o-que-voce-aprendera">O que você aprenderá<a class="headerlink" href="#o-que-voce-aprendera" title="Permanent link">&para;</a></h2>
+<p>Neste capítulo, você aprenderá que OCR não é apenas “transformar foto em texto”. Um sistema robusto precisa preparar a imagem, formular uma hipótese de layout, executar o reconhecimento e validar a saída.</p>
+<p>Ao final, deverá conseguir:</p>
+<ol>
+<li>diferenciar detecção de texto e reconhecimento de texto;</li>
+<li>compreender o papel do pré-processamento;</li>
+<li>preparar documentos em tons de cinza;</li>
+<li>comparar limiar fixo, Otsu e adaptativo;</li>
+<li>compreender polaridade e contraste;</li>
+<li>corrigir inclinação em alto nível;</li>
+<li>entender modos de segmentação de página do Tesseract;</li>
+<li>usar <code>pytesseract</code> quando disponível;</li>
+<li>obter texto e dados por palavra;</li>
+<li>interpretar confiança como uma pista, não como garantia;</li>
+<li>extrair campos com expressões regulares;</li>
+<li>validar datas, valores e códigos;</li>
+<li>medir qualidade com CER/WER em alto nível;</li>
+<li>construir um pipeline com revisão de baixa confiança.</li>
+</ol>
+<p>OCR combina processamento de imagem, modelagem de layout e reconhecimento de sequências. Tesseract é um motor amplamente utilizado cuja arquitetura evoluiu ao longo do tempo; a preparação adequada da entrada continua sendo decisiva (SMITH, 2007).</p>
+<hr />
+<h2 id="141-duas-tarefas-diferentes">14.1 Duas tarefas diferentes<a class="headerlink" href="#141-duas-tarefas-diferentes" title="Permanent link">&para;</a></h2>
+<p>Em cenas reais, podemos separar:</p>
+<h3 id="deteccao-de-texto">Detecção de texto<a class="headerlink" href="#deteccao-de-texto" title="Permanent link">&para;</a></h3>
+<p>Pergunta:</p>
+<blockquote>
+<p>“Onde há palavras ou linhas?”</p>
+</blockquote>
+<h3 id="reconhecimento">Reconhecimento<a class="headerlink" href="#reconhecimento" title="Permanent link">&para;</a></h3>
+<p>Pergunta:</p>
+<blockquote>
+<p>“Quais caracteres existem nesta região?”</p>
+</blockquote>
+<p>Um documento escaneado bem alinhado pode dispensar um detector explícito. Uma placa em uma cena urbana frequentemente exige localizar o texto antes de reconhecê-lo.</p>
+<hr />
+<h2 id="142-ocr-e-um-pipeline">14.2 OCR é um pipeline<a class="headerlink" href="#142-ocr-e-um-pipeline" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>imagem
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ↓
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>controle de qualidade
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  ↓
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>correção geométrica
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  ↓
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>redução de ruído
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  ↓
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>contraste / binarização
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  ↓
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>segmentação de página
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  ↓
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>OCR
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  ↓
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>normalização do texto
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  ↓
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>validação dos campos
+</span></code></pre></div>
+<h3 id="analogia-preparar-uma-folha-para-um-leitor">Analogia: preparar uma folha para um leitor<a class="headerlink" href="#analogia-preparar-uma-folha-para-um-leitor" title="Permanent link">&para;</a></h3>
+<p>Pedir OCR de uma imagem escura, torta e ruidosa é como entregar a alguém uma folha amassada sob pouca luz. Melhorar a legibilidade antes do reconhecimento reduz ambiguidades.</p>
+<hr />
+<h2 id="143-convertendo-para-tons-de-cinza">14.3 Convertendo para tons de cinza<a class="headerlink" href="#143-convertendo-para-tons-de-cinza" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">cinza</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Muitos pipelines de documentos não precisam manter três canais durante a preparação.</p>
+<hr />
+<h2 id="144-aumentando-resolucao">14.4 Aumentando resolução<a class="headerlink" href="#144-aumentando-resolucao" title="Permanent link">&para;</a></h2>
+<p>Texto muito pequeno pode se beneficiar de ampliação.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">ampliada</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">cinza</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">fx</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">fy</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_CUBIC</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Ampliação não cria detalhes que não foram capturados, mas pode tornar o traçado mais adequado ao pipeline seguinte.</p>
+<hr />
+<h2 id="145-suavizacao-com-cautela">14.5 Suavização com cautela<a class="headerlink" href="#145-suavizacao-com-cautela" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">suave</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">GaussianBlur</span><span class="p">(</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">ampliada</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="mi">0</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Blur demais pode unir letras como <code>rn</code> e <code>m</code> ou apagar traços finos.</p>
+<p>A escolha deve preservar a geometria dos caracteres.</p>
+<hr />
+<h2 id="146-otsu">14.6 Otsu<a class="headerlink" href="#146-otsu" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">_</span><span class="p">,</span> <span class="n">binaria</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">suave</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="mi">255</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_OTSU</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Otsu funciona bem quando texto e fundo formam grupos de intensidade razoavelmente separáveis (OTSU, 1979).</p>
+<hr />
+<h2 id="147-limiar-adaptativo-para-iluminacao-irregular">14.7 Limiar adaptativo para iluminação irregular<a class="headerlink" href="#147-limiar-adaptativo-para-iluminacao-irregular" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">adaptativa</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">adaptiveThreshold</span><span class="p">(</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">cinza</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="mi">255</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">ADAPTIVE_THRESH_GAUSSIAN_C</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="mi">31</span><span class="p">,</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="mi">11</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Pode ajudar em fotografias com sombra ou iluminação não uniforme.</p>
+<p>Mas parâmetros ruins também podem fragmentar letras.</p>
+<hr />
+<h2 id="148-polaridade">14.8 Polaridade<a class="headerlink" href="#148-polaridade" title="Permanent link">&para;</a></h2>
+<p>Texto escuro em fundo claro costuma ser uma configuração confortável para OCR de documentos.</p>
+<p>Se uma etapa intermediária usar texto branco em fundo preto:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">invertida</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">bitwise_not</span><span class="p">(</span><span class="n">binaria</span><span class="p">)</span>
+</span></code></pre></div>
+<p>pode ser necessário inverter novamente antes do reconhecedor.</p>
+<hr />
+<h2 id="149-morfologia-em-texto">14.9 Morfologia em texto<a class="headerlink" href="#149-morfologia-em-texto" title="Permanent link">&para;</a></h2>
+<h3 id="fechar-pequenas-falhas">Fechar pequenas falhas<a class="headerlink" href="#fechar-pequenas-falhas" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">kernel</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getStructuringElement</span><span class="p">(</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_RECT</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">)</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">fechada</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">morphologyEx</span><span class="p">(</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">binaria</span><span class="p">,</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_CLOSE</span><span class="p">,</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="n">kernel</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="cuidado">Cuidado<a class="headerlink" href="#cuidado" title="Permanent link">&para;</a></h3>
+<p>Kernel grande pode unir caracteres vizinhos.</p>
+<div class="admonition warning">
+<p class="admonition-title">Texto é estrutura fina</p>
+<p>Em processamento de documentos, poucos pixels podem representar uma haste inteira de uma letra. Morfologia precisa ser muito mais conservadora do que em objetos grandes.</p>
+</div>
+<hr />
+<h2 id="1410-inclinacao-skew">14.10 Inclinação (<em>skew</em>)<a class="headerlink" href="#1410-inclinacao-skew" title="Permanent link">&para;</a></h2>
+<p>Uma linha de texto inclinada dificulta a análise de layout.</p>
+<p>Podemos estimar um ângulo usando:</p>
+<ul>
+<li>contornos;</li>
+<li><code>minAreaRect</code>;</li>
+<li>transformada de Hough;</li>
+<li>projeções horizontais.</li>
+</ul>
+<p>Depois rotacionamos a página.</p>
+<hr />
+<h2 id="1411-exemplo-didatico-de-deskew-por-pixels-de-texto">14.11 Exemplo didático de deskew por pixels de texto<a class="headerlink" href="#1411-exemplo-didatico-de-deskew-por-pixels-de-texto" title="Permanent link">&para;</a></h2>
+<p>Se o texto foi binarizado como primeiro plano branco:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">binaria_invertida</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">angulo</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">minAreaRect</span><span class="p">(</span><span class="n">coords</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span></code></pre></div>
+<p>A interpretação do ângulo exige cuidado porque <code>minAreaRect</code> possui convenções próprias. Sempre visualize o resultado e normalize o ângulo conforme o intervalo retornado.</p>
+<hr />
+<h2 id="1412-corrigindo-rotacao">14.12 Corrigindo rotação<a class="headerlink" href="#1412-corrigindo-rotacao" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">altura</span><span class="p">,</span> <span class="n">largura</span> <span class="o">=</span> <span class="n">imagem</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">centro</span> <span class="o">=</span> <span class="p">(</span><span class="n">largura</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">altura</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">M</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getRotationMatrix2D</span><span class="p">(</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">centro</span><span class="p">,</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">angulo_corrigido</span><span class="p">,</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="mf">1.0</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">)</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="n">corrigida</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">warpAffine</span><span class="p">(</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    <span class="n">imagem</span><span class="p">,</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="n">M</span><span class="p">,</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="p">(</span><span class="n">largura</span><span class="p">,</span> <span class="n">altura</span><span class="p">),</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="n">borderValue</span><span class="o">=</span><span class="mi">255</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Para documentos, preservar fundo branco costuma ser útil.</p>
+<hr />
+<h2 id="1413-tesseract-e-psm">14.13 Tesseract e PSM<a class="headerlink" href="#1413-tesseract-e-psm" title="Permanent link">&para;</a></h2>
+<p>O PSM (<em>Page Segmentation Mode</em>) informa ao mecanismo uma hipótese de layout.</p>
+<p>Exemplos frequentemente úteis:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>PSM 6  → bloco uniforme de texto
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>PSM 7  → uma única linha
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>PSM 8  → uma palavra
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>PSM 11 → texto esparso
+</span></code></pre></div>
+<h3 id="analogia-dizer-ao-leitor-o-que-esperar">Analogia: dizer ao leitor o que esperar<a class="headerlink" href="#analogia-dizer-ao-leitor-o-que-esperar" title="Permanent link">&para;</a></h3>
+<p>“Leia esta página”, “leia esta linha” e “leia esta palavra” são tarefas diferentes. A hipótese de layout ajuda o reconhecedor a organizar a entrada.</p>
+<hr />
+<h2 id="1414-ocr-com-pytesseract">14.14 OCR com <code>pytesseract</code><a class="headerlink" href="#1414-ocr-com-pytesseract" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytesseract</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">texto</span> <span class="o">=</span> <span class="n">pytesseract</span><span class="o">.</span><span class="n">image_to_string</span><span class="p">(</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">binaria</span><span class="p">,</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">lang</span><span class="o">=</span><span class="s2">"por"</span><span class="p">,</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">config</span><span class="o">=</span><span class="s2">"--psm 6"</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="p">)</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">texto</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Isso exige que o executável Tesseract esteja instalado e que o idioma solicitado esteja disponível.</p>
+<hr />
+<h2 id="1415-fallback-de-idioma">14.15 Fallback de idioma<a class="headerlink" href="#1415-fallback-de-idioma" title="Permanent link">&para;</a></h2>
+<p>Em material didático, podemos verificar idiomas instalados:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">idiomas</span> <span class="o">=</span> <span class="n">pytesseract</span><span class="o">.</span><span class="n">get_languages</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">if</span> <span class="s2">"por"</span> <span class="ow">in</span> <span class="n">idiomas</span><span class="p">:</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">idioma</span> <span class="o">=</span> <span class="s2">"por"</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">elif</span> <span class="s2">"eng"</span> <span class="ow">in</span> <span class="n">idiomas</span><span class="p">:</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">idioma</span> <span class="o">=</span> <span class="s2">"eng"</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="k">else</span><span class="p">:</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="n">idioma</span> <span class="o">=</span> <span class="kc">None</span>
+</span></code></pre></div>
+<p>Se nenhum idioma adequado existir, o código deve informar claramente a dependência ausente.</p>
+<hr />
+<h2 id="1416-image_to_data">14.16 <code>image_to_data</code><a class="headerlink" href="#1416-image_to_data" title="Permanent link">&para;</a></h2>
+<p>Para obter caixas e confiança por palavra:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">dados</span> <span class="o">=</span> <span class="n">pytesseract</span><span class="o">.</span><span class="n">image_to_data</span><span class="p">(</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">binaria</span><span class="p">,</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">output_type</span><span class="o">=</span><span class="n">pytesseract</span><span class="o">.</span><span class="n">Output</span><span class="o">.</span><span class="n">DICT</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">config</span><span class="o">=</span><span class="s2">"--psm 6"</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Depois:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">texto</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dados</span><span class="p">[</span><span class="s2">"text"</span><span class="p">]):</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">conf</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dados</span><span class="p">[</span><span class="s2">"conf"</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="k">if</span> <span class="n">texto</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">and</span> <span class="n">conf</span> <span class="o">&gt;=</span> <span class="mi">60</span><span class="p">:</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">dados</span><span class="p">[</span><span class="s2">"left"</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>        <span class="n">y</span> <span class="o">=</span> <span class="n">dados</span><span class="p">[</span><span class="s2">"top"</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>        <span class="n">w</span> <span class="o">=</span> <span class="n">dados</span><span class="p">[</span><span class="s2">"width"</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>        <span class="n">h</span> <span class="o">=</span> <span class="n">dados</span><span class="p">[</span><span class="s2">"height"</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+</span></code></pre></div>
+<p>Confiança é uma pista para triagem, não prova de correção.</p>
+<hr />
+<h2 id="1417-texto-reconhecido-ainda-nao-e-dado-estruturado">14.17 Texto reconhecido ainda não é dado estruturado<a class="headerlink" href="#1417-texto-reconhecido-ainda-nao-e-dado-estruturado" title="Permanent link">&para;</a></h2>
+<p>OCR pode devolver:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>TOTAL: R$ 19,9O
+</span></code></pre></div>
+<p>em vez de:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>TOTAL: R$ 19,90
+</span></code></pre></div>
+<p>O próximo passo pode incluir:</p>
+<ul>
+<li>normalização;</li>
+<li>expressões regulares;</li>
+<li>validação por domínio;</li>
+<li>checagem de consistência.</li>
+</ul>
+<hr />
+<h2 id="1418-expressoes-regulares">14.18 Expressões regulares<a class="headerlink" href="#1418-expressoes-regulares" title="Permanent link">&para;</a></h2>
+<p>Exemplo didático de valor monetário:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">padrao</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"R\$\s*([0-9]+[,.][0-9]</span><span class="si">{2}</span><span class="s2">)"</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="n">resultado</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">padrao</span><span class="p">,</span> <span class="n">texto</span><span class="p">)</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="k">if</span> <span class="n">resultado</span><span class="p">:</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    <span class="n">valor</span> <span class="o">=</span> <span class="n">resultado</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Regex identifica um padrão de caracteres; não garante que o valor seja semanticamente correto.</p>
+<hr />
+<h2 id="1419-validacao-por-consistencia">14.19 Validação por consistência<a class="headerlink" href="#1419-validacao-por-consistencia" title="Permanent link">&para;</a></h2>
+<p>Em um recibo:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>item A = 10,00
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>item B = 20,00
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>total  = 30,00
+</span></code></pre></div>
+<p>podemos comparar soma e total.</p>
+<p>Em outros documentos, podemos usar:</p>
+<ul>
+<li>dígitos verificadores;</li>
+<li>formato de data;</li>
+<li>intervalos plausíveis;</li>
+<li>lista de campos obrigatórios.</li>
+</ul>
+<hr />
+<h2 id="1420-cer-e-wer">14.20 CER e WER<a class="headerlink" href="#1420-cer-e-wer" title="Permanent link">&para;</a></h2>
+<h3 id="cer-character-error-rate">CER — Character Error Rate<a class="headerlink" href="#cer-character-error-rate" title="Permanent link">&para;</a></h3>
+<p>Mede erros em caracteres com base em distância de edição.</p>
+<h3 id="wer-word-error-rate">WER — Word Error Rate<a class="headerlink" href="#wer-word-error-rate" title="Permanent link">&para;</a></h3>
+<p>Mede erros em palavras.</p>
+<p>Para avaliar OCR, precisamos de um <strong>ground truth</strong> correto e separado do processo de ajuste.</p>
+<hr />
+<h2 id="1421-ocr-de-cena-versus-documento">14.21 OCR de cena versus documento<a class="headerlink" href="#1421-ocr-de-cena-versus-documento" title="Permanent link">&para;</a></h2>
+<p>Documento:</p>
+<ul>
+<li>fundo relativamente regular;</li>
+<li>texto alinhado;</li>
+<li>alta resolução;</li>
+<li>layout previsível.</li>
+</ul>
+<p>Cena natural:</p>
+<ul>
+<li>perspectiva;</li>
+<li>texturas;</li>
+<li>reflexos;</li>
+<li>várias orientações;</li>
+<li>texto pequeno.</li>
+</ul>
+<p>Modelos de detecção como EAST/CRAFT podem localizar regiões antes do reconhecedor.</p>
+<hr />
+<h2 id="1422-exemplo-integrado-do-capitulo">14.22 Exemplo integrado do capítulo<a class="headerlink" href="#1422-exemplo-integrado-do-capitulo" title="Permanent link">&para;</a></h2>
+<p>O <a href="https://github.com/vmotta/opera-es-com-imagens/blob/main/exemplos/cap14_ocr.py">código do capítulo 14</a> cria um documento sintético e executa o pipeline mesmo quando Tesseract não está disponível.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[ocr]"</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>python<span class="w"> </span>-m<span class="w"> </span>exemplos.cap14_ocr
+</span></code></pre></div>
+<p>Pipeline:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>documento sintético
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>   ↓
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>ruído
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>   ↓
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>cinza
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>   ↓
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>Gaussiano
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>   ↓
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>Otsu / adaptativo
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>   ↓
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>pré-processado
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>   ↓
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>Tesseract opcional
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>   ↓
+</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>texto
+</span><span id="__span-20-16"><a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>   ↓
+</span><span id="__span-20-17"><a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>dados por palavra / confiança
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Antes</th>
+<th>Pré-processado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img alt="Texto sintético com ruído" src="../../assets/resultados/cap14/01_documento_ruidoso.png" /></td>
+<td><img alt="Texto binarizado para OCR" src="../../assets/resultados/cap14/02_pre_processado.png" /></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1423-erros-comuns">14.23 Erros comuns<a class="headerlink" href="#1423-erros-comuns" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa provável</th>
+<th>Correção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>texto vazio</td>
+<td>executável/idioma/layout</td>
+<td>valide dependências e PSM</td>
+</tr>
+<tr>
+<td>letras grudadas</td>
+<td>morfologia/blur excessivo</td>
+<td>reduza processamento</td>
+</tr>
+<tr>
+<td>letras quebradas</td>
+<td>erosão/limiar agressivo</td>
+<td>preserve traços</td>
+</tr>
+<tr>
+<td>OCR pior após binarizar</td>
+<td>original já era boa</td>
+<td>compare pipelines</td>
+</tr>
+<tr>
+<td>linha inclinada mal reconhecida</td>
+<td>skew</td>
+<td>aplique deskew</td>
+</tr>
+<tr>
+<td>PSM inadequado</td>
+<td>hipótese de layout errada</td>
+<td>escolha modo compatível</td>
+</tr>
+<tr>
+<td>regex extrai valor errado</td>
+<td>OCR contém erro</td>
+<td>valide semanticamente</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1424-perguntas-de-revisao">14.24 Perguntas de revisão<a class="headerlink" href="#1424-perguntas-de-revisao" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Qual diferença existe entre detectar e reconhecer texto?</li>
+<li>Por que pré-processar?</li>
+<li>Quando Otsu tende a funcionar bem?</li>
+<li>Quando adaptativo pode ser melhor?</li>
+<li>Por que blur excessivo prejudica letras?</li>
+<li>O que é deskew?</li>
+<li>Para que serve PSM?</li>
+<li>Qual diferença existe entre <code>image_to_string</code> e <code>image_to_data</code>?</li>
+<li>Por que confiança não garante correção?</li>
+<li>Por que regex não substitui validação?</li>
+</ol>
+<hr />
+<h1 id="exercicios-de-fixacao">Exercícios de fixação<a class="headerlink" href="#exercicios-de-fixacao" title="Permanent link">&para;</a></h1>
+<h3 id="exercicio-1">Exercício 1<a class="headerlink" href="#exercicio-1" title="Permanent link">&para;</a></h3>
+<p>Crie uma imagem com três linhas de texto usando <code>cv2.putText</code> e tente OCR com PSM 6.</p>
+<h3 id="exercicio-2">Exercício 2<a class="headerlink" href="#exercicio-2" title="Permanent link">&para;</a></h3>
+<p>Teste PSM 6, 7, 8 e 11 sobre entradas adequadas e inadequadas.</p>
+<h3 id="exercicio-3">Exercício 3<a class="headerlink" href="#exercicio-3" title="Permanent link">&para;</a></h3>
+<p>Adicione ruído Gaussiano e compare OCR antes/depois de suavização.</p>
+<h3 id="exercicio-4">Exercício 4<a class="headerlink" href="#exercicio-4" title="Permanent link">&para;</a></h3>
+<p>Compare Otsu e limiar adaptativo sob fundo em gradiente.</p>
+<h3 id="exercicio-5">Exercício 5<a class="headerlink" href="#exercicio-5" title="Permanent link">&para;</a></h3>
+<p>Rotacione o documento em 5°, 10° e 15°. Meça a degradação.</p>
+<h3 id="exercicio-6">Exercício 6<a class="headerlink" href="#exercicio-6" title="Permanent link">&para;</a></h3>
+<p>Implemente deskew e compare a saída reconhecida.</p>
+<h3 id="exercicio-7">Exercício 7<a class="headerlink" href="#exercicio-7" title="Permanent link">&para;</a></h3>
+<p>Use <code>image_to_data</code> e desenhe caixas nas palavras com confiança acima de um limiar.</p>
+<h3 id="exercicio-8">Exercício 8<a class="headerlink" href="#exercicio-8" title="Permanent link">&para;</a></h3>
+<p>Crie um recibo sintético com total monetário e extraia o valor por regex.</p>
+<h3 id="exercicio-9">Exercício 9<a class="headerlink" href="#exercicio-9" title="Permanent link">&para;</a></h3>
+<p>Introduza propositalmente uma letra <code>O</code> no lugar de zero e crie uma etapa de validação.</p>
+<h3 id="exercicio-10">Exercício 10<a class="headerlink" href="#exercicio-10" title="Permanent link">&para;</a></h3>
+<p>Calcule CER para uma frase conhecida e uma saída OCR com erros artificiais.</p>
+<h3 id="exercicio-11">Exercício 11<a class="headerlink" href="#exercicio-11" title="Permanent link">&para;</a></h3>
+<p>Calcule WER para duas frases curtas.</p>
+<h3 id="exercicio-12">Exercício 12<a class="headerlink" href="#exercicio-12" title="Permanent link">&para;</a></h3>
+<p>Construa uma política: confiança abaixo de 60 deve ir para revisão manual. Simule dados e conte quantos casos seriam revisados.</p>
+<h3 id="exercicio-13">Exercício 13<a class="headerlink" href="#exercicio-13" title="Permanent link">&para;</a></h3>
+<p>Explique por que um único pipeline de pré-processamento não é ideal para todos os documentos.</p>
+<hr />
+<h2 id="sintese">Síntese<a class="headerlink" href="#sintese" title="Permanent link">&para;</a></h2>
+<p>OCR é uma cadeia de decisões. Melhorar contraste, corrigir geometria e escolher o layout apropriado pode ser tão importante quanto o reconhecedor. A saída textual ainda precisa ser normalizada, validada e, quando necessário, revisada. O objetivo não é apenas “ler caracteres”, mas transformar uma imagem em informação confiável e auditável.</p>
+<hr />
+<h2 id="referencias">Referências<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<p>GONZALEZ, Rafael C.; WOODS, Richard E. <em>Processamento Digital de Imagens</em>. 3. ed. São Paulo: Pearson, 2010.</p>
+<p>OTSU, Nobuyuki. A threshold selection method from gray-level histograms. <em>IEEE Transactions on Systems, Man, and Cybernetics</em>, v. 9, n. 1, 1979.</p>
+<p>SMITH, Ray. An overview of the Tesseract OCR engine. In: <em>International Conference on Document Analysis and Recognition</em>. 2007.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
