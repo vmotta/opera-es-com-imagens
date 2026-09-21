@@ -75,7 +75,7 @@ print(type(contornos))
 print(len(contornos))
 ```
 
-Cada elemento contém uma sequência de pontos `(x, y)`.
+Cada elemento contém uma sequência de pontos $(x, y)$.
 
 ```python
 primeiro = contornos[0]
@@ -88,7 +88,7 @@ Em geral, a estrutura é semelhante a:
 (N, 1, 2)
 ```
 
-em que `N` é a quantidade de pontos armazenados.
+em que $N$ é a quantidade de pontos armazenados. A dimensão intermediária `1` costuma confundir iniciantes. Ela existe por motivos de compatibilidade interna das estruturas de dados (matrizes) do OpenCV. Na prática, para acessar as coordenadas $(x, y)$ do i-ésimo ponto do contorno, você fará `contorno[i][0]`.
 
 ---
 
@@ -151,12 +151,7 @@ Imagine um anel:
 - existe um contorno externo;
 - existe um contorno interno correspondente ao buraco.
 
-Com `RETR_TREE`, a hierarquia informa relações como:
-
-- próximo;
-- anterior;
-- primeiro filho;
-- pai.
+Com `RETR_TREE`, a hierarquia informa relações estruturais. O OpenCV retorna essa informação como um array com 4 valores para cada contorno: `[Próximo, Anterior, Primeiro Filho, Pai]`. Os valores são os índices (IDs) dos outros contornos na lista. Se não houver filho ou pai, o valor retornado na respectiva posição será `-1`. Compreender essa estrutura é essencial para identificar, por exemplo, furos (filhos) dentro de uma peça (pai).
 
 ### Analogia: diretórios
 
@@ -273,17 +268,17 @@ cv2.drawContours(
 M = cv2.moments(contorno)
 ```
 
-Os momentos resumem propriedades da distribuição espacial da região.
+Os momentos resumem propriedades da distribuição espacial da região. Em imagens binárias, a intuição por trás deles é bastante direta: o momento `m00` equivale à área do contorno (a quantidade total de pixels brancos). Já os momentos `m10` e `m01` representam, respectivamente, o somatório de todas as coordenadas $X$ e $Y$ desses pixels. 
 
-O centroide pode ser calculado por:
+Por isso, calcular o centroide da forma torna-se intuitivo, bastando calcular a média posicional:
 
-\[
+$$
 c_x=\frac{m_{10}}{m_{00}}
-\]
+$$
 
-\[
+$$
 c_y=\frac{m_{01}}{m_{00}}
-\]
+$$
 
 (GONZALEZ; WOODS, 2010).
 
@@ -331,6 +326,8 @@ aproximado = cv2.approxPolyDP(
 )
 ```
 
+O parâmetro `epsilon` define a distância máxima tolerada entre o contorno original e a linha reta que o aproxima. Ao definir esse limite como uma porcentagem do perímetro (neste caso, 2%), nós garantimos a **invariância de escala**. Ou seja, a aproximação funcionará de forma consistente independentemente de a forma estar muito próxima da câmera (parecendo grande na imagem) ou muito distante (parecendo pequena).
+
 ### Interpretação
 
 - 3 vértices → candidato a triângulo;
@@ -363,9 +360,9 @@ Em um mapa muito detalhado, registramos pequenas reentrâncias. Em um mapa simpl
 
 Uma medida clássica é:
 
-\[
+$$
 C=\frac{4\pi A}{P^2}
-\]
+$$
 
 em que:
 
@@ -384,9 +381,17 @@ if perimetro > 0:
     circularidade = 4 * math.pi * area / (perimetro ** 2)
 ```
 
-Um círculo ideal tende a valor próximo de `1`. Formas alongadas tendem a valores menores.
+Um círculo ideal tende a um valor de circularidade próximo de `1`. Formas alongadas ou complexas tendem a valores menores. 
 
-Isso não é um reconhecedor universal: resolução, serrilhamento e ruído alteram área e perímetro.
+Podemos provar isso matematicamente. Sabendo que a área de um círculo é $A = \pi r^2$ e o perímetro é $P = 2\pi r$, se substituirmos esses valores na fórmula teremos: 
+
+$$
+C = \frac{4\pi(\pi r^2)}{(2\pi r)^2} = \frac{4\pi^2 r^2}{4\pi^2 r^2} = 1
+$$
+
+Qualquer forma diferente do círculo perfeito exige um perímetro maior para fechar a mesma área, o que aumenta o denominador da equação e resulta em valores menores que 1.
+
+No entanto, vale lembrar que isso não é um reconhecedor universal perfeito: fatores como resolução, serrilhamento de pixels e ruídos na borda alteram a área e o perímetro lidos.
 
 ---
 
